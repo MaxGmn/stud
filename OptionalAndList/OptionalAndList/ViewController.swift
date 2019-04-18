@@ -95,7 +95,11 @@ class ViewController: UIViewController {
 
 }
 
-enum MyOptional<T>{
+enum OptionalError: Error{
+    case NilExeption
+}
+
+enum MyOptional<T> {
     case some(T)
     case none
     
@@ -107,22 +111,22 @@ enum MyOptional<T>{
         self = .none
     }
     
-    func unwrap() -> Any{
+    func unwrap() throws -> T{
         switch self {
         case .some(let x):
             return x
         default:
             break
         }
-        return MyOptional.none
+        throw OptionalError.NilExeption
     }
 }
 
-//func add(_ first: MyOptional<Int>, _ second: MyOptional<Int>) -> MyOptional<Int>{
-//    let a = first.unwrap()
-//    let b = second.unwrap()
-//    return MyOptional(a + b)
-//}
+func add(_ first: MyOptional<Int>, _ second: MyOptional<Int>) throws -> MyOptional<Int>{
+    let a = try first.unwrap()
+    let b = try second.unwrap()
+    return MyOptional(a + b)
+}
 
 class Node<T>{
     var value: T
