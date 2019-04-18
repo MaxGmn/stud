@@ -96,7 +96,7 @@ class ViewController: UIViewController {
 }
 
 enum OptionalError: Error{
-    case NilExeption
+    case NilException
 }
 
 enum MyOptional<T> {
@@ -118,7 +118,7 @@ enum MyOptional<T> {
         default:
             break
         }
-        throw OptionalError.NilExeption
+        throw OptionalError.NilException
     }
 }
 
@@ -170,17 +170,18 @@ class LinkedList<T>: CustomStringConvertible{
         }
     }
     
+    
     func delFirst(){
         if first === last {
             first = nil
             last = nil
-        } else if let delFirstNode = first{
-        let firstNode = delFirstNode.next
-        delFirstNode.next = nil
-        firstNode?.prev = nil
-        
-        if firstNode != nil{
-            first = firstNode!
+        } else if let firstNodeToDelete = first{
+            let firstNodeCandidate = firstNodeToDelete.next
+            firstNodeToDelete.next = nil
+            firstNodeCandidate?.prev = nil
+
+            if let newFirst = firstNodeCandidate {
+                first = newFirst
             }
         }
     }
@@ -189,29 +190,23 @@ class LinkedList<T>: CustomStringConvertible{
         if first === last {
             first = nil
             last = nil
-        } else if let delLastNode = last{
-        let lastNode = delLastNode.prev
-        delLastNode.prev = nil
-        lastNode?.next = nil
-        
-        if lastNode != nil{
-            last = lastNode!
+        } else if let lastNodeToDelete = last{
+            let lastNodeCandidate = lastNodeToDelete.prev
+            lastNodeToDelete.prev = nil
+            lastNodeCandidate?.next = nil
+            
+            if let newLast = lastNodeCandidate{
+                last = newLast
             }
         }
     }
     
     func returnFirst() -> T?{
-        if let item = first{
-            return item.value
-        }
-        return nil
+        return first?.value
     }
     
     func returnLast() -> T?{
-        if let item = last{
-            return item.value
-        }
-        return nil
+        return last?.value
     }
     
     var description: String{
