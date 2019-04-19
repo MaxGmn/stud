@@ -37,10 +37,10 @@ class ViewController: UIViewController {
 
 indirect enum LinkedList <T> : CustomStringConvertible{
 
-    case Empty
-    case Node(value: T, next: LinkedList)
+    case empty
+    case node(value: T, next: LinkedList)
     
-    init(){self = .Empty}
+    init(){self = .empty}
 
     mutating func append(value: T){
         self = addValueToLastLevel(value: value, list: self)
@@ -49,11 +49,11 @@ indirect enum LinkedList <T> : CustomStringConvertible{
     func addValueToLastLevel(value: T, list: LinkedList) -> LinkedList{
         
         switch list{
-        case .Empty:
-            return .Node(value: value, next: .Empty)
-        case let .Node(currentValue, nextList):
+        case .empty:
+            return .node(value: value, next: .empty)
+        case let .node(currentValue, nextList):
             let previousLinkedListItem = addValueToLastLevel(value: value, list: nextList)
-            return .Node(value: currentValue, next: previousLinkedListItem)
+            return .node(value: currentValue, next: previousLinkedListItem)
         }
     }
     
@@ -65,13 +65,13 @@ indirect enum LinkedList <T> : CustomStringConvertible{
     func getValueByIndex(list: LinkedList, item: Int, currentItem: Int = 0) throws -> T{
         
         switch list{
-        case let .Node(value, nextlist):
+        case let .node(value, nextlist):
             if item == currentItem{
                 return value
             }
             return try getValueByIndex(list: nextlist, item: item, currentItem: currentItem + 1)
-        case .Empty:
-            throw ListErrors.IndexOutOfRange
+        case .empty:
+            throw ListErrors.indexOutOfRange
         }
         
     }
@@ -83,9 +83,9 @@ indirect enum LinkedList <T> : CustomStringConvertible{
    func createListDescription(list: LinkedList, description: String) -> String{
         
         switch list{
-        case let .Node(value, nextlist):
+        case let .node(value, nextlist):
             return createListDescription(list: nextlist, description: description + "\(value) ")
-        case .Empty:
+        case .empty:
             return description + "]"
         }
         
@@ -94,5 +94,5 @@ indirect enum LinkedList <T> : CustomStringConvertible{
 
 
 enum ListErrors : Error{
-    case IndexOutOfRange
+    case indexOutOfRange
 }
