@@ -112,11 +112,8 @@ enum MyOptional<T> {
     }
     
     func unwrap() throws -> T{
-        switch self {
-        case .some(let x):
+        if case let .some(x) = self {
             return x
-        default:
-            break
         }
         throw OptionalError.NilException
     }
@@ -146,8 +143,6 @@ class LinkedList<T>: CustomStringConvertible{
     var first: Node<T>?
     var last: Node<T>?
     
-//    init(){}
-    
     init(value: T){
         let firstNode = Node(value: value);
         first = firstNode
@@ -157,17 +152,13 @@ class LinkedList<T>: CustomStringConvertible{
     func addFirst(value: T){
         let newFirstNode = Node(value: value, next: first)
         first = newFirstNode
-        if let oldFirst = newFirstNode.next {
-            oldFirst.prev = first
-        }
+        newFirstNode.next?.prev = first
     }
     
     func addLast(value: T){
         let newLastNode = Node(value: value, prev: last)
         last = newLastNode
-        if let oldLast = newLastNode.prev{
-            oldLast.next = last
-        }
+        newLastNode.prev?.next = last
     }
     
     
@@ -179,10 +170,7 @@ class LinkedList<T>: CustomStringConvertible{
             let firstNodeCandidate = firstNodeToDelete.next
             firstNodeToDelete.next = nil
             firstNodeCandidate?.prev = nil
-
-            if let newFirst = firstNodeCandidate {
-                first = newFirst
-            }
+            first = firstNodeCandidate
         }
     }
     
@@ -194,10 +182,7 @@ class LinkedList<T>: CustomStringConvertible{
             let lastNodeCandidate = lastNodeToDelete.prev
             lastNodeToDelete.prev = nil
             lastNodeCandidate?.next = nil
-            
-            if let newLast = lastNodeCandidate{
-                last = newLast
-            }
+            last = lastNodeCandidate
         }
     }
     
