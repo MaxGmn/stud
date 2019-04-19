@@ -14,6 +14,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         firstTask();
+        
+        print(MyDictionary())
     }
 }
 
@@ -30,7 +32,93 @@ func firstTask(){
         "\t tuesday and wednesday: \(tuesday.intersection(wednesday).sorted())\n" +
         "\t monday and wednesday: \(monday.intersection(wednesday).sorted())\n")
     
-    print("Students, who were in monday and wednestay, but not tuesday: \(monday.intersection(wednesday).subtracting(tuesday).sorted())")
+    print("Students, who were in monday and wednestay, but not tuesday: \(monday.intersection(wednesday).subtracting(tuesday).sorted())\n")
+}
+
+
+class DictionaryNode<K,V>{
+    var key:K
+    var value:V
+    var leftNode:DictionaryNode?
+    var rightNode:DictionaryNode?
+    
+    init(key:K, value:V){
+        self.key = key
+        self.value = value
+    }
+}
+
+enum MyDictionaryErrors: Error{
+    case itemIsNotExist
+}
+
+class MyDictionary<K:Comparable,V>: CustomStringConvertible{
+    
+    var head:DictionaryNode<K,V>?
+    
+    func add(key:K, value:V){
+        guard let headNode = head else{
+            head = DictionaryNode(key: key, value: value)
+            return
+        }
+        
+        addToBranch(node:headNode, key:key, value:value)
+    }
+    
+    func addToBranch(node:DictionaryNode<K,V>, key:K, value:V){
+        if node.key == key {
+            node.value = value
+            
+        } else if node.key > key{
+            guard let leftNodeCurrentBranch = node.leftNode else{
+                node.leftNode = DictionaryNode(key: key, value: value)
+                return
+            }
+            addToBranch(node:leftNodeCurrentBranch, key:key, value:value)
+        }
+            
+        else{
+            guard let rightNodeCurrentBranch = node.rightNode else{
+                node.rightNode = DictionaryNode(key: key, value: value)
+                return
+            }
+            addToBranch(node:rightNodeCurrentBranch, key:key, value:value)
+        }
+    }
+    
+    func getValue(key:K) throws -> V{
+        guard let headNode = head else{
+            throw MyDictionaryErrors.itemIsNotExist
+        }
+        
+        return try getBranchValue(node: headNode, key: key)
+    }
+    
+    func getBranchValue(node:DictionaryNode<K,V>, key:K) throws -> V{
+        if node.key == key {
+            return node.value
+            
+        } else if node.key > key{
+            guard let leftNode = node.leftNode else{
+                throw MyDictionaryErrors.itemIsNotExist
+            }
+            return try getBranchValue(node: leftNode, key: key)
+            
+        } else {
+            guard let rightNode = node.rightNode else{
+                throw MyDictionaryErrors.itemIsNotExist
+            }
+            return try getBranchValue(node: rightNode, key: key)
+        }
+    }
+    
+    func remove(key:K){
+        
+    }
+    
+    var description: String{
+        return "MyDictionaryClass"
+    }
 }
 
 
