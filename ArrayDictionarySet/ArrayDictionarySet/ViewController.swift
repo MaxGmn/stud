@@ -14,7 +14,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-//        firstTask();
+        firstTask();
+        
+        print("MyDictionary:")
         
         let dict = MyDictionary<Int, String>()
         dict.add(key: 100, value: "100")
@@ -22,22 +24,52 @@ class ViewController: UIViewController {
         dict.add(key: 75, value: "75")
         dict.add(key: 150, value: "150")
         print(dict)
-        
+
         do {
             let res = try dict.getValue(key: 150)
             print(res)
         }
         catch {print("Error")}
-        
+
         do {
             let res2 = try dict.getValue(key: 500)
             print(res2)
         }
         catch {print("Error")}
-        
+
         do {try dict.remove(key: 75)}
         catch {print("Error")}
         print(dict)
+        
+
+        print("\nMySet:")
+        
+        let set = MySet<Int>()
+        set.add(value: 100)
+        set.add(value: 50)
+        set.add(value: 75)
+        set.add(value: 150)
+        print(set)
+        
+        do {
+            let res = try set.getValue(value: 150)
+            print(res)
+        }
+        catch {print("Error")}
+        
+        do {
+            let res2 = try set.getValue(value: 500)
+            print(res2)
+        }
+        catch {print("Error")}
+        
+        print(set.valueIsExist(value: 75))
+        
+        do {try set.remove(value: 75)}
+        catch {print("Error")}
+        print(set)
+        
+        print(set.valueIsExist(value: 75))
     }
 }
 
@@ -228,7 +260,184 @@ class MyDictionary<K:Comparable,V>: CustomStringConvertible{
 }
 
 
+class SetNode<V>{
+    var value:V
+    var parent:SetNode?
+    var leftNode:SetNode?
+    var rightNode:SetNode?
+    
+    init(value:V, parent:SetNode? = nil){
+        self.value = value
+        self.parent = parent
+    }
+}
 
+class MySet<V:Comparable>: CustomStringConvertible{
+    
+    private var head:SetNode<V>?
+    
+    //add
+    //
+    func add(value:V){
+        guard let headNode = head else{
+            head = SetNode(value: value)
+            return
+        }
+        
+        addToBranch(node:headNode, value:value)
+    }
+    
+    func addToBranch(node:SetNode<V>, value:V){
+        if node.value == value {
+            return
+            
+        } else if node.value > value{
+            guard let leftNodeCurrentBranch = node.leftNode else{
+                node.leftNode = SetNode(value: value, parent: node)
+                return
+            }
+            addToBranch(node:leftNodeCurrentBranch, value:value)
+        }
+            
+        else{
+            guard let rightNodeCurrentBranch = node.rightNode else{
+                node.rightNode = SetNode(value: value, parent: node)
+                return
+            }
+            addToBranch(node:rightNodeCurrentBranch, value:value)
+        }
+    }
+    
+    //get
+    //
+    func getValue(value:V) throws -> V{
+        guard let headNode = head else{
+            throw MyDictionaryErrors.itemIsNotExist
+        }
+        
+        return try getBranchValue(node: headNode, value: value)
+    }
+    
+    func getBranchValue(node:SetNode<V>, value:V) throws -> V{
+        if node.value == value {
+            return node.value
+            
+        } else if node.value > value{
+            guard let leftNode = node.leftNode else{
+                throw MyDictionaryErrors.itemIsNotExist
+            }
+            return try getBranchValue(node: leftNode, value: value)
+            
+        } else {
+            guard let rightNode = node.rightNode else{
+                throw MyDictionaryErrors.itemIsNotExist
+            }
+            return try getBranchValue(node: rightNode, value: value)
+        }
+    }
+    
+    //remove
+    //
+    func remove(value:V) throws{
+        guard let headNode = head else{
+            throw MyDictionaryErrors.itemIsNotExist
+        }
+        
+        try findItemToRemove(node: headNode, value: value)
+    }
+    
+    func findItemToRemove(node:SetNode<V>, value:V) throws{
+        if node.value == value{
+            let exchangeItem = removeItemandReturnItemForExchange(node: node)
+            
+            if node.value == node.parent?.leftNode?.value{
+                node.parent?.leftNode = exchangeItem
+            } else if node.value == node.parent?.rightNode?.value{
+                node.parent?.rightNode = exchangeItem
+            }
+            
+            node.parent = nil
+            node.leftNode = nil
+            node.rightNode = nil
+            
+        } else if node.value > value{
+            guard let leftNode = node.leftNode else{
+                throw MyDictionaryErrors.itemIsNotExist
+            }
+            try findItemToRemove(node:leftNode, value: value)
+            
+        } else {
+            guard let rightNode = node.rightNode else{
+                throw MyDictionaryErrors.itemIsNotExist
+            }
+            try findItemToRemove(node:rightNode, value: value)
+        }
+    }
+    
+    func removeItemandReturnItemForExchange(node:SetNode<V>) -> SetNode<V>?{
+        if node.leftNode == nil && node.rightNode == nil{
+            return nil
+        } else if node.leftNode != nil && node.rightNode == nil{
+            return node.leftNode
+        } else if node.rightNode != nil && node.rightNode?.leftNode == nil{
+            node.rightNode?.leftNode = node.leftNode
+            return node.rightNode
+        } else{
+            var currentLeftChild = node.rightNode?.leftNode
+            var fatherOfLeftChild = node.rightNode
+            while currentLeftChild?.leftNode != nil{
+                fatherOfLeftChild = currentLeftChild
+                currentLeftChild = currentLeftChild?.leftNode
+            }
+            if currentLeftChild?.rightNode != nil{
+                fatherOfLeftChild?.leftNode = currentLeftChild?.rightNode
+            }
+            return currentLeftChild
+        }
+    }
+    
+    //value is exist
+    //
+    func valueIsExist(value:V) -> Bool{
+        guard let headNode = head else{
+            return false
+        }
+        
+        do {
+            let _ = try getBranchValue(node: headNode, value: value)
+        } catch {
+            return false
+        }
+        
+        return true
+    }
+    
+    //description
+    //
+    var description: String{
+        guard let headNode = head else{
+            return "isEmpty"
+        }
+        return getDescription(node:headNode)
+    }
+    
+    func getDescription(node:SetNode<V>) -> String{
+        if let nodeLeftValue = node.leftNode{
+            var globalValueString = getDescription(node: nodeLeftValue) + "\(node.value) "
+            if let nodeRightValue = node.rightNode{
+                globalValueString += getDescription(node: nodeRightValue)
+            }
+            return globalValueString
+            
+        } else {
+            var rightValueString = ""
+            if let nodeRightValue = node.rightNode{
+                rightValueString = getDescription(node: nodeRightValue)
+            }
+            return "\(node.value) " + rightValueString
+        }
+    }
+}
 
 
 
