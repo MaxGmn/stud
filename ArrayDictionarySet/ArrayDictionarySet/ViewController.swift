@@ -63,13 +63,13 @@ class ViewController: UIViewController {
         }
         catch {print("Error")}
         
-        print(set.valueIsExist(value: 75))
+        print(set.valueExists(value: 75))
         
         do {try set.remove(value: 75)}
         catch {print("Error")}
         print(set)
         
-        print(set.valueIsExist(value: 75))
+        print(set.valueExists(value: 75))
     }
 }
 
@@ -396,9 +396,9 @@ class MySet<V:Comparable>: CustomStringConvertible{
         }
     }
     
-    //value is exist
+    //value exists
     //
-    func valueIsExist(value:V) -> Bool{
+    func valueExists(value:V) -> Bool{
         guard let headNode = head else{
             return false
         }
