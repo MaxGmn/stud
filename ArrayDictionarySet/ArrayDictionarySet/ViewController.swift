@@ -511,12 +511,7 @@ class MyHashDictionary<K:Hashable,V>: CustomStringConvertible{
     }
     
     func getHashCode(key:K) -> Int{
-        let hashValue = abs(key.hashValue)
-        if itemsArray.count != 0 && hashValue > itemsArray.count{
-            return hashValue % itemsArray.count
-        }
-        
-        return hashValue
+        return abs(key.hashValue) % itemsArray.count
     }
     
     var description: String {
