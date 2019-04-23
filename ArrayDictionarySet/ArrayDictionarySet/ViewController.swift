@@ -82,16 +82,11 @@ class ViewController: UIViewController {
         hash.add(key: "C", value: "C")
         print(hash)
         
-        do {
-            let item = try hash.getItem(key: "B")
-            print(item)
-        }
-        catch {print("Error")}
+
+        print(hash.getItem(key: "B") as Any)
         
-        do {try hash.remove(key: "A")}
-        catch {print("Error")}
-        print(hash)
-        
+        hash.remove(key: "A")
+        print(hash)        
     }
 }
 
@@ -488,26 +483,23 @@ class MyHashDictionary<K:Hashable,V>: CustomStringConvertible{
         let newNode = HashDictionaryNode(key: key, value: value, hash: newItemsHash)
         
         itemsArray[newItemsHash] = newNode
+        increaseArraySize()
     }
     
-    func remove(key:K) throws{
-        let remoweItemsHash = getHashCode(key: key)
+    func increaseArraySize(){
+        let subArray = itemsArray.filter{$0 != nil}
         
-        guard let _ = itemsArray[remoweItemsHash] else{
-            throw MyDictionaryErrors.itemIsNotExist
+        if Double(subArray.count) / Double(itemsArray.count) > 0.6 {
+            itemsArray += Array.init(repeating: nil, count: 1000)
         }
-        
-        itemsArray.remove(at: remoweItemsHash)
     }
     
-    func getItem(key:K) throws-> V{
-        let neededItemsHash = getHashCode(key: key)
-        
-        guard let neededItem = itemsArray[neededItemsHash] else{
-            throw MyDictionaryErrors.itemIsNotExist
-        }
-        
-        return neededItem.value
+    func remove(key:K) {
+        itemsArray[getHashCode(key: key)] = nil
+    }
+    
+    func getItem(key:K) -> V?{
+        return itemsArray[getHashCode(key: key)]?.value
     }
     
     func getHashCode(key:K) -> Int{
