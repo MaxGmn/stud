@@ -15,9 +15,9 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         firstTask();
-        
+
         print("MyDictionary:")
-        
+
         let dict = MyDictionary<Int, String>()
         dict.add(key: 100, value: "100")
         dict.add(key: 50, value: "50")
@@ -40,36 +40,53 @@ class ViewController: UIViewController {
         do {try dict.remove(key: 75)}
         catch {print("Error")}
         print(dict)
-        
+
 
         print("\nMySet:")
-        
+
         let set = MySet<Int>()
         set.add(value: 100)
         set.add(value: 50)
         set.add(value: 75)
         set.add(value: 150)
         print(set)
-        
+
         do {
             let res = try set.getValue(value: 150)
             print(res)
         }
         catch {print("Error")}
-        
+
         do {
             let res2 = try set.getValue(value: 500)
             print(res2)
         }
         catch {print("Error")}
-        
+
         print(set.valueExists(value: 75))
-        
+
         do {try set.remove(value: 75)}
         catch {print("Error")}
         print(set)
-        
+
         print(set.valueExists(value: 75))
+        
+        print("\nMyHash:")
+        let hash = MyHashDictionary<String, String>()
+        hash.add(key: "A", value: "A")
+        print(hash)
+        hash.add(key: "C", value: "C")
+        print(hash)
+        hash.add(key: "B", value: "B")
+        print(hash)
+        hash.add(key: "C", value: "C")
+        print(hash)
+        
+
+        print(hash.getItem(key: "B") as Any)
+        
+        hash.remove(key: "A")
+        print(hash)        
     }
 }
 
@@ -440,6 +457,70 @@ class MySet<V:Comparable>: CustomStringConvertible{
 }
 
 
+class HashDictionaryNode<K,V>{
+    var key:K
+    var value:V
+    var hash:Int
+    
+    init(key:K, value:V, hash:Int){
+        self.key = key
+        self.value = value
+        self.hash = hash
+    }
+}
 
+class MyHashDictionary<K:Hashable,V>: CustomStringConvertible{
+    
+    private var itemsArray = [HashDictionaryNode<K,V>?]()
+    
+    init(){
+        itemsArray = Array.init(repeating: nil, count: 1000)
+    }
+    
+    func add(key:K, value:V){
+        
+        let newItemsHash = getHashCode(key: key)
+        let newNode = HashDictionaryNode(key: key, value: value, hash: newItemsHash)
+        
+        itemsArray[newItemsHash] = newNode
+        increaseArraySize()
+    }
+    
+    func increaseArraySize(){
+        let subArray = itemsArray.filter{$0 != nil}
+        
+        if Double(subArray.count) / Double(itemsArray.count) > 0.6 {
+            itemsArray += Array.init(repeating: nil, count: 1000)
+        }
+    }
+    
+    func remove(key:K) {
+        itemsArray[getHashCode(key: key)] = nil
+    }
+    
+    func getItem(key:K) -> V?{
+        return itemsArray[getHashCode(key: key)]?.value
+    }
+    
+    func getHashCode(key:K) -> Int{
+        return abs(key.hashValue) % itemsArray.count
+    }
+    
+    var description: String {
+        if itemsArray.count == 0{
+            return "Error"
+        }
+        
+        var resultString = ""
+        for index in 0..<itemsArray.count {
+            if let notNilItem = itemsArray[index] {
+                resultString += "\(notNilItem.hash)" + ":" + "\(notNilItem.value) "
+            }
+        }
+        
+        return resultString
+    }
+    
+}
 
 
