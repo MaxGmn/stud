@@ -19,14 +19,14 @@ class DescriptionViewController: UIViewController {
         descriptionText += "Description: " + dataStructures[index].description + "\n\n"
         descriptionText += "Addition: " + dataStructures[index].add + "\n\n"
         descriptionText += "Reading: " + dataStructures[index].read + "\n\n"
-        descriptionText += "Remowe: " + dataStructures[index].remowe
+        descriptionText += "Remove: " + dataStructures[index].remove
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         dataStructureDescription.text = descriptionText
-        dataStructureDescription.textAlignment = .natural
+        dataStructureDescription.textAlignment = .justified
         dataStructureDescription.numberOfLines = 0
         dataStructureDescription.sizeToFit()
     }
