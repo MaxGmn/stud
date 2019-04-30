@@ -21,70 +21,111 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    @IBOutlet weak var textField: UILabel!
+
+    
+    @IBOutlet weak var label: UILabel!
+    
+    @IBOutlet weak var buttonAC: UIButton!
+    
+    @IBOutlet weak var buttonInvert: UIButton!
+    
+    @IBOutlet weak var buttonPercent: UIButton!
+    
+    @IBOutlet weak var buttonDiv: UIButton!
+    
+    @IBOutlet weak var buttonMult: UIButton!
+    
+    @IBOutlet weak var buttonDiff: UIButton!
+    
+    @IBOutlet weak var buttonAdd: UIButton!
+    
+    @IBOutlet weak var buttonEqual: UIButton!
+    
+    @IBOutlet weak var buttonPoint: UIButton!
+    
+    @IBOutlet weak var buttonZero: UIButton!
+    
+    @IBOutlet weak var buttonOne: UIButton!
+    
+    @IBOutlet weak var buttonTwo: UIButton!
+    
+    @IBOutlet weak var buttonThree: UIButton!
+    
+    @IBOutlet weak var buttonFour: UIButton!
+    
+    @IBOutlet weak var buttonFive: UIButton!
+    
+    @IBOutlet weak var buttonSix: UIButton!
+    
+    @IBOutlet weak var buttonSeven: UIButton!
+    
+    @IBOutlet weak var buttonEight: UIButton!
+    
+    @IBOutlet weak var buttonNine: UIButton!
+    
     
     @IBAction func buttonsOnAction(_ sender: Any) {
         let button = sender as! UIButton
         
-        if error && button.restorationIdentifier != "buttonAC"{
+        if error && button != buttonAC{
             return
         }
         
-        switch button.restorationIdentifier {
-        case "buttonAC":
+        switch button {
+        case buttonAC:
             result = 0.0
-            textField.text = "0"
+            label.text = "0"
             pointInUse = false
             currentfuncType = ArithmeticFunctions.none
             error = false
             isResult = true
             
-        case "buttonInvert":
-            if textField.text != "0" {
-                if textField.text!.hasPrefix("-"){
-                    textField.text?.removeFirst()
+        case buttonInvert:
+            if label.text != "0" {
+                if label.text!.hasPrefix("-"){
+                    label.text?.removeFirst()
                 } else {
-                    textField.text = "-" + textField.text!
+                    label.text = "-" + label.text!
                 }
             }
             
-        case "buttonPoint":
+        case buttonPoint:
             if !pointInUse {
-                textField.text = textField.text! + "."
+                label.text = label.text! + "."
                 pointInUse = true
             }
             
-        case "buttonPercent":
-            textField.text = "\(Double(textField.text!)! / 100)"
-        case "buttonDiv":
+        case buttonPercent:
+            label.text = "\(Double(label.text!)! / 100)"
+        case buttonDiv:
             doArithmeticFunction(funcType: ArithmeticFunctions.division)
-        case "buttonMult":
+        case buttonMult:
             doArithmeticFunction(funcType: ArithmeticFunctions.multiplication)
-        case "buttonDiff":
+        case buttonDiff:
             doArithmeticFunction(funcType: ArithmeticFunctions.subtraction)
-        case "buttonAdd":
+        case buttonAdd:
             doArithmeticFunction(funcType: ArithmeticFunctions.addition)
-        case "buttonEqual":
+        case buttonEqual:
             doArithmeticFunction(funcType: ArithmeticFunctions.none)
-        case "button0":
+        case buttonZero:
             changeTextFieldContent("0")
-        case "button1":
+        case buttonOne:
             changeTextFieldContent("1")
-        case "button2":
+        case buttonTwo:
             changeTextFieldContent("2")
-        case "button3":
+        case buttonThree:
             changeTextFieldContent("3")
-        case "button4":
+        case buttonFour:
             changeTextFieldContent("4")
-        case "button5":
+        case buttonFive:
             changeTextFieldContent("5")
-        case "button6":
+        case buttonSix:
             changeTextFieldContent("6")
-        case "button7":
+        case buttonSeven:
             changeTextFieldContent("7")
-        case "button8":
+        case buttonEight:
             changeTextFieldContent("8")
-        case "button9":
+        case buttonNine:
             changeTextFieldContent("9")
         default:
             print("Undefined")
@@ -92,14 +133,14 @@ class ViewController: UIViewController {
     }
     
     func changeTextFieldContent(_ number: String){
-        if isResult { textField.text = "0" }
-        textField.text = textField.text == "0" ? number : textField.text! + number
+        if isResult { label.text = "0" }
+        label.text = label.text == "0" ? number : label.text! + number
         isResult = false
     }
     
     func doArithmeticFunction(funcType: ArithmeticFunctions){
         
-        let currentNumber = Double(textField.text!)!
+        let currentNumber = Double(label.text!)!
         
         if currentfuncType == ArithmeticFunctions.none {
             result = currentNumber
@@ -114,7 +155,7 @@ class ViewController: UIViewController {
                 result *= currentNumber
             case .division:
                 if currentNumber == 0.0{
-                    textField.text = "ERROR"
+                    label.text = "ERROR"
                     error = true
                     return
                 } else {
@@ -133,9 +174,9 @@ class ViewController: UIViewController {
     
     func getReasult(){
         if result.truncatingRemainder(dividingBy: 1) == 0 {
-            textField.text = "\(Int(result))"
+            label.text = "\(Int(result))"
         } else {
-            textField.text = "\(result)"
+            label.text = "\(result)"
         }
         
         currentfuncType = ArithmeticFunctions.none

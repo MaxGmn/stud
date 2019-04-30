@@ -324,7 +324,26 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="textField" destination="Lra-e1-HKA" id="lZQ-vY-2Bm"/>
+                        <outlet property="buttonAC" destination="CbY-Yo-DXs" id="8mh-bS-XYc"/>
+                        <outlet property="buttonAdd" destination="ysc-e0-Xtp" id="VMJ-dS-tUG"/>
+                        <outlet property="buttonDiff" destination="hAg-y8-aKj" id="Zug-WM-SfW"/>
+                        <outlet property="buttonDiv" destination="hc5-rZ-ncc" id="Pbb-fc-tbt"/>
+                        <outlet property="buttonEight" destination="bjQ-cm-4Xb" id="YDO-cs-dVY"/>
+                        <outlet property="buttonEqual" destination="TVd-O0-oV3" id="Y0K-aY-ggi"/>
+                        <outlet property="buttonFive" destination="OUO-9b-6ju" id="Qoa-cq-Vqk"/>
+                        <outlet property="buttonFour" destination="SEd-dJ-jP3" id="gR1-YS-1da"/>
+                        <outlet property="buttonInvert" destination="Wff-7O-X3I" id="Ruu-zl-eaZ"/>
+                        <outlet property="buttonMult" destination="q6R-il-VId" id="asD-6f-qGj"/>
+                        <outlet property="buttonNine" destination="8KN-YW-hps" id="MEi-ti-ePy"/>
+                        <outlet property="buttonOne" destination="wPM-95-Tub" id="xjd-pK-ZnE"/>
+                        <outlet property="buttonPercent" destination="T9h-f4-rIa" id="yGL-Qf-GKu"/>
+                        <outlet property="buttonPoint" destination="XXi-Kd-nva" id="eUB-nh-X4C"/>
+                        <outlet property="buttonSeven" destination="ejw-ma-do3" id="e0t-qv-0Ac"/>
+                        <outlet property="buttonSix" destination="MBf-9I-BMt" id="baq-9V-dIa"/>
+                        <outlet property="buttonThree" destination="4pf-UQ-c5p" id="z9C-nc-9dg"/>
+                        <outlet property="buttonTwo" destination="hfR-lw-Lfj" id="iNX-BE-qJM"/>
+                        <outlet property="buttonZero" destination="dda-FC-4AB" id="p1c-Mz-IOh"/>
+                        <outlet property="label" destination="Lra-e1-HKA" id="d8l-xI-T0b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
