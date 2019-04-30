@@ -11,19 +11,20 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet weak var mainTable: UITableView!
-    
-    let dataStructures = ["Stack", "Queue", "Array", "Set", "Dictionary", "HashTable"]
-    
-    
- 
+        
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDescription"{
+            if let indexRow = mainTable.indexPathForSelectedRow {
+                let destinationController = segue.destination as! DescriptionViewController
+                destinationController.createDescription(at: indexRow.row)
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
-    
-
 }
 
 extension ViewController: UITableViewDataSource{
@@ -33,9 +34,8 @@ extension ViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let currentCell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath)
-        
-        currentCell.textLabel?.text = dataStructures[indexPath.row]
+        let currentCell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath)        
+        currentCell.textLabel?.text = dataStructures[indexPath.row].title
         
         return currentCell
     }
