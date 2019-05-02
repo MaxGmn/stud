@@ -23,7 +23,11 @@
                                 <segments>
                                     <segment title="Bubble"/>
                                     <segment title="Insertion"/>
+                                    <segment title="Merge"/>
                                 </segments>
+                                <connections>
+                                    <action selector="changeSortType:" destination="BYZ-38-t0r" eventType="valueChanged" id="qQx-3i-ZLx"/>
+                                </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bTI-JM-kKp">
                                 <rect key="frame" x="20" y="821" width="374" height="40"/>
@@ -35,12 +39,12 @@
                                     <action selector="nextOnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3HU-Ic-Ob8"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1Rt-De-Lot">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="1Rt-De-Lot">
                                 <rect key="frame" x="20" y="79" width="374" height="734"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellID" id="bHz-wb-tVP">
-                                        <rect key="frame" x="0.0" y="28" width="374" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="374" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bHz-wb-tVP" id="Rc4-ke-xtM">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
