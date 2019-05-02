@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     var result = 0.0
     var pointInUse = false
-    var currentfuncType = ArithmeticFunctions.none
+    var currentFuncType = ArithmeticFunctions.none
     var error = false
     var isResult = true
     
@@ -76,7 +76,7 @@ class ViewController: UIViewController {
             result = 0.0
             label.text = "0"
             pointInUse = false
-            currentfuncType = ArithmeticFunctions.none
+            currentFuncType = ArithmeticFunctions.none
             error = false
             isResult = true
             
@@ -142,11 +142,11 @@ class ViewController: UIViewController {
         
         let currentNumber = Double(label.text!)!
         
-        if currentfuncType == ArithmeticFunctions.none {
+        if currentFuncType == ArithmeticFunctions.none {
             result = currentNumber
             
         } else if !isResult{
-            switch currentfuncType {
+            switch currentFuncType {
             case .addition:
                 result += currentNumber
             case .subtraction:
@@ -169,7 +169,7 @@ class ViewController: UIViewController {
         }
         
         isResult = true
-        currentfuncType = funcType
+        currentFuncType = funcType
     }
     
     func getReasult(){
@@ -179,7 +179,7 @@ class ViewController: UIViewController {
             label.text = "\(result)"
         }
         
-        currentfuncType = ArithmeticFunctions.none
+        currentFuncType = ArithmeticFunctions.none
     }   
 }
 
