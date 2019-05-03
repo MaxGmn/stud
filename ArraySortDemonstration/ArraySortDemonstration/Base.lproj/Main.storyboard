@@ -17,12 +17,70 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="TrI-f2-xmm">
+                                <rect key="frame" x="20" y="44" width="374" height="29"/>
+                                <segments>
+                                    <segment title="Bubble"/>
+                                    <segment title="Insertion"/>
+                                    <segment title="Merge"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeSortType:" destination="BYZ-38-t0r" eventType="valueChanged" id="qQx-3i-ZLx"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bTI-JM-kKp">
+                                <rect key="frame" x="20" y="821" width="374" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="whV-WH-otZ"/>
+                                </constraints>
+                                <state key="normal" title="Next"/>
+                                <connections>
+                                    <action selector="nextOnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3HU-Ic-Ob8"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="1Rt-De-Lot">
+                                <rect key="frame" x="20" y="79" width="374" height="734"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellID" id="bHz-wb-tVP">
+                                        <rect key="frame" x="0.0" y="55.5" width="374" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bHz-wb-tVP" id="Rc4-ke-xtM">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="k3g-Ua-083"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="FdL-YH-mqM"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="TrI-f2-xmm" secondAttribute="trailing" constant="20" id="5A0-Sc-CH5"/>
+                            <constraint firstItem="TrI-f2-xmm" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="5S1-7Z-6De"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="bTI-JM-kKp" secondAttribute="bottom" constant="1" id="6mM-cA-v5o"/>
+                            <constraint firstItem="bTI-JM-kKp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="HtB-Hv-roc"/>
+                            <constraint firstItem="TrI-f2-xmm" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="S9V-vd-f8X"/>
+                            <constraint firstItem="bTI-JM-kKp" firstAttribute="top" secondItem="1Rt-De-Lot" secondAttribute="bottom" constant="8" id="fY1-G3-DUr"/>
+                            <constraint firstItem="1Rt-De-Lot" firstAttribute="top" secondItem="TrI-f2-xmm" secondAttribute="bottom" constant="7" id="oXu-bV-2ah"/>
+                            <constraint firstItem="1Rt-De-Lot" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="pnb-1C-Kev"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bTI-JM-kKp" secondAttribute="trailing" constant="20" id="xe0-D3-Vj7"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1Rt-De-Lot" secondAttribute="trailing" constant="20" id="z5d-OH-3mB"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="sortTypeSwitcher" destination="TrI-f2-xmm" id="Bgb-uI-JC8"/>
+                        <outlet property="tableView" destination="1Rt-De-Lot" id="SCy-dw-GqH"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="131.8840579710145" y="138.61607142857142"/>
         </scene>
     </scenes>
 </document>
