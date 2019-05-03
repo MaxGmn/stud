@@ -41,6 +41,7 @@ class ViewController: UIViewController {
     
     @IBAction func changeSortType(_ sender: Any) {
         arrayForSort = [arrayFilling()]
+        arrayRebuilding = false
         tableView.reloadData()
     }
     
@@ -56,62 +57,98 @@ class ViewController: UIViewController {
         let tempArray = arrayForSort
         arrayForSort.removeAll()
         
-        if !arrayRebuilding {
-            for insideArray in tempArray{
+        tableView.beginUpdates()
+        
+        if !arrayRebuilding {            
+            for (index, insideArray) in tempArray.enumerated(){
                 if insideArray.count == 1 {
                     arrayForSort.append(insideArray)
                     continue
                 }
+
                 let middle = insideArray.count / 2
                 arrayForSort.append([Int](insideArray[0...middle-1]))
                 arrayForSort.append([Int](insideArray[middle...insideArray.count-1]))
+
+                var indexPathArray = [IndexPath]()
+                for i in middle..<insideArray.count {
+                    indexPathArray.append(IndexPath(row: i, section: index))
+                }
                 
+                tableView.deleteRows(at: indexPathArray, with: .automatic)
+                tableView.insertSections(IndexSet(integer: arrayForSort.count-1), with: .automatic)
+
                 arrayRebuilding = arrayForSort.count == 10
             }
             
         } else {
+            var tableCounter = 0
             for i in stride(from: 0, to: tempArray.count, by: 2){
+
+                var resultArray = [Int]()
+                var leftArray = [Int]()
                 
                 if i == tempArray.count - 1 {
-                    arrayForSort.append(tempArray[i])
-                    continue
-                }
-                
-                let leftArray = tempArray[i]
-                let rightArray = tempArray[i+1]
-                
-                var i = 0
-                var j = 0
-                var resultArray = [Int]()
-                
-                while leftArray.count > i && rightArray.count > j{
-                    if leftArray[i] <= rightArray[j]{
-                        resultArray.append(leftArray[i])
-                        i += 1
-                    } else {
-                        resultArray.append(rightArray[j])
-                        j += 1
+                    leftArray = tempArray[i-1]
+                    resultArray = tempArray[i]
+                    
+                } else {
+                    leftArray = tempArray[i]
+                    let rightArray = tempArray[i+1]
+                    
+                    var x = 0
+                    var y = 0
+                    
+                    
+                    while leftArray.count > x && rightArray.count > y{
+                        if leftArray[x] <= rightArray[y]{
+                            resultArray.append(leftArray[x])
+                            x += 1
+                        } else {
+                            resultArray.append(rightArray[y])
+                            y += 1
+                        }
+                    }
+                    
+                    if x < leftArray.count{
+                        resultArray += leftArray[x...leftArray.count - 1]
+                    }
+                    
+                    if y < rightArray.count{
+                        resultArray += rightArray[y...rightArray.count - 1]
                     }
                 }
                 
-                if i < leftArray.count{
-                    resultArray += leftArray[i...leftArray.count - 1]
-                }
-                
-                if j < rightArray.count{
-                    resultArray += rightArray[j...rightArray.count - 1]
-                }
-                
                 arrayForSort.append(resultArray)
+                
+                var indexArrayForDelete = [IndexPath]()
+                for counter in 0..<leftArray.count {
+                    indexArrayForDelete.append(IndexPath(row: counter, section: tableCounter))
+                }
+                
+                tableView.deleteRows(at: indexArrayForDelete, with: .automatic)
+                
+                var indexArrayForInsertion = [IndexPath]()
+                for counter in 0..<resultArray.count {
+                    indexArrayForInsertion.append(IndexPath(row: counter, section: tableCounter))
+                }
+                
+                tableView.insertRows(at: indexArrayForInsertion, with: .automatic)
+                
+                tableCounter += 1
+            }
+            if tempArray.count > arrayForSort.count {
+                tableView.deleteSections(IndexSet(integersIn: arrayForSort.count..<tempArray.count), with: .automatic)
             }
         }
-        
-        tableView.reloadData()
+        tableView.endUpdates()
     }
     
 }
 
 extension ViewController: UITableViewDataSource{
+    
+   
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return arrayForSort.count
