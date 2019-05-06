@@ -165,7 +165,34 @@ extension ViewController: UITableViewDataSource{
         return currentCell
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
     
+}
+
+extension ViewController: UITableViewDelegate{
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        let update = UITableViewRowAction(style: .default, title: "Update") {(action, indexPath) in
+            let alert = UIAlertController(title: "Всё пропало!", message: "Нифига не работает!", preferredStyle: .alert)            
+            let action = UIAlertAction(title: "Ок, понятно", style: .cancel) { (action) in }
+            
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        let remove = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
+            self.arrayForSort[indexPath.section].remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .middle)
+        }
+        
+        remove.backgroundColor = .red
+        update.backgroundColor = .green
+        
+        return [remove, update]
+    }
 }
 
 
