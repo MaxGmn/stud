@@ -22,7 +22,8 @@ class ViewController: UIViewController {
     }
     
 
-    
+    //[OL]: I'd recommend to store operand in separate variable and not take it from label
+    //Label is just a view to display operand value
     @IBOutlet weak var label: UILabel!
     
     @IBOutlet weak var buttonAC: UIButton!
@@ -67,6 +68,7 @@ class ViewController: UIViewController {
     @IBAction func buttonsOnAction(_ sender: Any) {
         let button = sender as! UIButton
         
+        //[OL]: Better use `guard`
         if error && button != buttonAC{
             return
         }
@@ -76,6 +78,7 @@ class ViewController: UIViewController {
             result = 0.0
             label.text = "0"
             pointInUse = false
+            //[OL]: You may skip ArithmeticFunctions as type is easy to follow by compiler
             currentFuncType = ArithmeticFunctions.none
             error = false
             isResult = true
@@ -98,6 +101,22 @@ class ViewController: UIViewController {
         case buttonPercent:
             label.text = "\(Double(label.text!)! / 100)"
         case buttonDiv:
+            //[OL]: You may skip ArithmeticFunctions as type is easy to follow by compiler
+            //And below
+            
+            //Copy-paste is bad :)
+            //I'd suggest to refactor code as follows:
+            //enum ButtonCheck {
+            //  case operation(ArithmeticFunctions)
+            //  case digit(Int)
+            //  case other //may be different cases for other types
+            //}
+            //
+            // func checkButton(_ button: UIButton) -> ButtonCheck {
+            //  ...
+            //}
+            //
+            
             doArithmeticFunction(funcType: ArithmeticFunctions.division)
         case buttonMult:
             doArithmeticFunction(funcType: ArithmeticFunctions.multiplication)
@@ -172,6 +191,7 @@ class ViewController: UIViewController {
         currentFuncType = funcType
     }
     
+    //[OL]: typo
     func getReasult(){
         if result.truncatingRemainder(dividingBy: 1) == 0 {
             label.text = "\(Int(result))"
