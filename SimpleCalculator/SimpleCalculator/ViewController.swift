@@ -10,20 +10,28 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    var currentNumberIntPart = 0
+    var currentNumberDecimalPart = 0
+    var decimalPartDepth = 0
+    
     var result = 0.0
+    
     var pointInUse = false
-    var currentFuncType = ArithmeticFunctions.none
     var error = false
     var isResult = true
+    var isNegative = false
+    
+    var currentFuncType = ArithmeticFunctions.none
+    
+    var buttons = Dictionary<UIButton, ButtonCheck>()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        buttons = fillMyButtonsDictionary()
     }
     
-
-    //[OL]: I'd recommend to store operand in separate variable and not take it from label
-    //Label is just a view to display operand value
     @IBOutlet weak var label: UILabel!
     
     @IBOutlet weak var buttonAC: UIButton!
@@ -68,103 +76,62 @@ class ViewController: UIViewController {
     @IBAction func buttonsOnAction(_ sender: Any) {
         let button = sender as! UIButton
         
-        //[OL]: Better use `guard`
-        if error && button != buttonAC{
+        guard !error || button == buttonAC else {
             return
         }
         
-        switch button {
-        case buttonAC:
-            result = 0.0
-            label.text = "0"
-            pointInUse = false
-            //[OL]: You may skip ArithmeticFunctions as type is easy to follow by compiler
-            currentFuncType = ArithmeticFunctions.none
-            error = false
-            isResult = true
-            
-        case buttonInvert:
-            if label.text != "0" {
-                if label.text!.hasPrefix("-"){
-                    label.text?.removeFirst()
-                } else {
-                    label.text = "-" + label.text!
-                }
-            }
-            
-        case buttonPoint:
-            if !pointInUse {
-                label.text = label.text! + "."
-                pointInUse = true
-            }
-            
-        case buttonPercent:
-            label.text = "\(Double(label.text!)! / 100)"
-        case buttonDiv:
-            //[OL]: You may skip ArithmeticFunctions as type is easy to follow by compiler
-            //And below
-            
-            //Copy-paste is bad :)
-            //I'd suggest to refactor code as follows:
-            //enum ButtonCheck {
-            //  case operation(ArithmeticFunctions)
-            //  case digit(Int)
-            //  case other //may be different cases for other types
-            //}
-            //
-            // func checkButton(_ button: UIButton) -> ButtonCheck {
-            //  ...
-            //}
-            //
-            
-            doArithmeticFunction(funcType: ArithmeticFunctions.division)
-        case buttonMult:
-            doArithmeticFunction(funcType: ArithmeticFunctions.multiplication)
-        case buttonDiff:
-            doArithmeticFunction(funcType: ArithmeticFunctions.subtraction)
-        case buttonAdd:
-            doArithmeticFunction(funcType: ArithmeticFunctions.addition)
-        case buttonEqual:
-            doArithmeticFunction(funcType: ArithmeticFunctions.none)
-        case buttonZero:
-            changeTextFieldContent("0")
-        case buttonOne:
-            changeTextFieldContent("1")
-        case buttonTwo:
-            changeTextFieldContent("2")
-        case buttonThree:
-            changeTextFieldContent("3")
-        case buttonFour:
-            changeTextFieldContent("4")
-        case buttonFive:
-            changeTextFieldContent("5")
-        case buttonSix:
-            changeTextFieldContent("6")
-        case buttonSeven:
-            changeTextFieldContent("7")
-        case buttonEight:
-            changeTextFieldContent("8")
-        case buttonNine:
-            changeTextFieldContent("9")
-        default:
-            print("Undefined")
+        guard let currentButton = buttons[button] else {
+            return
         }
-    }
-    
-    func changeTextFieldContent(_ number: String){
-        if isResult { label.text = "0" }
-        label.text = label.text == "0" ? number : label.text! + number
-        isResult = false
+        
+        switch currentButton {
+        case .clear:
+            setVariablesToDefaultValue()
+        case .invert:
+            if isResult {
+                result *= -1
+                getResult()
+            } else if currentNumberIntPart != 0 || currentNumberDecimalPart != 0 {
+                isNegative = !isNegative
+                setTextInLabel()
+            }
+        case .percent:
+            let addToDecimalPart = currentNumberIntPart % 100
+            currentNumberIntPart /= 100
+            currentNumberDecimalPart += addToDecimalPart * Int(pow(10, Double(decimalPartDepth)))
+            decimalPartDepth += 2
+            pointInUse = currentNumberDecimalPart > 0
+            setTextInLabel()
+        case .point:
+            pointInUse = true
+        case .operation(let arFunc):
+            doArithmeticFunction(funcType: arFunc)
+        case .digit(let number):
+            
+            if isResult {
+                currentNumberIntPart = 0
+                currentNumberDecimalPart = 0
+                decimalPartDepth = 0
+                isNegative = false
+                isResult = false
+                pointInUse = false
+            }
+            
+            if !pointInUse {
+                currentNumberIntPart = currentNumberIntPart * 10 + number
+            } else {
+                currentNumberDecimalPart = currentNumberDecimalPart * 10 + number
+                decimalPartDepth += 1
+            }
+            setTextInLabel()
+        }
     }
     
     func doArithmeticFunction(funcType: ArithmeticFunctions){
         
-        let currentNumber = Double(label.text!)!
+        let currentNumber = getCurrentNumber()
         
-        if currentFuncType == ArithmeticFunctions.none {
-            result = currentNumber
-            
-        } else if !isResult{
+        if !isResult{
             switch currentFuncType {
             case .addition:
                 result += currentNumber
@@ -180,27 +147,92 @@ class ViewController: UIViewController {
                 } else {
                     result /= currentNumber
                 }
-            default:
-                break
+            case .none:
+                result = currentNumber
             }
             
-            getReasult()
+            getResult()
         }
         
         isResult = true
         currentFuncType = funcType
     }
     
-    //[OL]: typo
-    func getReasult(){
+    func getResult(){
         if result.truncatingRemainder(dividingBy: 1) == 0 {
             label.text = "\(Int(result))"
         } else {
             label.text = "\(result)"
         }
+    }
+    
+    func setVariablesToDefaultValue(){
         
-        currentFuncType = ArithmeticFunctions.none
-    }   
+        currentNumberIntPart = 0
+        currentNumberDecimalPart = 0
+        decimalPartDepth = 0
+        
+        result = 0.0
+        
+        pointInUse = false
+        error = false
+        isResult = true
+        isNegative = false
+        
+        currentFuncType = .none
+        
+        setTextInLabel()
+    }
+    
+    func setTextInLabel() {
+        var resultText = ""
+        
+        if pointInUse {
+            resultText = "\(getCurrentNumber())"
+        } else {
+            resultText = isNegative ? "-" : ""
+            resultText += String(currentNumberIntPart)
+        }
+        
+        label.text = resultText
+    }
+    
+    func getCurrentNumber() -> Double {
+        return (Double(currentNumberIntPart) + Double(currentNumberDecimalPart) / pow(10, Double(decimalPartDepth))) * (isNegative ? -1 : 1)
+    }
+    
+    func fillMyButtonsDictionary() -> Dictionary<UIButton, ButtonCheck> {
+        let resultDictionary : [UIButton: ButtonCheck] = [buttonAC: .clear,
+                                                          buttonInvert: .invert,
+                                                          buttonPercent: .percent,
+                                                          buttonDiv: .operation(.division),
+                                                          buttonMult: .operation(.multiplication),
+                                                          buttonDiff: .operation(.subtraction),
+                                                          buttonAdd: .operation(.addition),
+                                                          buttonEqual: .operation(.none),
+                                                          buttonPoint: .point,
+                                                          buttonZero: .digit(0),
+                                                          buttonOne: .digit(1),
+                                                          buttonTwo: .digit(2),
+                                                          buttonThree: .digit(3),
+                                                          buttonFour: .digit(4),
+                                                          buttonFive: .digit(5),
+                                                          buttonSix: .digit(6),
+                                                          buttonSeven: .digit(7),
+                                                          buttonEight: .digit(8),
+                                                          buttonNine: .digit(9)]
+        return resultDictionary
+    }
+    
+}
+
+enum ButtonCheck {
+    case operation(ArithmeticFunctions)
+    case digit(Int)
+    case clear
+    case invert
+    case percent
+    case point
 }
 
 enum ArithmeticFunctions{
