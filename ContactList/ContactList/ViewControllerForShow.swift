@@ -29,9 +29,8 @@ class ViewControllerForShow: UIViewController {
         firstName.text = person.firstName
         lastName.text = person.lastName
         phoneNumber.text = person.phoneNumber
-        email.text = person.phoneNumber
-        
-//        imageArea.image = UIImage(
+        email.text = person.email
+        imageArea.image = UIImage(named: person.imagePath ?? "emptyAvatar")
     }
     
     func showPersonData(at index: Int){
