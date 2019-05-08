@@ -63,7 +63,6 @@
                                     <outlet property="cellContact" destination="TZK-wo-N54" id="bzJ-fe-adq"/>
                                     <outlet property="cellImage" destination="BUS-7T-LET" id="2hw-hC-weU"/>
                                     <outlet property="cellName" destination="c7A-4t-zT0" id="8e6-dt-aGD"/>
-                                    <segue destination="BYZ-38-t0r" kind="show" identifier="showTheContact" id="YYC-9o-dc8"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -99,7 +98,7 @@
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <state key="normal" title="Add contact"/>
                             <connections>
-                                <action selector="addContactButtonOnAction:" destination="gwA-ln-IfH" eventType="touchUpInside" id="I5v-YA-jUa"/>
+                                <segue destination="cAr-db-pbk" kind="show" identifier="addContact" id="Ssz-Q7-bFY"/>
                             </connections>
                         </button>
                     </subviews>
@@ -115,7 +114,7 @@
             </objects>
             <point key="canvasLocation" x="163.768115942029" y="143.97321428571428"/>
         </scene>
-        <!--Updating contact-->
+        <!--Update-->
         <scene sceneID="eqj-Wy-LgP">
             <objects>
                 <viewController storyboardIdentifier="ViewControllerForUpdate" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cAr-db-pbk" customClass="ViewControllerForUpdate" customModule="ContactList" customModuleProvider="target" sceneMemberID="viewController">
@@ -231,7 +230,7 @@
                         <viewLayoutGuide key="safeArea" id="wOu-m3-FuN"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Updating contact" id="nmH-C7-jmZ">
+                    <navigationItem key="navigationItem" title="Update" id="nmH-C7-jmZ">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="ZFj-8b-dsE">
                             <connections>
                                 <action selector="cancelAction:" destination="cAr-db-pbk" id="f85-fO-Wuh"/>
@@ -257,22 +256,22 @@
             </objects>
             <point key="canvasLocation" x="1060.8695652173915" y="420.53571428571428"/>
         </scene>
-        <!--View Controller For Show-->
+        <!--Title-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewControllerForShow" customModule="ContactList" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewControllerForShow" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="ViewControllerForShow" customModule="ContactList" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8ZA-6N-ioX">
-                                <rect key="frame" x="95" y="107" width="224" height="224"/>
+                                <rect key="frame" x="95" y="63" width="224" height="224"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="8ZA-6N-ioX" secondAttribute="height" id="I9u-SJ-Cvw"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FhX-Rh-kBl">
-                                <rect key="frame" x="20" y="380" width="80" height="21"/>
+                                <rect key="frame" x="20" y="336" width="80" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="PxN-ar-RBh"/>
                                     <constraint firstAttribute="height" constant="21" id="r11-3g-eag"/>
@@ -282,7 +281,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RZ1-Xm-cmQ">
-                                <rect key="frame" x="20" y="430" width="80" height="21"/>
+                                <rect key="frame" x="20" y="386" width="80" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="NRT-NE-7co"/>
                                 </constraints>
@@ -291,7 +290,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d7Y-u2-9xU">
-                                <rect key="frame" x="20" y="480" width="49" height="21"/>
+                                <rect key="frame" x="20" y="436" width="49" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="49" id="xoe-SC-QqW"/>
                                 </constraints>
@@ -300,7 +299,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E-mail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Buf-uL-eQJ">
-                                <rect key="frame" x="20" y="530" width="49" height="21"/>
+                                <rect key="frame" x="20" y="486" width="49" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="49" id="J6s-2O-jGs"/>
                                 </constraints>
@@ -309,7 +308,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gmv-Me-cYC">
-                                <rect key="frame" x="123" y="380" width="271" height="21"/>
+                                <rect key="frame" x="123" y="336" width="271" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="4uU-Au-7NV"/>
                                 </constraints>
@@ -318,7 +317,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7rq-we-xuZ">
-                                <rect key="frame" x="123" y="430" width="271" height="21"/>
+                                <rect key="frame" x="123" y="386" width="271" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Xtv-SK-vo5"/>
                                 </constraints>
@@ -327,7 +326,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LGo-ef-NYV">
-                                <rect key="frame" x="123" y="480" width="271" height="21"/>
+                                <rect key="frame" x="123" y="436" width="271" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="N0j-cz-bWZ"/>
                                 </constraints>
@@ -336,7 +335,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RT6-gP-9tD">
-                                <rect key="frame" x="123" y="530" width="271" height="21"/>
+                                <rect key="frame" x="123" y="486" width="271" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="lcf-oK-2L7"/>
                                 </constraints>
@@ -373,6 +372,18 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Title" id="QrU-LB-t1I">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="tkz-Oc-Wo3">
+                            <connections>
+                                <action selector="cancelOnAction:" destination="BYZ-38-t0r" id="5EY-dL-8bZ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="gd8-6W-yeI">
+                            <connections>
+                                <action selector="editOnAction:" destination="BYZ-38-t0r" id="A45-eI-XkY"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="email" destination="RT6-gP-9tD" id="z5D-cu-Ov6"/>
                         <outlet property="firstName" destination="gmv-Me-cYC" id="WzF-JX-UeC"/>
@@ -404,4 +415,7 @@
             <point key="canvasLocation" x="-746.37681159420299" y="143.97321428571428"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Ssz-Q7-bFY"/>
+    </inferredMetricsTieBreakers>
 </document>

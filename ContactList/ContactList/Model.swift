@@ -7,10 +7,7 @@
 //
 
 import Foundation
-
-//var personsArray = [Person]()
-
-var personsArray = fillPersons()
+import UIKit
 
 class Person: Equatable {
     
@@ -19,35 +16,26 @@ class Person: Equatable {
     var lastName: String?
     var phoneNumber : String?
     var email: String?
-    var imagePath: String?
+    var image: UIImage
     
-    init(firstName: String? = nil, lastName: String? = nil, phoneNumber: String? = nil, email: String? = nil, imagePath: String? = nil){
+    init(firstName: String? = "", lastName: String? = "", phoneNumber: String? = "", email: String? = "", image: UIImage? = nil){
         self.firstName = firstName
         self.lastName = lastName
         self.phoneNumber = phoneNumber
         self.email = email
-        self.imagePath = imagePath
+        self.image = image ?? UIImage(named: "emptyAvatar")!
     }
     
     func copy() -> Person{
-        return Person(firstName: self.firstName, lastName: self.lastName, phoneNumber: self.phoneNumber , email: self.email,imagePath: self.imagePath)
+        return Person(firstName: self.firstName, lastName: self.lastName, phoneNumber: self.phoneNumber, email: self.email, image: self.image)
     }
     
-    static func == (lhs: Person, rhs: Person) -> Bool {        
-        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.imagePath == rhs.imagePath
+    static func == (lhs: Person, rhs: Person) -> Bool {
+        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.image.isEqual(rhs.image) //lhs.image == rhs.image
     }
 }
 
-func fillPersons() -> [Person] {
-    
-    let firstPerson = Person(firstName: "James", lastName: "Bond", phoneNumber: "555-22-33", email: "jb@Gmail.com", imagePath: "emptyAvatar")
-    let secondPerson = Person(firstName: "Billy", email: "bill@Gmail.com", imagePath: "emptyAvatar")
-    let thirdPerson = Person(phoneNumber: "911", email: "hz@Gmail.com", imagePath: "emptyAvatar")
-    
-    return [firstPerson, secondPerson, thirdPerson]    
-}
-
-
-protocol Delegate {
-    func onRowAddition(newIndex: Int)
+protocol ContactListHandler {
+    func addNewPerson(person: Person)
+    func updatePresonInformation(person: Person, at index: Int)
 }

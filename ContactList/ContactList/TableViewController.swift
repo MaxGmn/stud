@@ -10,15 +10,10 @@ import UIKit
 
 class TableViewController: UITableViewController {
     
+    var personsArray = [Person]()
+    
     @IBOutlet var emptyListView: UIView!
-    
-    @IBAction func addContactButtonOnAction(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "ViewControllerForUpdate")
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
             tableView.backgroundView = emptyListView
@@ -35,7 +30,6 @@ class TableViewController: UITableViewController {
         if personsArray.count == 0 {
             tableView.separatorStyle = .none
             tableView.backgroundView?.isHidden = false
-//            tableView.backgroundView = emptyListView
         } else {
             tableView.separatorStyle = .singleLine
             tableView.backgroundView?.isHidden = true
@@ -44,12 +38,22 @@ class TableViewController: UITableViewController {
         return personsArray.count
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "ViewControllerForShow") as! ViewControllerForShow
+        controller.person = personsArray[indexPath.row]
+        controller.currentAttayIndex = indexPath.row
+        controller.handler = self
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TableViewCell
         let currentPerson = personsArray[indexPath.row]
+        
         var fullName: String = ""
         
-        cell.cellImage.image = UIImage(named: currentPerson.imagePath ?? "emptyAvatar")
+        cell.cellImage.image = currentPerson.image
         cell.cellContact.text = currentPerson.phoneNumber ?? currentPerson.email
         
         if let firstName = currentPerson.firstName {
@@ -67,31 +71,25 @@ class TableViewController: UITableViewController {
     
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "showTheContact":
-            if let indexPath = tableView.indexPathForSelectedRow{
-                let destinationController = segue.destination as! ViewControllerForShow
-                destinationController.showPersonData(at: indexPath.row)
-            }
-        case "addContact":
+        if segue.identifier == "addContact" {
             let destinationController = segue.destination as! ViewControllerForUpdate
-            destinationController.delegate = self
-            
-            if let indexPath = tableView.indexPathForSelectedRow{
-                destinationController.getPersonForUpdate(at: indexPath.row)
-            } else {
-                destinationController.getPersonForAddition(at: personsArray.count)
-            }
-        default:
-            break
-        }
-        
+            destinationController.handler = self
+            destinationController.createNewPerson()
+        }        
     }
 }
-extension TableViewController: Delegate {
+
+extension TableViewController: ContactListHandler {
     
-    func onRowAddition(newIndex: Int) {
-        let indexPath = IndexPath(row: newIndex, section: 0)
+    func addNewPerson(person: Person) {
+        personsArray.append(person)
+        let indexPath = IndexPath(row: personsArray.count-1, section: 0)
         tableView.insertRows(at: [indexPath], with: .automatic)
+    }
+    
+    func updatePresonInformation(person: Person, at index: Int) {
+        personsArray[index] = person
+        let indexPath = IndexPath(row: index, section: 0)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 }

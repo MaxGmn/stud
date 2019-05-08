@@ -26,29 +26,33 @@ class ViewControllerForUpdate: UIViewController {
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
     
-    var delegate: Delegate?
-    
-    var currentIndex = 0
     var currentPersonForEditing = Person()
-    
     var currentPersonCopy = Person()
     
+    var handler: ContactListHandler?
+    var callback: ((Person) -> Void)?
     
+    var changedArrayItemIndex: Int?
     
+    let picker = UIImagePickerController()
     
     @IBAction func cancelAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
     
-    
     @IBAction func saveAction(_ sender: Any) {
-        personsArray.insert(currentPersonCopy, at: currentIndex)
-        delegate?.onRowAddition(newIndex: currentIndex)
+        if let arrayIndex = changedArrayItemIndex {
+            handler?.updatePresonInformation(person: currentPersonCopy, at: arrayIndex)
+        } else {
+            handler?.addNewPerson(person: currentPersonCopy)
+        }
+        if let callback = callback {
+            callback(currentPersonCopy)
+        }
         navigationController?.popViewController(animated: true)
-    }
+    }    
     
-    
-    @IBAction func versionComparison(_ sender: Any) {
+    @IBAction func versionComparison(_ sender: Any?) {
         changeCurrentPersonCopy()
         saveButton.isEnabled = currentPersonForEditing != currentPersonCopy
     }
@@ -56,38 +60,79 @@ class ViewControllerForUpdate: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         currentPersonCopy = currentPersonForEditing.copy()
+        fillTextFields()
+        
+        picker.delegate = self
+        
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTap(tapGuestureRecognizer:)))
+        imageAreaTF.isUserInteractionEnabled = true
+        imageAreaTF.addGestureRecognizer(recognizer)
     }
     
-    func getPersonForUpdate(at index: Int) {
-        currentIndex = index
-        currentPersonForEditing = personsArray[currentIndex]
+    @objc func onImageTap (tapGuestureRecognizer: UITapGestureRecognizer) {
+        
+//        #if targetEnvironment(simulator)
+//            picker.allowsEditing = false
+//            picker.sourceType = .photoLibrary
+//            picker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+//            present(picker, animated: true, completion: nil)
+//        #else
+            let alertController = UIAlertController(title: "Choose image source", message: nil, preferredStyle: .actionSheet)
+            let galleryAction = UIAlertAction(title: "Gallery", style: .default){action in
+                self.picker.allowsEditing = false
+                self.picker.sourceType = .photoLibrary
+                self.picker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+                self.present(self.picker, animated: true, completion: nil)
+            }
+            let cameraAction = UIAlertAction(title: "Camera", style: .default){action in
+                self.picker.allowsEditing = false
+                self.picker.sourceType = .camera
+                self.picker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+                self.present(self.picker, animated: true, completion: nil)
+        }
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+            alertController.addAction(galleryAction)
+            alertController.addAction(cameraAction)
+            alertController.addAction(cancel)
+        
+            self.present(alertController, animated: true, completion: nil)
+//        #endif
     }
     
-    func getPersonForAddition(at index: Int) {
-        currentIndex = index
+    func createNewPerson(){
         currentPersonForEditing = Person()
     }
     
     func changeCurrentPersonCopy() {
-        currentPersonCopy.firstName = firstNameTF.text!.isEmpty ? nil : firstNameTF.text
-        currentPersonCopy.lastName = lastNameTF.text!.isEmpty ? nil : lastNameTF.text
-        currentPersonCopy.phoneNumber = phoneTF.text!.isEmpty ? nil : phoneTF.text
-        currentPersonCopy.email = emailTF.text!.isEmpty ? nil : emailTF.text
-//        currentPersonCopy.imagePath =
+        currentPersonCopy.firstName = firstNameTF.text
+        currentPersonCopy.lastName = lastNameTF.text
+        currentPersonCopy.phoneNumber = phoneTF.text
+        currentPersonCopy.email = emailTF.text
+        currentPersonCopy.image = imageAreaTF.image!
     }
     
-    
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func fillTextFields() {
+        firstNameTF.text = currentPersonCopy.firstName
+        lastNameTF.text = currentPersonCopy.lastName
+        phoneTF.text = currentPersonCopy.phoneNumber
+        emailTF.text = currentPersonCopy.email
+        imageAreaTF.image = currentPersonCopy.image
     }
-    */
+    
+}
 
+extension ViewControllerForUpdate: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let chosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        imageAreaTF.contentMode = .scaleAspectFit
+        imageAreaTF.image = chosenImage
+        dismiss(animated:true, completion: nil)
+        versionComparison(nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
 }
