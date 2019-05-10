@@ -14,7 +14,7 @@ class Person: Equatable {
     
     var firstName: String?
     var lastName: String?
-    var phoneNumber : String?
+    var phoneNumber: String?
     var email: String?
     var image: UIImage
     
@@ -38,4 +38,5 @@ class Person: Equatable {
 protocol ContactListHandler {
     func addNewPerson(person: Person)
     func updatePresonInformation(person: Person, at index: Int)
+    func deletePerson(at index: Int)
 }

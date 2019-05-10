@@ -74,11 +74,12 @@
                     <navigationItem key="navigationItem" id="BvG-kV-p6O">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="x4b-vX-bvU">
                             <connections>
-                                <segue destination="cAr-db-pbk" kind="show" identifier="addContact" id="HuE-WM-VEu"/>
+                                <action selector="addNewContact:" destination="gwA-ln-IfH" id="bbe-dQ-3Kj"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addNewContactButton" destination="x4b-vX-bvU" id="Upb-Oc-Nqw"/>
                         <outlet property="emptyListView" destination="eya-8e-N3J" id="T5m-2D-Rgr"/>
                     </connections>
                 </tableViewController>
@@ -98,7 +99,7 @@
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <state key="normal" title="Add contact"/>
                             <connections>
-                                <segue destination="cAr-db-pbk" kind="show" identifier="addContact" id="Ssz-Q7-bFY"/>
+                                <action selector="addNewContact:" destination="gwA-ln-IfH" eventType="touchUpInside" id="ClU-Hl-X4y"/>
                             </connections>
                         </button>
                     </subviews>
@@ -168,7 +169,7 @@
                                 <rect key="frame" x="128" y="374" width="266" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <textInputTraits key="textInputTraits" textContentType="name"/>
+                                <textInputTraits key="textInputTraits" keyboardType="alphabet" textContentType="name"/>
                                 <connections>
                                     <action selector="versionComparison:" destination="cAr-db-pbk" eventType="editingChanged" id="5Z9-lX-y74"/>
                                 </connections>
@@ -177,7 +178,7 @@
                                 <rect key="frame" x="128" y="424" width="266" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" textContentType="family-name"/>
+                                <textInputTraits key="textInputTraits" keyboardType="alphabet" textContentType="family-name"/>
                                 <connections>
                                     <action selector="versionComparison:" destination="cAr-db-pbk" eventType="editingChanged" id="2GI-tf-Iz8"/>
                                 </connections>
@@ -186,7 +187,7 @@
                                 <rect key="frame" x="128" y="474" width="266" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" textContentType="tel"/>
+                                <textInputTraits key="textInputTraits" keyboardType="phonePad" textContentType="tel"/>
                                 <connections>
                                     <action selector="versionComparison:" destination="cAr-db-pbk" eventType="editingChanged" id="GkM-Rj-tgc"/>
                                 </connections>
@@ -195,7 +196,7 @@
                                 <rect key="frame" x="128" y="524" width="266" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" textContentType="email"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                                 <connections>
                                     <action selector="versionComparison:" destination="cAr-db-pbk" eventType="editingChanged" id="pTZ-Ub-xFk"/>
                                 </connections>
@@ -236,11 +237,18 @@
                                 <action selector="cancelAction:" destination="cAr-db-pbk" id="f85-fO-Wuh"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Save" id="fRG-Xo-RQ2">
-                            <connections>
-                                <action selector="saveAction:" destination="cAr-db-pbk" id="qvl-Dn-eDp"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem enabled="NO" title="Save" id="fRG-Xo-RQ2">
+                                <connections>
+                                    <action selector="saveAction:" destination="cAr-db-pbk" id="qvl-Dn-eDp"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem enabled="NO" title="Remove" id="dBq-iS-Vzi">
+                                <connections>
+                                    <action selector="removeAction:" destination="cAr-db-pbk" id="lUV-Uv-QxS"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="emailTF" destination="z0W-LT-yjG" id="7od-DZ-Qkh"/>
@@ -249,12 +257,13 @@
                         <outlet property="imageAreaTF" destination="60x-3C-e6m" id="GqD-9N-AN9"/>
                         <outlet property="lastNameTF" destination="aLw-5l-8Mc" id="Hym-yY-bPH"/>
                         <outlet property="phoneTF" destination="K6Z-2t-b2k" id="2fo-PS-Uhk"/>
+                        <outlet property="removeButton" destination="dBq-iS-Vzi" id="d9n-pv-AKr"/>
                         <outlet property="saveButton" destination="fRG-Xo-RQ2" id="UH5-2w-7oK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UIv-k1-Tna" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1060.8695652173915" y="420.53571428571428"/>
+            <point key="canvasLocation" x="164" y="840"/>
         </scene>
         <!--Title-->
         <scene sceneID="tne-QT-ifu">
@@ -394,7 +403,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1044.9275362318842" y="-235.04464285714283"/>
+            <point key="canvasLocation" x="1039" y="144"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bvI-fr-3xh">
@@ -414,8 +423,23 @@
             </objects>
             <point key="canvasLocation" x="-746.37681159420299" y="143.97321428571428"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="CmR-nx-Bvv">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="VsE-FY-aky" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="zbR-Mh-myB">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="cAr-db-pbk" kind="relationship" relationship="rootViewController" id="cOC-kr-Csc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V69-2w-saf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-746" y="840"/>
+        </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="Ssz-Q7-bFY"/>
-    </inferredMetricsTieBreakers>
 </document>

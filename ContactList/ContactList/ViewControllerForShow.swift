@@ -38,18 +38,21 @@ class ViewControllerForShow: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func editOnAction(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "ViewControllerForUpdate") as! ViewControllerForUpdate
+    @IBAction func editOnAction(_ sender: Any) {        
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ViewControllerForUpdate") as! ViewControllerForUpdate
         controller.currentPersonForEditing = person
         controller.changedArrayItemIndex = currentAttayIndex
         controller.handler = handler
-        controller.callback = { [weak self] person in
+        controller.callback = { [weak self] person, isDeletion in
+            if isDeletion {
+                self?.navigationController?.popViewController(animated: true)
+            }
             self?.person = person
             self?.showPersonInformation()
         }
         
-        navigationController?.pushViewController(controller, animated: true)
+        let navController = UINavigationController(rootViewController: controller)
+        self.present(navController, animated:true, completion: nil)
     }
     
     func showPersonInformation() {
@@ -59,7 +62,5 @@ class ViewControllerForShow: UIViewController {
         email.text = person.email
         imageArea.image = person.image
     }
-    
-    
 }
 

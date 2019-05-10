@@ -13,10 +13,27 @@ class TableViewController: UITableViewController {
     var personsArray = [Person]()
     
     @IBOutlet var emptyListView: UIView!
+    
+    @IBOutlet weak var addNewContactButton: UIBarButtonItem!
+    var buttonCopy: UIBarButtonItem?
+    
+    @IBAction func addNewContact(_ sender: Any?) {
         
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ViewControllerForUpdate") as! ViewControllerForUpdate
+        controller.handler = self
+        controller.createNewPerson()
+        let navController = UINavigationController(rootViewController: controller)
+        self.present(navController, animated:true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-            tableView.backgroundView = emptyListView
+        tableView.backgroundView = emptyListView
+        buttonCopy = addNewContactButton
+    }
+    
+    func addContactButtonSetVisibility() {
+        navigationItem.setRightBarButton(!personsArray.isEmpty ? buttonCopy : nil, animated: true)
     }
 
     // MARK: - Table view data source
@@ -27,7 +44,7 @@ class TableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if personsArray.count == 0 {
+        if personsArray.isEmpty {
             tableView.separatorStyle = .none
             tableView.backgroundView?.isHidden = false
         } else {
@@ -35,6 +52,7 @@ class TableViewController: UITableViewController {
             tableView.backgroundView?.isHidden = true
         }
         
+        addContactButtonSetVisibility()
         return personsArray.count
     }
     
@@ -51,36 +69,15 @@ class TableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TableViewCell
         let currentPerson = personsArray[indexPath.row]
         
-        var fullName: String = ""
-        
         cell.cellImage.image = currentPerson.image
-        cell.cellContact.text = currentPerson.phoneNumber ?? currentPerson.email
-        
-        if let firstName = currentPerson.firstName {
-            fullName += firstName
-        }
-        
-        if let lastName = currentPerson.lastName {
-            fullName += (fullName.isEmpty ? "" : " ") + lastName
-        }
-        
-        cell.cellName.text = fullName
+        cell.cellName.text = currentPerson.firstName! + (currentPerson.firstName!.isEmpty ? "" : " ") + currentPerson.lastName!
+        cell.cellContact.text = !currentPerson.phoneNumber!.isEmpty ? currentPerson.phoneNumber : currentPerson.email
         
         return cell
-    }
-    
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "addContact" {
-            let destinationController = segue.destination as! ViewControllerForUpdate
-            destinationController.handler = self
-            destinationController.createNewPerson()
-        }        
     }
 }
 
 extension TableViewController: ContactListHandler {
-    
     func addNewPerson(person: Person) {
         personsArray.append(person)
         let indexPath = IndexPath(row: personsArray.count-1, section: 0)
@@ -91,5 +88,11 @@ extension TableViewController: ContactListHandler {
         personsArray[index] = person
         let indexPath = IndexPath(row: index, section: 0)
         tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
+    
+    func deletePerson(at index: Int) {
+        personsArray.remove(at: index)
+        let indexPath = IndexPath(row: index, section: 0)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
     }
 }
