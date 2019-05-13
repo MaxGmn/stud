@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+let emptyAvatar = UIImage(named: "emptyAvatar")
+
 class Person: Equatable {
     
     
@@ -23,7 +25,7 @@ class Person: Equatable {
         self.lastName = lastName
         self.phoneNumber = phoneNumber
         self.email = email
-        self.image = image ?? UIImage(named: "emptyAvatar")!
+        self.image = image ?? emptyAvatar!
     }
     
     func copy() -> Person{
@@ -31,7 +33,7 @@ class Person: Equatable {
     }
     
     static func == (lhs: Person, rhs: Person) -> Bool {
-        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.image.isEqual(rhs.image) //lhs.image == rhs.image
+        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.image.isEqual(rhs.image) 
     }
 }
 
@@ -41,7 +43,3 @@ protocol ContactListHandler {
     func deletePerson(at index: Int)
 }
 
-//func test() {
-//    let userDefaults = UserDefaults()
-//    UserDefaults.standard.
-//}

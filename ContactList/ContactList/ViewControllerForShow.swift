@@ -29,10 +29,8 @@ class ViewControllerForShow: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         showPersonInformation()
-    }
-    
+    }    
     
     @IBAction func cancelOnAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)

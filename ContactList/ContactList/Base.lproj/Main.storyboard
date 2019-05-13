@@ -72,6 +72,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="BvG-kV-p6O">
+                        <barButtonItem key="leftBarButtonItem" title="Edit" id="J7m-LG-2T1">
+                            <connections>
+                                <action selector="editTable:" destination="gwA-ln-IfH" id="lMp-ah-f1E"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="x4b-vX-bvU">
                             <connections>
                                 <action selector="addNewContact:" destination="gwA-ln-IfH" id="bbe-dQ-3Kj"/>

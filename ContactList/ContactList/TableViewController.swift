@@ -18,12 +18,16 @@ class TableViewController: UITableViewController {
     var buttonCopy: UIBarButtonItem?
     
     @IBAction func addNewContact(_ sender: Any?) {
-        
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "ViewControllerForUpdate") as! ViewControllerForUpdate
         controller.handler = self
         controller.createNewPerson()
         let navController = UINavigationController(rootViewController: controller)
-        self.present(navController, animated:true, completion: nil)
+        self.present(navController, animated: true, completion: nil)
+    }
+    
+    @IBAction func editTable(_ sender: Any) {
+        tableView.setEditing(!tableView.isEditing, animated: true)
+        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
     }
     
     override func viewDidLoad() {
@@ -77,6 +81,10 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        if tableView.isEditing {
+            return nil
+        }
+        
         let deleteAction = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
             self.deletePerson(at: indexPath.row)
         }
@@ -94,6 +102,18 @@ class TableViewController: UITableViewController {
         updateAction.backgroundColor = .orange
         
         return [deleteAction, updateAction]
+    }
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+        
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        personsArray.insert(personsArray.remove(at: sourceIndexPath.row), at: destinationIndexPath.row)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        self.deletePerson(at: indexPath.row)
     }
 }
 
