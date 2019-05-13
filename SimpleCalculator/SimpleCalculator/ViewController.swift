@@ -118,10 +118,14 @@ class ViewController: UIViewController {
             }
             
             if !pointInUse {
-                currentNumberIntPart = currentNumberIntPart * 10 + number
+                if (Int.max - number) / 10 > currentNumberIntPart {
+                    currentNumberIntPart = currentNumberIntPart * 10 + number
+                }
             } else {
-                currentNumberDecimalPart = currentNumberDecimalPart * 10 + number
-                decimalPartDepth += 1
+                if (Int.max - number) / 10 > currentNumberDecimalPart {
+                    currentNumberDecimalPart = currentNumberDecimalPart * 10 + number
+                    decimalPartDepth += 1
+                }
             }
             setTextInLabel()
         }
