@@ -40,3 +40,8 @@ protocol ContactListHandler {
     func updatePresonInformation(person: Person, at index: Int)
     func deletePerson(at index: Int)
 }
+
+//func test() {
+//    let userDefaults = UserDefaults()
+//    UserDefaults.standard.
+//}

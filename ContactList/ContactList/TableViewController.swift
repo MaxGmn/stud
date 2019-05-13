@@ -75,6 +75,26 @@ class TableViewController: UITableViewController {
         
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
+            self.deletePerson(at: indexPath.row)
+        }
+        
+        let updateAction = UITableViewRowAction(style: .default, title: "Edit") {(action, indexPath) in
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "ViewControllerForUpdate") as! ViewControllerForUpdate
+            controller.currentPersonForEditing = self.personsArray[indexPath.row]
+            controller.changedArrayItemIndex = indexPath.row
+            controller.handler = self
+            let navController = UINavigationController(rootViewController: controller)
+            self.present(navController, animated: true, completion: nil)
+        }
+        
+        deleteAction.backgroundColor = .red
+        updateAction.backgroundColor = .orange
+        
+        return [deleteAction, updateAction]
+    }
 }
 
 extension TableViewController: ContactListHandler {
