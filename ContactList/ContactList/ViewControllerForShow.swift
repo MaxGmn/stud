@@ -11,25 +11,22 @@ import UIKit
 class ViewControllerForShow: UIViewController {
     
     
-    @IBOutlet weak var firstName: UILabel!
+    @IBOutlet weak var firstNameLabel: UILabel!
     
-    @IBOutlet weak var lastName: UILabel!
+    @IBOutlet weak var lastNameLabel: UILabel!
     
-    @IBOutlet weak var phoneNumber: UILabel!
+    @IBOutlet weak var phoneNumberLabel: UILabel!
     
-    @IBOutlet weak var email: UILabel!
+    @IBOutlet weak var emailLabel: UILabel!
     
     @IBOutlet weak var imageArea: UIImageView!
     
     var person: Person!
     
-    var currentAttayIndex: Int!
-    
-    var handler: ContactListHandler?
+    var contactListDelegate: ContactListDelegate?
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
+        super.viewDidLoad()        
         showPersonInformation()
     }
     
@@ -39,28 +36,23 @@ class ViewControllerForShow: UIViewController {
     }
     
     @IBAction func editOnAction(_ sender: Any) {        
-        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ViewControllerForUpdate") as! ViewControllerForUpdate
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
         controller.currentPersonForEditing = person
-        controller.changedArrayItemIndex = currentAttayIndex
-        controller.handler = handler
-        controller.callback = { [weak self] person, isDeletion in
-            if isDeletion {
-                self?.navigationController?.popViewController(animated: true)
-            }
+        controller.contactListDelegate = contactListDelegate
+        controller.callback = { [weak self] person in
             self?.person = person
             self?.showPersonInformation()
         }
         
-        let navController = UINavigationController(rootViewController: controller)
-        self.present(navController, animated:true, completion: nil)
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func showPersonInformation() {
-        firstName.text = person.firstName
-        lastName.text = person.lastName
-        phoneNumber.text = person.phoneNumber
-        email.text = person.email
-        imageArea.image = person.image
+        firstNameLabel.text = person.firstName
+        lastNameLabel.text = person.lastName
+        phoneNumberLabel.text = person.phoneNumber
+        emailLabel.text = person.email
+        imageArea.image = person.image ?? emptyAvatar
     }
 }
 

@@ -19,9 +19,8 @@ class TableViewController: UITableViewController {
     
     @IBAction func addNewContact(_ sender: Any?) {
         
-        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ViewControllerForUpdate") as! ViewControllerForUpdate
-        controller.handler = self
-        controller.createNewPerson()
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
+        controller.contactListDelegate = self
         let navController = UINavigationController(rootViewController: controller)
         self.present(navController, animated:true, completion: nil)
     }
@@ -39,11 +38,6 @@ class TableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if personsArray.isEmpty {
             tableView.separatorStyle = .none
             tableView.backgroundView?.isHidden = false
@@ -53,6 +47,10 @@ class TableViewController: UITableViewController {
         }
         
         addContactButtonSetVisibility()
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return personsArray.count
     }
     
@@ -60,37 +58,36 @@ class TableViewController: UITableViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "ViewControllerForShow") as! ViewControllerForShow
         controller.person = personsArray[indexPath.row]
-        controller.currentAttayIndex = indexPath.row
-        controller.handler = self
+        controller.contactListDelegate = self
         navigationController?.pushViewController(controller, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TableViewCell
-        let currentPerson = personsArray[indexPath.row]
-        
-        cell.cellImage.image = currentPerson.image
-        cell.cellName.text = currentPerson.firstName! + (currentPerson.firstName!.isEmpty ? "" : " ") + currentPerson.lastName!
-        cell.cellContact.text = !currentPerson.phoneNumber!.isEmpty ? currentPerson.phoneNumber : currentPerson.email
-        
+        cell.updateWith(contact: personsArray[indexPath.row])
         return cell
     }
 }
 
-extension TableViewController: ContactListHandler {
-    func addNewPerson(person: Person) {
-        personsArray.append(person)
-        let indexPath = IndexPath(row: personsArray.count-1, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
+extension TableViewController: ContactListDelegate {
+    
+    func updatePresonInformation(person: Person) {
+        if let index = findItemIndex(by: person.id, in: personsArray) {
+            personsArray[index] = person
+            let indexPath = IndexPath(row: index, section: 0)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        } else {
+            personsArray.append(person)
+            let indexPath = IndexPath(row: personsArray.count-1, section: 0)
+            tableView.insertRows(at: [indexPath], with: .automatic)
+        }
     }
     
-    func updatePresonInformation(person: Person, at index: Int) {
-        personsArray[index] = person
-        let indexPath = IndexPath(row: index, section: 0)
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-    }
-    
-    func deletePerson(at index: Int) {
+    func deletePerson(by id: UUID) {
+        guard let index = findItemIndex(by: id, in: personsArray) else {
+            return
+        }
+        
         personsArray.remove(at: index)
         let indexPath = IndexPath(row: index, section: 0)
         tableView.deleteRows(at: [indexPath], with: .automatic)

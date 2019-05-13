@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewControllerForUpdate: UIViewController {
+class UpdateViewController: UIViewController {
     
     
     @IBOutlet weak var firstNameTF: UITextField!
@@ -21,49 +21,41 @@ class ViewControllerForUpdate: UIViewController {
     
     @IBOutlet weak var imageAreaTF: UIImageView!    
     
-    @IBOutlet var forUpdate: UIView!
-    
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
     @IBOutlet weak var removeButton: UIBarButtonItem!
     
     
-    var currentPersonForEditing = Person()
+    var imageState: ImageEditState!
+    
+    var currentPersonForEditing: Person?
     var currentPersonCopy = Person()
     
-    var handler: ContactListHandler?
-    var callback: ((Person, Bool) -> Void)?
+    var contactListDelegate: ContactListDelegate?
+    var callback: ((Person) -> Void)?
     
-    var changedArrayItemIndex: Int?
     var fieldsCheckingIsOk: Bool!
     
     let picker = UIImagePickerController()
     
+    
     @IBAction func cancelAction(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        if let arrayIndex = changedArrayItemIndex {
-            handler?.updatePresonInformation(person: currentPersonCopy, at: arrayIndex)
-        } else {
-            handler?.addNewPerson(person: currentPersonCopy)
-        }
+        contactListDelegate?.updatePresonInformation(person: currentPersonCopy)
         if let callback = callback {
-            callback(currentPersonCopy, false)
+            callback(currentPersonCopy)
         }
+        navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
     
     @IBAction func removeAction(_ sender: Any) {
-        guard let arrayIndex = changedArrayItemIndex else {
-            return
-        }
-        
-        handler?.deletePerson(at: arrayIndex)
-        if let callback = callback {
-            callback(currentPersonCopy, true)
-        }
+        contactListDelegate?.deletePerson(by: currentPersonCopy.id)
+        navigationController?.popToRootViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
     
@@ -76,17 +68,21 @@ class ViewControllerForUpdate: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        currentPersonCopy = currentPersonForEditing.copy()
+        
+        if currentPersonForEditing == nil {
+            currentPersonForEditing = Person()
+        }
+        
+        currentPersonCopy = currentPersonForEditing!.copy() as! Person
         fillTextFields()
         fieldsCheckingIsOk = allFieldsAreValid() && atLeastOneFieldIsFilled()
-        if let _ = changedArrayItemIndex {
-            removeButton.isEnabled = true
-        }
         
         picker.delegate = self
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTap(tapGuestureRecognizer:)))
         imageAreaTF.isUserInteractionEnabled = true
         imageAreaTF.addGestureRecognizer(recognizer)
+        
+        imageState = .noChanges
     }
     
     @objc func onImageTap (tapGuestureRecognizer: UITapGestureRecognizer) {
@@ -121,10 +117,6 @@ class ViewControllerForUpdate: UIViewController {
         #endif
     }
     
-    func createNewPerson(){
-        currentPersonForEditing = Person()
-    }
-    
     func changeCurrentPersonCopy() {
         currentPersonCopy.firstName = firstNameTF.text
         currentPersonCopy.lastName = lastNameTF.text
@@ -137,7 +129,7 @@ class ViewControllerForUpdate: UIViewController {
         lastNameTF.text = currentPersonCopy.lastName
         phoneTF.text = currentPersonCopy.phoneNumber
         emailTF.text = currentPersonCopy.email
-        imageAreaTF.image = currentPersonCopy.image
+        imageAreaTF.image = currentPersonCopy.image ?? emptyAvatar
     }
     
     func allFieldsAreValid() -> Bool {
@@ -168,20 +160,32 @@ class ViewControllerForUpdate: UIViewController {
     func changeSaveButtonAvailability() {
         saveButton.isEnabled = (currentPersonForEditing != currentPersonCopy) && fieldsCheckingIsOk
     }
+    
 }
 
-extension ViewControllerForUpdate: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+extension UpdateViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let chosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         imageAreaTF.contentMode = .scaleAspectFit
         imageAreaTF.image = chosenImage
-        dismiss(animated:true, completion: nil)
         currentPersonCopy.image = imageAreaTF.image!
         changeSaveButtonAvailability()
+        dismiss(animated:true, completion: nil)
+        
+        imageState = .changed(newImage: chosenImage)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
+    }
+}
+
+extension UpdateViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        view.endEditing(true)
+        return false
     }
 }

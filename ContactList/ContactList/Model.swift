@@ -9,34 +9,57 @@
 import Foundation
 import UIKit
 
-class Person: Equatable {
-    
-    
+let emptyAvatar = UIImage(named: "emptyAvatar")!
+
+class Person {
+   
+    private (set) var id: UUID
     var firstName: String?
     var lastName: String?
     var phoneNumber: String?
     var email: String?
-    var image: UIImage
+    var image: UIImage?
     
     init(firstName: String? = "", lastName: String? = "", phoneNumber: String? = "", email: String? = "", image: UIImage? = nil){
+        self.id  = UUID.init()
         self.firstName = firstName
         self.lastName = lastName
         self.phoneNumber = phoneNumber
         self.email = email
-        self.image = image ?? UIImage(named: "emptyAvatar")!
-    }
-    
-    func copy() -> Person{
-        return Person(firstName: self.firstName, lastName: self.lastName, phoneNumber: self.phoneNumber, email: self.email, image: self.image)
-    }
-    
-    static func == (lhs: Person, rhs: Person) -> Bool {
-        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.image.isEqual(rhs.image) //lhs.image == rhs.image
+        self.image = image
     }
 }
 
-protocol ContactListHandler {
-    func addNewPerson(person: Person)
-    func updatePresonInformation(person: Person, at index: Int)
-    func deletePerson(at index: Int)
+extension Person: NSCopying {
+    func copy(with zone: NSZone? = nil) -> Any {
+        let newPerson = Person(firstName: self.firstName, lastName: self.lastName, phoneNumber: self.phoneNumber, email: self.email, image: self.image)
+        newPerson.id = self.id
+        return newPerson
+    }
+}
+
+extension Person: Equatable {
+    static func == (lhs: Person, rhs: Person) -> Bool {
+        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.image == rhs.image
+    }
+}
+
+func findItemIndex(by id: UUID, in array: [Person]) -> Int? {
+    for (key, value) in array.enumerated() {
+        if value.id == id {
+            return key
+        }
+    }
+    return nil
+}
+
+protocol ContactListDelegate {
+    func updatePresonInformation(person: Person)
+    func deletePerson(by id: UUID)
+}
+
+enum ImageEditState {
+    case noChanges
+    case removed
+    case changed(newImage: UIImage)
 }

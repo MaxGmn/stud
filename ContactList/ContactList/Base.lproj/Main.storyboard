@@ -60,9 +60,9 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="cellContact" destination="TZK-wo-N54" id="bzJ-fe-adq"/>
+                                    <outlet property="cellContactLabel" destination="TZK-wo-N54" id="cxm-9q-FyF"/>
                                     <outlet property="cellImage" destination="BUS-7T-LET" id="2hw-hC-weU"/>
-                                    <outlet property="cellName" destination="c7A-4t-zT0" id="8e6-dt-aGD"/>
+                                    <outlet property="cellNameLabel" destination="c7A-4t-zT0" id="f6c-P4-0du"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -118,7 +118,7 @@
         <!--Update-->
         <scene sceneID="eqj-Wy-LgP">
             <objects>
-                <viewController storyboardIdentifier="ViewControllerForUpdate" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cAr-db-pbk" customClass="ViewControllerForUpdate" customModule="ContactList" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="UpdateViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cAr-db-pbk" customClass="UpdateViewController" customModule="ContactList" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="um1-j2-yGW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -172,6 +172,7 @@
                                 <textInputTraits key="textInputTraits" keyboardType="alphabet" textContentType="name"/>
                                 <connections>
                                     <action selector="versionComparison:" destination="cAr-db-pbk" eventType="editingChanged" id="5Z9-lX-y74"/>
+                                    <outlet property="delegate" destination="cAr-db-pbk" id="cMg-fg-EA1"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aLw-5l-8Mc">
@@ -181,6 +182,7 @@
                                 <textInputTraits key="textInputTraits" keyboardType="alphabet" textContentType="family-name"/>
                                 <connections>
                                     <action selector="versionComparison:" destination="cAr-db-pbk" eventType="editingChanged" id="2GI-tf-Iz8"/>
+                                    <outlet property="delegate" destination="cAr-db-pbk" id="Ai0-ZL-96t"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="K6Z-2t-b2k">
@@ -190,6 +192,7 @@
                                 <textInputTraits key="textInputTraits" keyboardType="phonePad" textContentType="tel"/>
                                 <connections>
                                     <action selector="versionComparison:" destination="cAr-db-pbk" eventType="editingChanged" id="GkM-Rj-tgc"/>
+                                    <outlet property="delegate" destination="cAr-db-pbk" id="6Yx-ok-K08"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="z0W-LT-yjG">
@@ -199,6 +202,7 @@
                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                                 <connections>
                                     <action selector="versionComparison:" destination="cAr-db-pbk" eventType="editingChanged" id="pTZ-Ub-xFk"/>
+                                    <outlet property="delegate" destination="cAr-db-pbk" id="fe5-k4-iK0"/>
                                 </connections>
                             </textField>
                         </subviews>
@@ -243,7 +247,7 @@
                                     <action selector="saveAction:" destination="cAr-db-pbk" id="qvl-Dn-eDp"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem enabled="NO" title="Remove" id="dBq-iS-Vzi">
+                            <barButtonItem title="Remove" id="dBq-iS-Vzi">
                                 <connections>
                                     <action selector="removeAction:" destination="cAr-db-pbk" id="lUV-Uv-QxS"/>
                                 </connections>
@@ -253,7 +257,6 @@
                     <connections>
                         <outlet property="emailTF" destination="z0W-LT-yjG" id="7od-DZ-Qkh"/>
                         <outlet property="firstNameTF" destination="YEr-YD-QUY" id="tbX-sb-STx"/>
-                        <outlet property="forUpdate" destination="um1-j2-yGW" id="ixk-Bq-GZ3"/>
                         <outlet property="imageAreaTF" destination="60x-3C-e6m" id="GqD-9N-AN9"/>
                         <outlet property="lastNameTF" destination="aLw-5l-8Mc" id="Hym-yY-bPH"/>
                         <outlet property="phoneTF" destination="K6Z-2t-b2k" id="2fo-PS-Uhk"/>
@@ -394,11 +397,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="email" destination="RT6-gP-9tD" id="z5D-cu-Ov6"/>
-                        <outlet property="firstName" destination="gmv-Me-cYC" id="WzF-JX-UeC"/>
+                        <outlet property="emailLabel" destination="RT6-gP-9tD" id="iXW-rd-4NC"/>
+                        <outlet property="firstNameLabel" destination="gmv-Me-cYC" id="hCk-Yq-Pio"/>
                         <outlet property="imageArea" destination="8ZA-6N-ioX" id="zbV-MC-mtF"/>
-                        <outlet property="lastName" destination="7rq-we-xuZ" id="FZP-4J-6jI"/>
-                        <outlet property="phoneNumber" destination="LGo-ef-NYV" id="tYp-PV-Tz1"/>
+                        <outlet property="lastNameLabel" destination="7rq-we-xuZ" id="bVe-aJ-AUt"/>
+                        <outlet property="phoneNumberLabel" destination="LGo-ef-NYV" id="S7D-dK-y9L"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

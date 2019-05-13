@@ -12,7 +12,13 @@ class TableViewCell: UITableViewCell {
 
     @IBOutlet weak var cellImage: UIImageView!
     
-    @IBOutlet weak var cellName: UILabel!
+    @IBOutlet weak var cellNameLabel: UILabel!
     
-    @IBOutlet weak var cellContact: UILabel!
+    @IBOutlet weak var cellContactLabel: UILabel!
+    
+    func updateWith (contact: Person) {
+        cellImage.image = contact.image ?? emptyAvatar
+        cellNameLabel.text = contact.firstName! + (contact.firstName!.isEmpty ? "" : " ") + contact.lastName!
+        cellContactLabel.text = !contact.phoneNumber!.isEmpty ? contact.phoneNumber : contact.email
+    }
 }
