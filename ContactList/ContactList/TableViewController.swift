@@ -38,15 +38,17 @@ class TableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
+        
+        addContactButtonSetVisibility()
+        
         if personsArray.isEmpty {
             tableView.separatorStyle = .none
             tableView.backgroundView?.isHidden = false
-        } else {
-            tableView.separatorStyle = .singleLine
-            tableView.backgroundView?.isHidden = true
+            return 0
         }
         
-        addContactButtonSetVisibility()
+        tableView.separatorStyle = .singleLine
+        tableView.backgroundView?.isHidden = true
         return 1
     }
 
@@ -71,25 +73,43 @@ class TableViewController: UITableViewController {
 
 extension TableViewController: ContactListDelegate {
     
-    func updatePresonInformation(person: Person) {
-        if let index = findItemIndex(by: person.id, in: personsArray) {
+    func updatePersonInformation(person: Person) {
+        if let index = findItemIndex(by: person.id) {
             personsArray[index] = person
             let indexPath = IndexPath(row: index, section: 0)
             tableView.reloadRows(at: [indexPath], with: .automatic)
         } else {
+            tableView.beginUpdates()
+            if personsArray.isEmpty {
+                tableView.insertSections(IndexSet(arrayLiteral: 0), with: .automatic)
+            }            
             personsArray.append(person)
             let indexPath = IndexPath(row: personsArray.count-1, section: 0)
             tableView.insertRows(at: [indexPath], with: .automatic)
+            tableView.endUpdates()
         }
     }
     
-    func deletePerson(by id: UUID) {
-        guard let index = findItemIndex(by: id, in: personsArray) else {
+    func deletePerson(by id: String) {
+        guard let index = findItemIndex(by: id) else {
             return
         }
-        
+        tableView.beginUpdates()
         personsArray.remove(at: index)
         let indexPath = IndexPath(row: index, section: 0)
         tableView.deleteRows(at: [indexPath], with: .automatic)
+        if personsArray.isEmpty {
+            tableView.deleteSections(IndexSet(arrayLiteral: 0), with: .automatic)
+        }
+        tableView.endUpdates()
+    }
+    
+    func findItemIndex(by id: String) -> Int? {
+        for (key, value) in personsArray.enumerated() {
+            if value.id == id {
+                return key
+            }
+        }
+        return nil
     }
 }

@@ -13,7 +13,7 @@ let emptyAvatar = UIImage(named: "emptyAvatar")!
 
 class Person {
    
-    private (set) var id: UUID
+    private (set) var id: String
     var firstName: String?
     var lastName: String?
     var phoneNumber: String?
@@ -21,7 +21,7 @@ class Person {
     var image: UIImage?
     
     init(firstName: String? = "", lastName: String? = "", phoneNumber: String? = "", email: String? = "", image: UIImage? = nil){
-        self.id  = UUID.init()
+        self.id  = UUID.init().uuidString
         self.firstName = firstName
         self.lastName = lastName
         self.phoneNumber = phoneNumber
@@ -40,25 +40,16 @@ extension Person: NSCopying {
 
 extension Person: Equatable {
     static func == (lhs: Person, rhs: Person) -> Bool {
-        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.image == rhs.image
+        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email
     }
-}
-
-func findItemIndex(by id: UUID, in array: [Person]) -> Int? {
-    for (key, value) in array.enumerated() {
-        if value.id == id {
-            return key
-        }
-    }
-    return nil
 }
 
 protocol ContactListDelegate {
-    func updatePresonInformation(person: Person)
-    func deletePerson(by id: UUID)
+    func updatePersonInformation(person: Person)
+    func deletePerson(by id: String)
 }
 
-enum ImageEditState {
+enum ImageEditState: Equatable {
     case noChanges
     case removed
     case changed(newImage: UIImage)

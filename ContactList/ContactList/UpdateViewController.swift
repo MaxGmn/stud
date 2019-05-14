@@ -19,7 +19,7 @@ class UpdateViewController: UIViewController {
     
     @IBOutlet weak var emailTF: UITextField!
     
-    @IBOutlet weak var imageAreaTF: UIImageView!    
+    @IBOutlet weak var imageArea: UIImageView!
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
@@ -28,7 +28,7 @@ class UpdateViewController: UIViewController {
     
     var imageState: ImageEditState!
     
-    var currentPersonForEditing: Person?
+    var currentPersonForEditing: Person!
     var currentPersonCopy = Person()
     
     var contactListDelegate: ContactListDelegate?
@@ -45,10 +45,8 @@ class UpdateViewController: UIViewController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        contactListDelegate?.updatePresonInformation(person: currentPersonCopy)
-        if let callback = callback {
-            callback(currentPersonCopy)
-        }
+        contactListDelegate?.updatePersonInformation(person: currentPersonCopy)
+        callback?(currentPersonCopy)
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
@@ -79,8 +77,8 @@ class UpdateViewController: UIViewController {
         
         picker.delegate = self
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTap(tapGuestureRecognizer:)))
-        imageAreaTF.isUserInteractionEnabled = true
-        imageAreaTF.addGestureRecognizer(recognizer)
+        imageArea.isUserInteractionEnabled = true
+        imageArea.addGestureRecognizer(recognizer)
         
         imageState = .noChanges
     }
@@ -129,20 +127,20 @@ class UpdateViewController: UIViewController {
         lastNameTF.text = currentPersonCopy.lastName
         phoneTF.text = currentPersonCopy.phoneNumber
         emailTF.text = currentPersonCopy.email
-        imageAreaTF.image = currentPersonCopy.image ?? emptyAvatar
+        imageArea.image = currentPersonCopy.image ?? emptyAvatar
     }
     
     func allFieldsAreValid() -> Bool {
-        let firstNameValidationResult = isValidName(text: currentPersonCopy.firstName!)
+        let firstNameValidationResult = Validation.isValidField(text: currentPersonCopy.firstName!, kindOfField: .forTextField)
         firstNameTF.backgroundColor = firstNameValidationResult ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         
-        let lastNameValidationResult = isValidName(text: currentPersonCopy.lastName!)
+        let lastNameValidationResult = Validation.isValidField(text: currentPersonCopy.lastName!, kindOfField: .forTextField)
         lastNameTF.backgroundColor = lastNameValidationResult ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         
-        let phoneNumberValidationResult = isValidPhoneNumber(number: currentPersonCopy.phoneNumber!)
+        let phoneNumberValidationResult = Validation.isValidField(text: currentPersonCopy.phoneNumber!, kindOfField: .forPhoneNumber)
         phoneTF.backgroundColor = phoneNumberValidationResult ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         
-        let emailValidationResult = isValidEmail(email: currentPersonCopy.email!)
+        let emailValidationResult = Validation.isValidField(text: currentPersonCopy.email!, kindOfField: .forEmail)
         emailTF.backgroundColor = emailValidationResult ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         
         return firstNameValidationResult && lastNameValidationResult && phoneNumberValidationResult && emailValidationResult
@@ -158,7 +156,7 @@ class UpdateViewController: UIViewController {
     }
     
     func changeSaveButtonAvailability() {
-        saveButton.isEnabled = (currentPersonForEditing != currentPersonCopy) && fieldsCheckingIsOk
+        saveButton.isEnabled = (currentPersonForEditing != currentPersonCopy || imageState != ImageEditState.noChanges) && fieldsCheckingIsOk
     }
     
 }
@@ -167,13 +165,14 @@ extension UpdateViewController: UIImagePickerControllerDelegate, UINavigationCon
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let chosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        imageAreaTF.contentMode = .scaleAspectFit
-        imageAreaTF.image = chosenImage
-        currentPersonCopy.image = imageAreaTF.image!
+        imageArea.contentMode = .scaleAspectFit
+        imageArea.image = chosenImage
+        currentPersonCopy.image = imageArea.image!
+        imageState = .changed(newImage: chosenImage)
         changeSaveButtonAvailability()
         dismiss(animated:true, completion: nil)
         
-        imageState = .changed(newImage: chosenImage)
+        
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -185,7 +184,7 @@ extension UpdateViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        view.endEditing(true)
+//        view.endEditing(true)
         return false
     }
 }

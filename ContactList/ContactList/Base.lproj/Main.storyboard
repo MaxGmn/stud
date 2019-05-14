@@ -257,7 +257,7 @@
                     <connections>
                         <outlet property="emailTF" destination="z0W-LT-yjG" id="7od-DZ-Qkh"/>
                         <outlet property="firstNameTF" destination="YEr-YD-QUY" id="tbX-sb-STx"/>
-                        <outlet property="imageAreaTF" destination="60x-3C-e6m" id="GqD-9N-AN9"/>
+                        <outlet property="imageArea" destination="60x-3C-e6m" id="2Pc-G5-SOs"/>
                         <outlet property="lastNameTF" destination="aLw-5l-8Mc" id="Hym-yY-bPH"/>
                         <outlet property="phoneTF" destination="K6Z-2t-b2k" id="2fo-PS-Uhk"/>
                         <outlet property="removeButton" destination="dBq-iS-Vzi" id="d9n-pv-AKr"/>
