@@ -8,41 +8,36 @@
 
 import Foundation
 
-
-
-func isValidEmail(email: String) -> Bool {
-    
-    if email.isEmpty {return true}
-
-    let emailRegEx = "[\\w-]+@([\\w-]+\\.)+[\\w-]+"
-    
-    let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-    
-    let result = emailTest.evaluate(with: email)
-    
-    return result
+class Validation {
+        
+    static func isValidField(text: String, kindOfField: ValidationFunctions) -> Bool {
+        if text.isEmpty {return true}
+        
+        let textRegEx = kindOfField.getRegExForField
+        
+        let textTest = NSPredicate(format: "SELF MATCHES %@", textRegEx)
+        
+        let result = textTest.evaluate(with: text)
+        
+        switch kindOfField {
+        case .forTextField(let maxLength):
+            return result && text.count <= maxLength
+        default:
+            return result
+        }
+    }
 }
 
-func isValidPhoneNumber(number: String) -> Bool {
+enum ValidationFunctions {
+    case forTextField(maxLength: Int)
+    case forPhoneNumber
+    case forEmail
     
-    let phoneRegEx = "^\\+?\\d*"
-    
-    let phoneTest = NSPredicate(format: "SELF MATCHES %@", phoneRegEx)
-    
-    let result = phoneTest.evaluate(with: number)
-    
-    return result
-}
-
-func isValidName(text: String) -> Bool {
-    
-    if text.isEmpty {return true}
-    
-    let textRegEx = ".*\\w+.*"
-    
-    let textTest = NSPredicate(format: "SELF MATCHES %@", textRegEx)
-    
-    let result = textTest.evaluate(with: text)
-    
-    return result && text.count <= 20
+    var getRegExForField: String {
+        switch self {
+        case .forTextField: return ".*\\w+.*"
+        case .forPhoneNumber: return "^\\+?\\d*"
+        case .forEmail: return "[\\w-]+@([\\w-]+\\.)+[\\w-]+"
+        }
+    }
 }

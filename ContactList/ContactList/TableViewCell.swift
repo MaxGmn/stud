@@ -12,7 +12,14 @@ class TableViewCell: UITableViewCell {
 
     @IBOutlet weak var cellImage: UIImageView!
     
-    @IBOutlet weak var cellName: UILabel!
+    @IBOutlet weak var cellNameLabel: UILabel!
     
-    @IBOutlet weak var cellContact: UILabel!
+    @IBOutlet weak var cellContactLabel: UILabel!
+    
+    func updateWith (contact: Person) {
+        let personViewModel = PersonViewModel(with: contact)
+        cellImage.image = personViewModel.image
+        cellNameLabel.text = personViewModel.lineFirst
+        cellContactLabel.text = personViewModel.lineSecond
+    }
 }
