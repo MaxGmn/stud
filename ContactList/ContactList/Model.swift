@@ -55,6 +55,21 @@ extension Person: Equatable {
     }
 }
 
+class CellFieldsBuilder {
+    
+    static func getImage(image: UIImage?) -> UIImage {
+        return image ?? Constants.emptyAvatar!
+    }
+    
+    static func getName(firstName: String, lastName: String) -> String {
+        return firstName + (firstName.isEmpty ? "" : " ") + lastName
+    }
+    
+    static func getContact (phoneNumber: String, email: String) -> String {
+        return !phoneNumber.isEmpty ? phoneNumber : email
+    }
+}
+
 protocol ContactListDelegate {
     func updatePersonInformation(person: Person)
     func deletePerson(by id: String)

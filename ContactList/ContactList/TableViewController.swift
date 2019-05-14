@@ -104,13 +104,4 @@ extension TableViewController: ContactListDelegate {
         }
         tableView.endUpdates()
     }
-    
-    func findItemIndex(by id: String) -> Int? {
-        for (key, value) in personsArray.enumerated() {
-            if value.id == id {
-                return key
-            }
-        }
-        return nil
-    }
 }

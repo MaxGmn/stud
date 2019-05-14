@@ -29,7 +29,7 @@ class UpdateViewController: UIViewController {
     var imageState = ImageEditState.noChanges
     
     var currentPersonForEditing: Person!
-    var currentPersonCopy = Person()
+    var currentPersonCopy: Person!
     
     var contactListDelegate: ContactListDelegate?
     var callback: ((Person) -> Void)?
@@ -71,7 +71,7 @@ class UpdateViewController: UIViewController {
             currentPersonForEditing = Person()
         }
         
-        currentPersonCopy = currentPersonForEditing!.copy() as! Person
+        currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
         fillTextFields()
         fieldsCheckingIsOk = allFieldsAreValid() && atLeastOneFieldIsFilled()
         
