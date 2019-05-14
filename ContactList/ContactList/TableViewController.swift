@@ -74,7 +74,7 @@ class TableViewController: UITableViewController {
 extension TableViewController: ContactListDelegate {
     
     func updatePersonInformation(person: Person) {
-        if let index = findItemIndex(by: person.id) {
+        if let index = (personsArray.firstIndex {(item) -> Bool in item.id == person.id}) {
             personsArray[index] = person
             let indexPath = IndexPath(row: index, section: 0)
             tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -91,9 +91,10 @@ extension TableViewController: ContactListDelegate {
     }
     
     func deletePerson(by id: String) {
-        guard let index = findItemIndex(by: id) else {
+        guard let index = (personsArray.firstIndex {(item) -> Bool in item.id == id}) else {
             return
         }
+        
         tableView.beginUpdates()
         personsArray.remove(at: index)
         let indexPath = IndexPath(row: index, section: 0)

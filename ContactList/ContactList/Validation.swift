@@ -19,12 +19,17 @@ class Validation {
         
         let result = textTest.evaluate(with: text)
         
-        return result && (kindOfField == .forTextField ? text.count <= 20 : true)
+        switch kindOfField {
+        case .forTextField(let maxLength):
+            return result && text.count <= maxLength
+        default:
+            return result
+        }
     }
 }
 
-enum ValidationFunctions: Equatable {
-    case forTextField
+enum ValidationFunctions {
+    case forTextField(maxLength: Int)
     case forPhoneNumber
     case forEmail
     

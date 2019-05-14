@@ -26,7 +26,7 @@ class UpdateViewController: UIViewController {
     @IBOutlet weak var removeButton: UIBarButtonItem!
     
     
-    var imageState: ImageEditState!
+    var imageState = ImageEditState.noChanges
     
     var currentPersonForEditing: Person!
     var currentPersonCopy = Person()
@@ -79,8 +79,6 @@ class UpdateViewController: UIViewController {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTap(tapGuestureRecognizer:)))
         imageArea.isUserInteractionEnabled = true
         imageArea.addGestureRecognizer(recognizer)
-        
-        imageState = .noChanges
     }
     
     @objc func onImageTap (tapGuestureRecognizer: UITapGestureRecognizer) {
@@ -127,21 +125,21 @@ class UpdateViewController: UIViewController {
         lastNameTF.text = currentPersonCopy.lastName
         phoneTF.text = currentPersonCopy.phoneNumber
         emailTF.text = currentPersonCopy.email
-        imageArea.image = currentPersonCopy.image ?? emptyAvatar
+        imageArea.image = currentPersonCopy.image ?? Constants.emptyAvatar
     }
     
     func allFieldsAreValid() -> Bool {
-        let firstNameValidationResult = Validation.isValidField(text: currentPersonCopy.firstName!, kindOfField: .forTextField)
-        firstNameTF.backgroundColor = firstNameValidationResult ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        let firstNameValidationResult = Validation.isValidField(text: currentPersonCopy.firstName!, kindOfField: .forTextField(maxLength: 20))
+        firstNameTF.backgroundColor = firstNameValidationResult.color
         
-        let lastNameValidationResult = Validation.isValidField(text: currentPersonCopy.lastName!, kindOfField: .forTextField)
-        lastNameTF.backgroundColor = lastNameValidationResult ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        let lastNameValidationResult = Validation.isValidField(text: currentPersonCopy.lastName!, kindOfField: .forTextField(maxLength: 20))
+        lastNameTF.backgroundColor = lastNameValidationResult.color
         
         let phoneNumberValidationResult = Validation.isValidField(text: currentPersonCopy.phoneNumber!, kindOfField: .forPhoneNumber)
-        phoneTF.backgroundColor = phoneNumberValidationResult ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        phoneTF.backgroundColor = phoneNumberValidationResult.color
         
         let emailValidationResult = Validation.isValidField(text: currentPersonCopy.email!, kindOfField: .forEmail)
-        emailTF.backgroundColor = emailValidationResult ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        emailTF.backgroundColor = emailValidationResult.color
         
         return firstNameValidationResult && lastNameValidationResult && phoneNumberValidationResult && emailValidationResult
     }

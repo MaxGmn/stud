@@ -9,7 +9,18 @@
 import Foundation
 import UIKit
 
-let emptyAvatar = UIImage(named: "emptyAvatar")!
+struct Constants {
+    static let emptyAvatar = UIImage(named: "emptyAvatar")
+    static let validColor = UIColor.white
+    static let invalidColor = UIColor.red
+}
+
+extension Bool {
+    var color: UIColor {
+        return self ? Constants.validColor : Constants.invalidColor
+    }
+}
+
 
 class Person {
    

@@ -52,7 +52,7 @@ class ViewControllerForShow: UIViewController {
         lastNameLabel.text = person.lastName
         phoneNumberLabel.text = person.phoneNumber
         emailLabel.text = person.email
-        imageArea.image = person.image ?? emptyAvatar
+        imageArea.image = person.image ?? Constants.emptyAvatar
     }
 }
 

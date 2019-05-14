@@ -17,7 +17,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var cellContactLabel: UILabel!
     
     func updateWith (contact: Person) {
-        cellImage.image = contact.image ?? emptyAvatar
+        cellImage.image = contact.image ?? Constants.emptyAvatar
         cellNameLabel.text = contact.firstName! + (contact.firstName!.isEmpty ? "" : " ") + contact.lastName!
         cellContactLabel.text = !contact.phoneNumber!.isEmpty ? contact.phoneNumber : contact.email
     }
