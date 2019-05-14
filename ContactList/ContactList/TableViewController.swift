@@ -33,6 +33,7 @@ class TableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.backgroundView = emptyListView
         buttonCopy = addNewContactButton
+        personsArray = UserDefaultsWorking.getArray()
     }
     
     func addContactButtonSetVisibility() {
@@ -127,6 +128,8 @@ extension TableViewController: ContactListDelegate {
             tableView.insertRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
         }
+        
+        updatePersonsArray()
     }
     
     func deletePerson(by id: String) {
@@ -142,5 +145,12 @@ extension TableViewController: ContactListDelegate {
             tableView.deleteSections(IndexSet(arrayLiteral: 0), with: .automatic)
         }
         tableView.endUpdates()
+        
+        UserDefaultsWorking.saveImage(by: .removed, name: id)
+        updatePersonsArray()
+    }
+    
+    func updatePersonsArray() {
+        UserDefaultsWorking.putArray(array: personsArray)
     }
 }

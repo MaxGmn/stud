@@ -47,6 +47,7 @@ class UpdateViewController: UIViewController {
     @IBAction func saveAction(_ sender: Any) {
         contactListDelegate?.updatePersonInformation(person: currentPersonCopy)
         callback?(currentPersonCopy)
+        UserDefaultsWorking.saveImage(by: imageState, name: currentPersonCopy.id)
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
@@ -86,7 +87,7 @@ class UpdateViewController: UIViewController {
         if imageArea.image != Constants.emptyAvatar {
             let choosePhotoAction = UIAlertController(title: "Choose image source", message: nil, preferredStyle: .actionSheet)
             let changeAction = UIAlertAction(title: "Change image", style: .default) {action in self.runCooseImageHandler()}
-            let removeAction = UIAlertAction(title: "Remove image", style: .destructive) {action in self.changeCurrentImage(image: Constants.emptyAvatar)}
+            let removeAction = UIAlertAction(title: "Remove image", style: .destructive) {action in self.changeCurrentImage(imageState: .removed)}
             let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
             
             choosePhotoAction.addAction(changeAction)
@@ -110,7 +111,7 @@ class UpdateViewController: UIViewController {
         lastNameTF.text = currentPersonCopy.lastName
         phoneTF.text = currentPersonCopy.phoneNumber
         emailTF.text = currentPersonCopy.email
-        imageArea.image = currentPersonCopy.image ?? Constants.emptyAvatar
+        imageArea.image = UserDefaultsWorking.getImage(fileName: currentPersonCopy.id)
     }
     
     func allFieldsAreValid() -> Bool {
@@ -142,10 +143,20 @@ class UpdateViewController: UIViewController {
         saveButton.isEnabled = (currentPersonForEditing != currentPersonCopy || imageState != ImageEditState.noChanges) && fieldsCheckingIsOk
     }
     
-    func changeCurrentImage(image: UIImage) {
+    func changeCurrentImage(imageState: ImageEditState) {
+        
         imageArea.contentMode = .scaleAspectFit
-        imageArea.image = image
-        currentPersonCopy.image = imageArea.image!
+        
+        switch imageState {
+        case .removed:
+            imageArea.image = Constants.emptyAvatar
+        case .changed(let newImage):
+            imageArea.image = newImage
+        default:
+            break
+        }
+        
+        self.imageState = imageState
         changeSaveButtonAvailability()
     }
     
@@ -183,21 +194,9 @@ class UpdateViewController: UIViewController {
 extension UpdateViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-//<<<<<<< HEAD:ContactList/ContactList/ViewControllerForUpdate.swift
         let choosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        changeCurrentImage(image: choosenImage)
+        changeCurrentImage(imageState: .changed(newImage: choosenImage))
         dismiss(animated:true, completion: nil)
-//=======
-//        let chosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-//        imageArea.contentMode = .scaleAspectFit
-//        imageArea.image = chosenImage
-//        currentPersonCopy.image = imageArea.image!
-//        imageState = .changed(newImage: chosenImage)
-//        changeSaveButtonAvailability()
-//        dismiss(animated:true, completion: nil)
-//
-//
-//>>>>>>> master:ContactList/ContactList/UpdateViewController.swift
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

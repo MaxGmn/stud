@@ -21,7 +21,6 @@ extension Bool {
     }
 }
 
-
 class Person: NSObject {
    
     private (set) var id: String
@@ -29,24 +28,28 @@ class Person: NSObject {
     var lastName: String?
     var phoneNumber: String?
     var email: String?
-    var image: UIImage?
     
-    init(firstName: String? = "", lastName: String? = "", phoneNumber: String? = "", email: String? = "", image: UIImage? = nil){
+    var image: UIImage? {
+        get {return UserDefaultsWorking.getImage(fileName: id)}
+    }
+    
+    init(firstName: String? = "", lastName: String? = "", phoneNumber: String? = "", email: String? = ""){
         self.id  = UUID.init().uuidString
         self.firstName = firstName
         self.lastName = lastName
         self.phoneNumber = phoneNumber
         self.email = email
-        self.image = image ?? Constants.emptyAvatar
     }
     
     required convenience init (coder aDecoder: NSCoder) {
+        let id = aDecoder.decodeObject(forKey: "id") as! String
         let firstName = aDecoder.decodeObject(forKey: "firstName") as! String
         let lastName = aDecoder.decodeObject(forKey: "lastName") as! String
         let phoneNumber = aDecoder.decodeObject(forKey: "phoneNumber") as! String
         let email = aDecoder.decodeObject(forKey: "email") as! String
+        
         self.init(firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email)
-        self.image = image
+        self.id = id
     }
     
     static func == (lhs: Person, rhs: Person) -> Bool {
@@ -56,7 +59,7 @@ class Person: NSObject {
 
 extension Person: NSCopying {
     func copy(with zone: NSZone? = nil) -> Any {
-        let newPerson = Person(firstName: self.firstName, lastName: self.lastName, phoneNumber: self.phoneNumber, email: self.email, image: self.image)
+        let newPerson = Person(firstName: self.firstName, lastName: self.lastName, phoneNumber: self.phoneNumber, email: self.email)
         newPerson.id = self.id
         return newPerson
     }
@@ -64,6 +67,7 @@ extension Person: NSCopying {
 
 extension Person: NSCoding {
     func encode(with aCoder: NSCoder) {
+        aCoder.encode(id, forKey: "id")
         aCoder.encode(firstName, forKey: "firstName")
         aCoder.encode(lastName, forKey: "lastName")
         aCoder.encode(phoneNumber, forKey: "phoneNumber")
@@ -77,7 +81,7 @@ struct PersonViewModel {
     let lineSecond: String
     
     init(with contact: Person) {
-        image = contact.image ?? Constants.emptyAvatar
+        image = UserDefaultsWorking.getImage(fileName: contact.id)
         lineFirst = contact.firstName! + (contact.firstName!.isEmpty ? "" : " ") + contact.lastName!
         lineSecond = !contact.phoneNumber!.isEmpty ? contact.phoneNumber! : contact.email!
     }
@@ -93,22 +97,3 @@ enum ImageEditState: Equatable {
     case removed
     case changed(newImage: UIImage)
 }
-
-//func putArrayIntoUserDefaults(array: [Person]) {
-//    let userDefaults = UserDefaults.standard
-//    do{
-//        let data = try NSKeyedArchiver.archivedData(withRootObject: array, requiringSecureCoding: false)
-//        userDefaults.set(data, forKey: "persons")
-//        userDefaults.synchronize()
-//    } catch {
-//        print("Something wrong")
-//    }
-//}
-//
-//func getArrayFromUserDefaults() -> [Person] {
-//    if let data = UserDefaults.standard.object(forKey: "persons") {
-//        return NSKeyedUnarchiver.unarchivedObject(ofClasses: [Person as AnyClass], from: data as! Data) as! [Person]
-//    }
-//    
-//    return []
-//}
