@@ -11,8 +11,7 @@ import UIKit
 
 let emptyAvatar = UIImage(named: "emptyAvatar")
 
-class Person: Equatable {
-    
+class Person: NSObject, NSCoding {
     
     var firstName: String?
     var lastName: String?
@@ -28,13 +27,29 @@ class Person: Equatable {
         self.image = image ?? emptyAvatar!
     }
     
-    func copy() -> Person{
-        return Person(firstName: self.firstName, lastName: self.lastName, phoneNumber: self.phoneNumber, email: self.email, image: self.image)
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(firstName, forKey: "firstName")
+        aCoder.encode(lastName, forKey: "lastName")
+        aCoder.encode(phoneNumber, forKey: "phoneNumber")
+        aCoder.encode(email, forKey: "email")
     }
     
-    static func == (lhs: Person, rhs: Person) -> Bool {
-        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.image.isEqual(rhs.image) 
+    required convenience init (coder aDecoder: NSCoder) {
+        let firstName = aDecoder.decodeObject(forKey: "firstName") as! String
+        let lastName = aDecoder.decodeObject(forKey: "lastName") as! String
+        let phoneNumber = aDecoder.decodeObject(forKey: "phoneNumber") as! String
+        let email = aDecoder.decodeObject(forKey: "email") as! String
+        self.init(firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email)
     }
+    
+    
+//    func copy() -> Person{
+//        return Person(firstName: self.firstName, lastName: self.lastName, phoneNumber: self.phoneNumber, email: self.email, image: self.image)
+//    }
+//
+//    static func == (lhs: Person, rhs: Person) -> Bool {
+//        return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.image.isEqual(rhs.image)
+//    }
 }
 
 protocol ContactListHandler {
@@ -43,3 +58,21 @@ protocol ContactListHandler {
     func deletePerson(at index: Int)
 }
 
+//func putArrayIntoUserDefaults(array: [Person]) {
+//    let userDefaults = UserDefaults.standard
+//    do{
+//        let data = try NSKeyedArchiver.archivedData(withRootObject: array, requiringSecureCoding: false)
+//        userDefaults.set(data, forKey: "persons")
+//        userDefaults.synchronize()
+//    } catch {
+//        print("Something wrong")
+//    }
+//}
+//
+//func getArrayFromUserDefaults() -> [Person] {
+//    if let data = UserDefaults.standard.object(forKey: "persons") {
+//        return NSKeyedUnarchiver.unarchivedObject(ofClasses: [Person as AnyClass], from: data as! Data) as! [Person]
+//    }
+//    
+//    return []
+//}
