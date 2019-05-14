@@ -17,8 +17,9 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var cellContactLabel: UILabel!
     
     func updateWith (contact: Person) {
-        cellImage.image = CellFieldsBuilder.getImage(image: contact.image)
-        cellNameLabel.text = CellFieldsBuilder.getName(firstName: contact.firstName!, lastName: contact.lastName!)
-        cellContactLabel.text = CellFieldsBuilder.getContact(phoneNumber: contact.phoneNumber!, email: contact.email!)
+        let personViewModel = PersonViewModel(with: contact)
+        cellImage.image = personViewModel.image
+        cellNameLabel.text = personViewModel.lineFirst
+        cellContactLabel.text = personViewModel.lineSecond
     }
 }

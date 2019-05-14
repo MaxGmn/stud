@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 struct Constants {
-    static let emptyAvatar = UIImage(named: "emptyAvatar")
+    static let emptyAvatar = UIImage(named: "emptyAvatar")!
     static let validColor = UIColor.white
     static let invalidColor = UIColor.red
 }
@@ -55,18 +55,15 @@ extension Person: Equatable {
     }
 }
 
-class CellFieldsBuilder {
+struct PersonViewModel {
+    let image: UIImage
+    let lineFirst: String
+    let lineSecond: String
     
-    static func getImage(image: UIImage?) -> UIImage {
-        return image ?? Constants.emptyAvatar!
-    }
-    
-    static func getName(firstName: String, lastName: String) -> String {
-        return firstName + (firstName.isEmpty ? "" : " ") + lastName
-    }
-    
-    static func getContact (phoneNumber: String, email: String) -> String {
-        return !phoneNumber.isEmpty ? phoneNumber : email
+    init(with contact: Person) {
+        image = contact.image ?? Constants.emptyAvatar
+        lineFirst = contact.firstName! + (contact.firstName!.isEmpty ? "" : " ") + contact.lastName!
+        lineSecond = !contact.phoneNumber!.isEmpty ? contact.phoneNumber! : contact.email!
     }
 }
 
