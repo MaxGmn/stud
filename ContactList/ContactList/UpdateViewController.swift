@@ -45,7 +45,7 @@ class UpdateViewController: UIViewController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        UserDefaultsWorking.saveImage(by: imageState, name: currentPersonCopy.id)
+        WorkWithData.saveImage(by: imageState, name: currentPersonCopy.id)
         contactListDelegate?.updatePersonInformation(person: currentPersonCopy)
         callback?(currentPersonCopy)
         navigationController?.popViewController(animated: true)
@@ -80,11 +80,12 @@ class UpdateViewController: UIViewController {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTap(tapGuestureRecognizer:)))
         imageArea.isUserInteractionEnabled = true
         imageArea.addGestureRecognizer(recognizer)
+        imageArea.contentMode = .scaleAspectFit
     }
     
     @objc func onImageTap (tapGuestureRecognizer: UITapGestureRecognizer) {
         
-        if imageArea.image != Constants.emptyAvatar {
+        if let _ = currentPersonCopy.image {
             let choosePhotoAction = UIAlertController(title: "Choose image source", message: nil, preferredStyle: .actionSheet)
             let changeAction = UIAlertAction(title: "Change image", style: .default) {action in self.runCooseImageHandler()}
             let removeAction = UIAlertAction(title: "Remove image", style: .destructive) {action in self.changeCurrentImage(imageState: .removed)}
@@ -111,7 +112,7 @@ class UpdateViewController: UIViewController {
         lastNameTF.text = currentPersonCopy.lastName
         phoneTF.text = currentPersonCopy.phoneNumber
         emailTF.text = currentPersonCopy.email
-        imageArea.image = currentPersonCopy.image
+        imageArea.image = currentPersonCopy.image ?? Constants.emptyAvatar
     }
     
     func allFieldsAreValid() -> Bool {
@@ -144,19 +145,17 @@ class UpdateViewController: UIViewController {
     }
     
     func changeCurrentImage(imageState: ImageEditState) {
-        
-        imageArea.contentMode = .scaleAspectFit
-        
         switch imageState {
         case .removed:
             imageArea.image = Constants.emptyAvatar
+            currentPersonCopy.image = nil
         case .changed(let newImage):
             imageArea.image = newImage
+            currentPersonCopy.image = newImage
         default:
             break
         }
-        
-        currentPersonCopy.image = imageArea.image!
+
         self.imageState = imageState
         changeSaveButtonAvailability()
     }

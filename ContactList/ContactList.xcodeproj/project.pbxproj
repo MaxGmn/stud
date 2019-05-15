@@ -17,7 +17,7 @@
 		620395DE22805EC300734092 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395DD22805EC300734092 /* Model.swift */; };
 		620395E42281A0AA00734092 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E32281A0AA00734092 /* TableViewCell.swift */; };
 		620395E62285629500734092 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E52285629500734092 /* Validation.swift */; };
-		620395E8228ACE6200734092 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E7228ACE6200734092 /* UserDefaults.swift */; };
+		620395E8228ACE6200734092 /* WorkWithData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E7228ACE6200734092 /* WorkWithData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +33,7 @@
 		620395DD22805EC300734092 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		620395E32281A0AA00734092 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		620395E52285629500734092 /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
-		620395E7228ACE6200734092 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		620395E7228ACE6200734092 /* WorkWithData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkWithData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +69,7 @@
 				620395C722805B7C00734092 /* AppDelegate.swift */,
 				620395DD22805EC300734092 /* Model.swift */,
 				620395E52285629500734092 /* Validation.swift */,
-				620395E7228ACE6200734092 /* UserDefaults.swift */,
+				620395E7228ACE6200734092 /* WorkWithData.swift */,
 				620395D922805CE000734092 /* TableViewController.swift */,
 				620395E32281A0AA00734092 /* TableViewCell.swift */,
 				620395C922805B7C00734092 /* ViewControllerForShow.swift */,
@@ -157,7 +157,7 @@
 				620395E42281A0AA00734092 /* TableViewCell.swift in Sources */,
 				620395CA22805B7C00734092 /* ViewControllerForShow.swift in Sources */,
 				620395DC22805E2500734092 /* UpdateViewController.swift in Sources */,
-				620395E8228ACE6200734092 /* UserDefaults.swift in Sources */,
+				620395E8228ACE6200734092 /* WorkWithData.swift in Sources */,
 				620395DA22805CE000734092 /* TableViewController.swift in Sources */,
 				620395C822805B7C00734092 /* AppDelegate.swift in Sources */,
 				620395E62285629500734092 /* Validation.swift in Sources */,

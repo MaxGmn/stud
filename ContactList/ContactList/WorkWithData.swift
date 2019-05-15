@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class UserDefaultsWorking {
+class WorkWithData {
    
     static func putArray(array: [Person]) {
         let userDefaults = UserDefaults.standard
@@ -47,15 +47,15 @@ class UserDefaultsWorking {
         }
     }
     
-    static func getImage(fileName: String) -> UIImage {
+    static func getImage(fileName: String) -> UIImage? {
         do {
-            guard let fullPath = getFullPath(to: fileName) else {return Constants.emptyAvatar}
+            guard let fullPath = getFullPath(to: fileName) else {return nil}
             let data = try Data(contentsOf: fullPath)
-            return UIImage(data: data) ?? Constants.emptyAvatar
+            return UIImage(data: data)
         } catch {
             print("Can't get data")
         }
-        return Constants.emptyAvatar
+        return nil
     }
     
     
