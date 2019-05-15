@@ -26,9 +26,12 @@ class UserDefaultsWorking {
         guard let data = UserDefaults.standard.object(forKey: "persons") else {
              return []
         }
-        
-        return NSKeyedUnarchiver.unarchiveObject(with: data as! Data) as! [Person]
-//        return NSKeyedUnarchiver.unarchivedObject(ofClasses: [Person as AnyClass], from: data as! Data) as! [Person]
+
+        do {
+            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [Person]
+        } catch {
+            return []
+        }
        
     }
     

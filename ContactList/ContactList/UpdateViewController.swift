@@ -45,9 +45,9 @@ class UpdateViewController: UIViewController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
+        UserDefaultsWorking.saveImage(by: imageState, name: currentPersonCopy.id)
         contactListDelegate?.updatePersonInformation(person: currentPersonCopy)
         callback?(currentPersonCopy)
-        UserDefaultsWorking.saveImage(by: imageState, name: currentPersonCopy.id)
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
@@ -111,7 +111,7 @@ class UpdateViewController: UIViewController {
         lastNameTF.text = currentPersonCopy.lastName
         phoneTF.text = currentPersonCopy.phoneNumber
         emailTF.text = currentPersonCopy.email
-        imageArea.image = UserDefaultsWorking.getImage(fileName: currentPersonCopy.id)
+        imageArea.image = currentPersonCopy.image
     }
     
     func allFieldsAreValid() -> Bool {
@@ -156,6 +156,7 @@ class UpdateViewController: UIViewController {
             break
         }
         
+        currentPersonCopy.image = imageArea.image!
         self.imageState = imageState
         changeSaveButtonAvailability()
     }

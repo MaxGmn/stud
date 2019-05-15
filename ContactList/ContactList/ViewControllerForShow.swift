@@ -51,7 +51,7 @@ class ViewControllerForShow: UIViewController {
         lastNameLabel.text = person.lastName
         phoneNumberLabel.text = person.phoneNumber
         emailLabel.text = person.email
-        imageArea.image = UserDefaultsWorking.getImage(fileName: person.id)
+        imageArea.image = person.image
     }
 }
 

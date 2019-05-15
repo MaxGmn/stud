@@ -29,9 +29,8 @@ class Person: NSObject {
     var phoneNumber: String?
     var email: String?
     
-    var image: UIImage? {
-        get {return UserDefaultsWorking.getImage(fileName: id)}
-    }
+    lazy var image: UIImage = UserDefaultsWorking.getImage(fileName: id)
+    
     
     init(firstName: String? = "", lastName: String? = "", phoneNumber: String? = "", email: String? = ""){
         self.id  = UUID.init().uuidString
@@ -81,7 +80,7 @@ struct PersonViewModel {
     let lineSecond: String
     
     init(with contact: Person) {
-        image = UserDefaultsWorking.getImage(fileName: contact.id)
+        image = contact.image
         lineFirst = contact.firstName! + (contact.firstName!.isEmpty ? "" : " ") + contact.lastName!
         lineSecond = !contact.phoneNumber!.isEmpty ? contact.phoneNumber! : contact.email!
     }
