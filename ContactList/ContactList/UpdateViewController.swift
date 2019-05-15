@@ -45,6 +45,7 @@ class UpdateViewController: UIViewController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
+        WorkWithData.saveImage(by: imageState, name: currentPersonCopy.id)
         contactListDelegate?.updatePersonInformation(person: currentPersonCopy)
         callback?(currentPersonCopy)
         navigationController?.popViewController(animated: true)
@@ -79,38 +80,24 @@ class UpdateViewController: UIViewController {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTap(tapGuestureRecognizer:)))
         imageArea.isUserInteractionEnabled = true
         imageArea.addGestureRecognizer(recognizer)
+        imageArea.contentMode = .scaleAspectFit
     }
     
     @objc func onImageTap (tapGuestureRecognizer: UITapGestureRecognizer) {
         
-        #if targetEnvironment(simulator)
-            picker.allowsEditing = false
-            picker.sourceType = .photoLibrary
-            picker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-            present(picker, animated: true, completion: nil)
-        #else
-            let alertController = UIAlertController(title: "Choose image source", message: nil, preferredStyle: .actionSheet)
-            let galleryAction = UIAlertAction(title: "Gallery", style: .default){action in
-                self.picker.allowsEditing = false
-                self.picker.sourceType = .photoLibrary
-                self.picker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-                self.present(self.picker, animated: true, completion: nil)
-            }
-            let cameraAction = UIAlertAction(title: "Camera", style: .default){action in
-                self.picker.allowsEditing = false
-                self.picker.sourceType = .camera
-                self.picker.cameraCaptureMode = .photo
-                self.picker.modalPresentationStyle = .fullScreen
-                self.present(self.picker, animated: true, completion: nil)
-        }
+        if let _ = currentPersonCopy.image {
+            let choosePhotoAction = UIAlertController(title: "Choose image source", message: nil, preferredStyle: .actionSheet)
+            let changeAction = UIAlertAction(title: "Change image", style: .default) {action in self.runCooseImageHandler()}
+            let removeAction = UIAlertAction(title: "Remove image", style: .destructive) {action in self.changeCurrentImage(imageState: .removed)}
             let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-            alertController.addAction(galleryAction)
-            alertController.addAction(cameraAction)
-            alertController.addAction(cancel)
-        
-            self.present(alertController, animated: true, completion: nil)
-        #endif
+            
+            choosePhotoAction.addAction(changeAction)
+            choosePhotoAction.addAction(removeAction)
+            choosePhotoAction.addAction(cancel)
+            present(choosePhotoAction, animated: true, completion: nil)
+        } else {
+            runCooseImageHandler()
+        }
     }
     
     func changeCurrentPersonCopy() {
@@ -157,20 +144,59 @@ class UpdateViewController: UIViewController {
         saveButton.isEnabled = (currentPersonForEditing != currentPersonCopy || imageState != ImageEditState.noChanges) && fieldsCheckingIsOk
     }
     
+    func changeCurrentImage(imageState: ImageEditState) {
+        switch imageState {
+        case .removed:
+            imageArea.image = Constants.emptyAvatar
+            currentPersonCopy.image = nil
+        case .changed(let newImage):
+            imageArea.image = newImage
+            currentPersonCopy.image = newImage
+        default:
+            break
+        }
+
+        self.imageState = imageState
+        changeSaveButtonAvailability()
+    }
+    
+    func runCooseImageHandler() {
+        #if targetEnvironment(simulator)
+            showPhotoLibrary()
+        #else
+            let alertController = UIAlertController(title: "Choose image source", message: nil, preferredStyle: .actionSheet)
+            let galleryAction = UIAlertAction(title: "Gallery", style: .default){action in self.showPhotoLibrary()}
+            let cameraAction = UIAlertAction(title: "Camera", style: .default){action in self.runCamera()}
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            alertController.addAction(galleryAction)
+            alertController.addAction(cameraAction)
+            alertController.addAction(cancel)        
+            self.present(alertController, animated: true, completion: nil)
+        #endif
+    }
+    
+    func showPhotoLibrary() {
+        picker.allowsEditing = false
+        picker.sourceType = .photoLibrary
+        picker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+        present(self.picker, animated: true, completion: nil)
+    }
+    
+    func runCamera() {
+        picker.allowsEditing = false
+        picker.sourceType = .camera
+        picker.cameraCaptureMode = .photo
+        picker.modalPresentationStyle = .fullScreen
+        present(self.picker, animated: true, completion: nil)
+    }
 }
 
 extension UpdateViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let chosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        imageArea.contentMode = .scaleAspectFit
-        imageArea.image = chosenImage
-        currentPersonCopy.image = imageArea.image!
-        imageState = .changed(newImage: chosenImage)
-        changeSaveButtonAvailability()
+        let choosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        changeCurrentImage(imageState: .changed(newImage: choosenImage))
         dismiss(animated:true, completion: nil)
-        
-        
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -182,7 +208,6 @@ extension UpdateViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-//        view.endEditing(true)
         return false
     }
 }

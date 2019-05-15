@@ -18,17 +18,22 @@ class TableViewController: UITableViewController {
     var buttonCopy: UIBarButtonItem?
     
     @IBAction func addNewContact(_ sender: Any?) {
-        
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
         controller.contactListDelegate = self
         let navController = UINavigationController(rootViewController: controller)
-        self.present(navController, animated:true, completion: nil)
+        self.present(navController, animated: true, completion: nil)
+    }
+    
+    @IBAction func editTable(_ sender: Any) {
+        tableView.setEditing(!tableView.isEditing, animated: true)
+        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundView = emptyListView
         buttonCopy = addNewContactButton
+        personsArray = WorkWithData.getArray()
     }
     
     func addContactButtonSetVisibility() {
@@ -69,6 +74,41 @@ class TableViewController: UITableViewController {
         cell.updateWith(contact: personsArray[indexPath.row])
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        if tableView.isEditing {
+            return nil
+        }
+        
+        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
+            self.deletePerson(by: self.personsArray[indexPath.row].id)
+        }
+        
+        let updateAction = UITableViewRowAction(style: .default, title: "Edit") {(action, indexPath) in
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
+            controller.currentPersonForEditing = self.personsArray[indexPath.row]
+            controller.contactListDelegate = self
+            let navController = UINavigationController(rootViewController: controller)
+            self.present(navController, animated: true, completion: nil)
+        }
+        
+        deleteAction.backgroundColor = .red
+        updateAction.backgroundColor = .orange
+        
+        return [deleteAction, updateAction]
+    }
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+        
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        personsArray.insert(personsArray.remove(at: sourceIndexPath.row), at: destinationIndexPath.row)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        self.deletePerson(by: personsArray[indexPath.row].id)
+    }
 }
 
 extension TableViewController: ContactListDelegate {
@@ -88,6 +128,8 @@ extension TableViewController: ContactListDelegate {
             tableView.insertRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
         }
+        
+        updatePersonsArray()
     }
     
     func deletePerson(by id: String) {
@@ -103,5 +145,12 @@ extension TableViewController: ContactListDelegate {
             tableView.deleteSections(IndexSet(arrayLiteral: 0), with: .automatic)
         }
         tableView.endUpdates()
+        
+        WorkWithData.saveImage(by: .removed, name: id)
+        updatePersonsArray()
+    }
+    
+    func updatePersonsArray() {
+        WorkWithData.putArray(array: personsArray)
     }
 }

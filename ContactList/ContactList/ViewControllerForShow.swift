@@ -26,10 +26,9 @@ class ViewControllerForShow: UIViewController {
     var contactListDelegate: ContactListDelegate?
     
     override func viewDidLoad() {
-        super.viewDidLoad()        
+        super.viewDidLoad()
         showPersonInformation()
-    }
-    
+    }    
     
     @IBAction func cancelOnAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
