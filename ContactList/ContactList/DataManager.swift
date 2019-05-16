@@ -11,28 +11,52 @@ import UIKit
 
 class DataManager {
    
-    static func putArray(array: [Person]) {
+//    static func putArray(array: [Person]) {
+//        let userDefaults = UserDefaults.standard
+//            do{
+//                let data = try NSKeyedArchiver.archivedData(withRootObject: array, requiringSecureCoding: false)
+//                userDefaults.set(data, forKey: "persons")
+//                userDefaults.synchronize()
+//            } catch {
+//                print("Something wrong")
+//            }
+//    }
+//    
+//    static func getArray() -> [Person]{
+//        guard let data = UserDefaults.standard.object(forKey: "persons") else {
+//             return []
+//        }
+//
+//        do {
+//            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [Person]
+//        } catch {
+//            return []
+//        }
+//       
+//    }
+    
+    static func putDictionary(dictionary: [Character : [Person]]) {
         let userDefaults = UserDefaults.standard
-            do{
-                let data = try NSKeyedArchiver.archivedData(withRootObject: array, requiringSecureCoding: false)
-                userDefaults.set(data, forKey: "persons")
-                userDefaults.synchronize()
-            } catch {
-                print("Something wrong")
-            }
+        do{
+            let data = try NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
+            userDefaults.set(data, forKey: "groupedPersons")
+            userDefaults.synchronize()
+        } catch {
+            print(error)
+        }
     }
     
-    static func getArray() -> [Person]{
-        guard let data = UserDefaults.standard.object(forKey: "persons") else {
-             return []
+    static func getDictionary() -> [Character : [Person]]{
+        guard let data = UserDefaults.standard.object(forKey: "groupedPersons") else {
+            return [:]
         }
-
+        
         do {
-            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [Person]
+            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [Character : [Person]]
         } catch {
-            return []
+            return [:]
         }
-       
+        
     }
     
     static func saveImage (by imageState: ImageEditState, name: String) {

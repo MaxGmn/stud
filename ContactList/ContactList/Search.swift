@@ -16,7 +16,7 @@ class Search {
             let sourceString: String
             
             if isContains(searchText: searchText, in: person.firstName!) || isContains(searchText: searchText, in: person.lastName!){
-                sourceString = person.firstName! + (person.firstName!.isEmpty ? "" : " ") + person.lastName!
+                sourceString = getFullNameString(from: person)
             } else if isContains(searchText: searchText, in: person.phoneNumber!) {
                 sourceString = person.phoneNumber!
             } else if isContains(searchText: searchText, in: person.email!){
@@ -29,6 +29,22 @@ class Search {
             return true
         })
         return (filteredPersons, resultStringsArray)
+    }
+    
+    static func getPersonsArrayFromDictionary(from dictionary: [Character : [Person]]) -> [Person] {
+        var resultArray = [Person]()
+        for item in dictionary {
+            resultArray += item.value
+        }
+        return resultArray
+    }
+    
+    static func isPersonsFullNameFirstCharCompare(firstPerson: Person, secondPerson: Person) -> Bool {
+        return getFullNameString(from: firstPerson).first == getFullNameString(from: secondPerson).first
+    }
+    
+    static func getFullNameString(from person: Person) -> String {
+        return person.firstName! + (person.firstName!.isEmpty ? "" : " ") + person.lastName!
     }
     
     private static func isContains (searchText: String, in source: String) -> Bool {
