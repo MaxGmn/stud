@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class WorkWithData {
+class DataManager {
    
     static func putArray(array: [Person]) {
         let userDefaults = UserDefaults.standard

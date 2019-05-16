@@ -45,7 +45,7 @@ class UpdateViewController: UIViewController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        WorkWithData.saveImage(by: imageState, name: currentPersonCopy.id)
+        DataManager.saveImage(by: imageState, name: currentPersonCopy.id)
         contactListDelegate?.updatePersonInformation(person: currentPersonCopy)
         callback?(currentPersonCopy)
         navigationController?.popViewController(animated: true)

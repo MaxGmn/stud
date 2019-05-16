@@ -11,6 +11,9 @@ import UIKit
 class TableViewController: UITableViewController {
     
     var personsArray = [Person]()
+    var filteredPersons = [Person]()
+    
+    var searchController: UISearchController!
     
     @IBOutlet var emptyListView: UIView!
     
@@ -33,25 +36,37 @@ class TableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.backgroundView = emptyListView
         buttonCopy = addNewContactButton
-        personsArray = WorkWithData.getArray()
+        personsArray = DataManager.getArray()
+        
+        changeSearchBarVisibility()
     }
     
     func addContactButtonSetVisibility() {
         navigationItem.setRightBarButton(!personsArray.isEmpty ? buttonCopy : nil, animated: true)
     }
+    
+    func changeSearchBarVisibility() {
+//        if personsArray.count >= 10 {
+            let searchResultController = self.storyboard!.instantiateViewController(withIdentifier: "SearchResultController") as! SearchResultController
+            searchResultController.mainTableView = self
+            searchController = UISearchController(searchResultsController: searchResultController)
+            searchController.searchResultsUpdater = searchResultController
+            searchController.dimsBackgroundDuringPresentation = false
+            definesPresentationContext = true
+            tableView.tableHeaderView = searchController.searchBar
+//        } else {
+//            tableView.tableHeaderView = nil
+//        }
+    }
 
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        
         addContactButtonSetVisibility()
-        
         if personsArray.isEmpty {
             tableView.separatorStyle = .none
             tableView.backgroundView?.isHidden = false
             return 0
         }
-        
         tableView.separatorStyle = .singleLine
         tableView.backgroundView?.isHidden = true
         return 1
@@ -67,6 +82,7 @@ class TableViewController: UITableViewController {
         controller.person = personsArray[indexPath.row]
         controller.contactListDelegate = self
         navigationController?.pushViewController(controller, animated: true)
+        changeSearchBarVisibility()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -79,11 +95,9 @@ class TableViewController: UITableViewController {
         if tableView.isEditing {
             return nil
         }
-        
         let deleteAction = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
             self.deletePerson(by: self.personsArray[indexPath.row].id)
         }
-        
         let updateAction = UITableViewRowAction(style: .default, title: "Edit") {(action, indexPath) in
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
             controller.currentPersonForEditing = self.personsArray[indexPath.row]
@@ -94,7 +108,6 @@ class TableViewController: UITableViewController {
         
         deleteAction.backgroundColor = .red
         updateAction.backgroundColor = .orange
-        
         return [deleteAction, updateAction]
     }
     
@@ -108,6 +121,7 @@ class TableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         self.deletePerson(by: personsArray[indexPath.row].id)
+        changeSearchBarVisibility()
     }
 }
 
@@ -128,7 +142,6 @@ extension TableViewController: ContactListDelegate {
             tableView.insertRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
         }
-        
         updatePersonsArray()
     }
     
@@ -146,11 +159,11 @@ extension TableViewController: ContactListDelegate {
         }
         tableView.endUpdates()
         
-        WorkWithData.saveImage(by: .removed, name: id)
+        DataManager.saveImage(by: .removed, name: id)
         updatePersonsArray()
     }
     
     func updatePersonsArray() {
-        WorkWithData.putArray(array: personsArray)
+        DataManager.putArray(array: personsArray)
     }
 }
