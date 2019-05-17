@@ -57,10 +57,11 @@ class DataManager {
         }
         return nil
     }
+}
+
+private extension DataManager {
     
-    
-    
-    private static func removeFile(fileName: String) {       
+    private static func removeFile(fileName: String) {
         do {
             guard let fullPath = getFullPath(to: fileName) else {return}
             let fileManager = FileManager.default
@@ -69,7 +70,6 @@ class DataManager {
             print("File \(fileName).jpeg is not deleted")
         }
     }
-    
     
     private static func createFile(fileName: String, image: UIImage) {
         do {

@@ -10,15 +10,15 @@ import UIKit
 
 class TableViewController: UITableViewController {
     
-    var groupedPersons: [String : [Person]]!
-    var keysArray = [String]()
+    private (set) var groupedPersons: [String : [Person]]!
+    private (set) var keysArray = [String]()
     
-    var searchController: UISearchController!
+    private var searchController: UISearchController!
     
-    @IBOutlet var emptyListView: UIView!
+    @IBOutlet private var emptyListView: UIView!
     
-    @IBOutlet weak var addNewContactButton: UIBarButtonItem!
-    var buttonCopy: UIBarButtonItem?
+    @IBOutlet private weak var addNewContactButton: UIBarButtonItem!
+    private var buttonCopy: UIBarButtonItem?
     
     @IBAction func addNewContact(_ sender: Any?) {
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
@@ -39,27 +39,6 @@ class TableViewController: UITableViewController {
         groupedPersons = DataManager.getDictionary()
         createSearchBar()
         changeSearchBarVisibility()
-    }
-    
-    private func addContactButtonSetVisibility() {
-        navigationItem.setRightBarButton(!groupedPersons.isEmpty ? buttonCopy : nil, animated: true)
-    }
-    
-    private func createSearchBar() {
-        let searchResultController = self.storyboard!.instantiateViewController(withIdentifier: "SearchResultController") as! SearchResultController
-        searchResultController.mainTableView = self
-        searchController = UISearchController(searchResultsController: searchResultController)
-        searchController.searchResultsUpdater = searchResultController
-        searchController.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = true
-    }
-    
-    private func changeSearchBarVisibility() {
-        if Search.getPersonsArrayFromDictionary(from: groupedPersons).count >= 10 {
-            tableView.tableHeaderView = searchController.searchBar
-        } else {
-            tableView.tableHeaderView = nil
-        }
     }
 
     // MARK: - Table view data source
@@ -149,25 +128,32 @@ extension TableViewController: ContactListDelegate {
     }
     
     func deletePerson(by id: String) {
-        for dictionaryItem in groupedPersons {
-            guard let index = (dictionaryItem.value.firstIndex {(item) -> Bool in item.id == id}) else {
-                continue
-            }
-            tableView.beginUpdates()
-            groupedPersons[dictionaryItem.key]!.remove(at: index)
-            let keysArrayIndex = keysArray.firstIndex(of: dictionaryItem.key)!
-            let indexPath = IndexPath(row: index, section: keysArrayIndex)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            if groupedPersons[dictionaryItem.key]!.isEmpty {
-                groupedPersons.remove(at: groupedPersons.index(forKey: dictionaryItem.key)!)
-                keysArray.remove(at: keysArrayIndex)
-                tableView.deleteSections(IndexSet(arrayLiteral: keysArrayIndex), with: .automatic)
-            }
-            tableView.endUpdates()
-            DataManager.saveImage(by: .removed, name: id)
-            updateDictionary()
-            changeSearchBarVisibility()
-            break
+        removeCurrentPerson(by: id)
+        updateDictionary()
+        changeSearchBarVisibility()
+    }
+}
+
+private extension TableViewController {
+    
+    private func addContactButtonSetVisibility() {
+        navigationItem.setRightBarButton(!groupedPersons.isEmpty ? buttonCopy : nil, animated: true)
+    }
+    
+    private func createSearchBar() {
+        let searchResultController = self.storyboard!.instantiateViewController(withIdentifier: "SearchResultController") as! SearchResultController
+        searchResultController.mainTableView = self
+        searchController = UISearchController(searchResultsController: searchResultController)
+        searchController.searchResultsUpdater = searchResultController
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+    }
+    
+    private func changeSearchBarVisibility() {
+        if Search.getPersonsArrayFromDictionary(from: groupedPersons).count >= 10 {
+            tableView.tableHeaderView = searchController.searchBar
+        } else {
+            tableView.tableHeaderView = nil
         }
     }
     
@@ -176,8 +162,7 @@ extension TableViewController: ContactListDelegate {
             keysArray.append(categoryName)
             keysArray.sort()
             groupedPersons[categoryName] = []
-            let newCategoryIndex = keysArray.firstIndex(of: categoryName)
-            tableView.insertSections(IndexSet(arrayLiteral: newCategoryIndex!), with: .automatic)
+            tableView.insertSections(IndexSet(arrayLiteral: getKeysArrayIndex(by: categoryName)), with: .automatic)
         }
     }
     
@@ -187,7 +172,7 @@ extension TableViewController: ContactListDelegate {
                 continue
             }
             let personOldVersion = groupedPersons[dictionaryItem.key]![index]
-            let sectionNumber = keysArray.firstIndex(of: dictionaryItem.key)!
+            let sectionNumber = getKeysArrayIndex(by: dictionaryItem.key)
             let indexPath = IndexPath(row: index, section: sectionNumber)
             
             if Search.isPersonsFullNameFirstCharCompare(firstPerson: personOldVersion, secondPerson: person) {
@@ -195,13 +180,14 @@ extension TableViewController: ContactListDelegate {
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             } else {
                 if let targetDirectory = groupedPersons[categoryName] {
-                    let targetSectionNumber = keysArray.firstIndex(of: categoryName)!
-                    let targetRow = targetDirectory.count
-                    let targetIndexPath = IndexPath(row: targetRow, section: targetSectionNumber)
+                    let targetIndexPath = IndexPath(row: targetDirectory.count, section: getKeysArrayIndex(by: categoryName))
                     groupedPersons[dictionaryItem.key]!.remove(at: index)
                     groupedPersons[categoryName]?.append(person)
                     tableView.moveRow(at: indexPath, to: targetIndexPath)
                     tableView.reloadRows(at: [targetIndexPath], with: .automatic)
+                    if groupedPersons[dictionaryItem.key]!.isEmpty {
+                        removeSection(by: dictionaryItem.key)
+                    }
                 }
             }
             return true
@@ -217,6 +203,35 @@ extension TableViewController: ContactListDelegate {
             groupedPersons[categoryName]?.append(person)
             tableView.insertRows(at: [targetIndexPath], with: .automatic)
         }
+    }
+    
+    private func removeCurrentPerson(by id: String)    {
+        for dictionaryItem in groupedPersons {
+            guard let index = (dictionaryItem.value.firstIndex {(item) -> Bool in item.id == id}) else {
+                continue
+            }
+            tableView.beginUpdates()
+            groupedPersons[dictionaryItem.key]!.remove(at: index)
+            let indexPath = IndexPath(row: index, section: getKeysArrayIndex(by: dictionaryItem.key))
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            if groupedPersons[dictionaryItem.key]!.isEmpty {
+                removeSection(by: dictionaryItem.key)
+            }
+            tableView.endUpdates()
+            DataManager.saveImage(by: .removed, name: id)
+            break
+        }
+    }
+    
+    private func getKeysArrayIndex(by key: String) -> Int {
+        return keysArray.firstIndex(of: key)!
+    }
+    
+    private func removeSection(by key: String) {
+        let keysArrayIndex = keysArray.firstIndex(of: key)!
+        groupedPersons.remove(at: groupedPersons.index(forKey: key)!)
+        keysArray.remove(at: keysArrayIndex)
+        tableView.deleteSections(IndexSet(arrayLiteral: keysArrayIndex), with: .automatic)
     }
     
     private func updateDictionary() {

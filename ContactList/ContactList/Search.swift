@@ -9,6 +9,7 @@
 import Foundation
 
 class Search {
+    
     static func getFilterResults(from array: [Person], by searchText: String) -> ([Person], [NSAttributedString]) {
         var resultStringsArray = [NSAttributedString]()
         
@@ -46,6 +47,9 @@ class Search {
     static func getFullNameString(from person: Person) -> String {
         return person.firstName! + (person.firstName!.isEmpty ? "" : " ") + person.lastName!
     }
+}
+
+private extension Search {
     
     private static func isContains (searchText: String, in source: String) -> Bool {
         return source.lowercased().contains(searchText.lowercased())

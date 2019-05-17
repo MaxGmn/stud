@@ -11,15 +11,15 @@ import UIKit
 class ViewControllerForShow: UIViewController {
     
     
-    @IBOutlet weak var firstNameLabel: UILabel!
+    @IBOutlet private weak var firstNameLabel: UILabel!
     
-    @IBOutlet weak var lastNameLabel: UILabel!
+    @IBOutlet private weak var lastNameLabel: UILabel!
     
-    @IBOutlet weak var phoneNumberLabel: UILabel!
+    @IBOutlet private weak var phoneNumberLabel: UILabel!
     
-    @IBOutlet weak var emailLabel: UILabel!
+    @IBOutlet private weak var emailLabel: UILabel!
     
-    @IBOutlet weak var imageArea: UIImageView!
+    @IBOutlet private weak var imageArea: UIImageView!
     
     var person: Person!
     
@@ -45,8 +45,11 @@ class ViewControllerForShow: UIViewController {
         
         navigationController?.pushViewController(controller, animated: true)
     }
+}
+
+private extension ViewControllerForShow {
     
-    func showPersonInformation() {
+    private func showPersonInformation() {
         firstNameLabel.text = person.firstName
         lastNameLabel.text = person.lastName
         phoneNumberLabel.text = person.phoneNumber
