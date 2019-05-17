@@ -20,7 +20,7 @@ class SearchResultController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.personsArray = mainTableView.personsArray
+        self.personsArray = Search.getPersonsArrayFromDictionary(from: mainTableView.groupedPersons)
     }
 
     // MARK: - Table view data source

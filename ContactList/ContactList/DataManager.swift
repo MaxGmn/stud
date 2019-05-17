@@ -10,35 +10,11 @@ import Foundation
 import UIKit
 
 class DataManager {
-   
-//    static func putArray(array: [Person]) {
-//        let userDefaults = UserDefaults.standard
-//            do{
-//                let data = try NSKeyedArchiver.archivedData(withRootObject: array, requiringSecureCoding: false)
-//                userDefaults.set(data, forKey: "persons")
-//                userDefaults.synchronize()
-//            } catch {
-//                print("Something wrong")
-//            }
-//    }
-//    
-//    static func getArray() -> [Person]{
-//        guard let data = UserDefaults.standard.object(forKey: "persons") else {
-//             return []
-//        }
-//
-//        do {
-//            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [Person]
-//        } catch {
-//            return []
-//        }
-//       
-//    }
-    
-    static func putDictionary(dictionary: [Character : [Person]]) {
+       
+    static func putDictionary(myDictionary: [String : [Person]]) {
         let userDefaults = UserDefaults.standard
         do{
-            let data = try NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
+            let data = try NSKeyedArchiver.archivedData(withRootObject: myDictionary, requiringSecureCoding: false)
             userDefaults.set(data, forKey: "groupedPersons")
             userDefaults.synchronize()
         } catch {
@@ -46,13 +22,13 @@ class DataManager {
         }
     }
     
-    static func getDictionary() -> [Character : [Person]]{
+    static func getDictionary() -> [String : [Person]]{
         guard let data = UserDefaults.standard.object(forKey: "groupedPersons") else {
             return [:]
         }
         
         do {
-            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [Character : [Person]]
+            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [String : [Person]]
         } catch {
             return [:]
         }

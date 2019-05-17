@@ -31,7 +31,7 @@ class Search {
         return (filteredPersons, resultStringsArray)
     }
     
-    static func getPersonsArrayFromDictionary(from dictionary: [Character : [Person]]) -> [Person] {
+    static func getPersonsArrayFromDictionary(from dictionary: [String : [Person]]) -> [Person] {
         var resultArray = [Person]()
         for item in dictionary {
             resultArray += item.value
