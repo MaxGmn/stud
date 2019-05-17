@@ -28,9 +28,7 @@ class TableViewController: UITableViewController {
     
     @IBAction func editTable(_ sender: Any) {
         tableView.setEditing(!tableView.isEditing, animated: true)
-        let editButton = NSLocalizedString("EDIT_BUTTON", comment: "Edit")
-        let doneButton = NSLocalizedString("DONE_BUTTON", comment: "Done")
-        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? doneButton : editButton
+        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
     }
     
     override func viewDidLoad() {
@@ -85,14 +83,11 @@ class TableViewController: UITableViewController {
         if tableView.isEditing {
             return nil
         }
-        
-        let editButton = NSLocalizedString("EDIT_BUTTON", comment: "Edit")
-        let deleteButton = NSLocalizedString("DELETE_BUTTON", comment: "Delete")
-        
-        let deleteAction = UITableViewRowAction(style: .default, title: deleteButton) {(action, indexPath) in
+                
+        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
             self.deletePerson(by: self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row].id)
         }
-        let updateAction = UITableViewRowAction(style: .default, title: editButton) {(action, indexPath) in
+        let updateAction = UITableViewRowAction(style: .default, title: "Edit") {(action, indexPath) in
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
             controller.currentPersonForEditing = self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row]
             controller.contactListDelegate = self

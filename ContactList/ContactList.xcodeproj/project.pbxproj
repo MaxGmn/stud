@@ -21,7 +21,6 @@
 		620395EA228C39A200734092 /* SearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E9228C39A200734092 /* SearchResultController.swift */; };
 		620395EC228D3E8800734092 /* ContactItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395EB228D3E8800734092 /* ContactItem.swift */; };
 		620395EE228D402D00734092 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395ED228D402D00734092 /* Search.swift */; };
-		620395F2228EB77400734092 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 620395F4228EB77400734092 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,9 +40,6 @@
 		620395E9228C39A200734092 /* SearchResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultController.swift; sourceTree = "<group>"; };
 		620395EB228D3E8800734092 /* ContactItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactItem.swift; sourceTree = "<group>"; };
 		620395ED228D402D00734092 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
-		620395EF228EB36400734092 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
-		620395F3228EB77400734092 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		620395F5228EB77900734092 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +83,6 @@
 				620395E32281A0AA00734092 /* TableViewCell.swift */,
 				620395C922805B7C00734092 /* ViewControllerForShow.swift */,
 				620395DB22805E2500734092 /* UpdateViewController.swift */,
-				620395F4228EB77400734092 /* Localizable.strings */,
 				620395CB22805B7C00734092 /* Main.storyboard */,
 				620395CE22805B7D00734092 /* Assets.xcassets */,
 				620395D022805B7D00734092 /* LaunchScreen.storyboard */,
@@ -156,7 +151,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				620395D222805B7D00734092 /* LaunchScreen.storyboard in Resources */,
-				620395F2228EB77400734092 /* Localizable.strings in Resources */,
 				620395CF22805B7D00734092 /* Assets.xcassets in Resources */,
 				620395CD22805B7C00734092 /* Main.storyboard in Resources */,
 			);
@@ -190,7 +184,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				620395CC22805B7C00734092 /* Base */,
-				620395EF228EB36400734092 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -201,15 +194,6 @@
 				620395D122805B7D00734092 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		620395F4228EB77400734092 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				620395F3228EB77400734092 /* ru */,
-				620395F5228EB77900734092 /* en */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
