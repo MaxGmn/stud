@@ -85,11 +85,11 @@ class TableViewController: UITableViewController {
         }
                 
         let deleteAction = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
-            self.deletePerson(by: self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row].id)
+            self.deletePerson(by: self.getPerson(at: indexPath).id)
         }
         let updateAction = UITableViewRowAction(style: .default, title: "Edit") {(action, indexPath) in
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
-            controller.currentPersonForEditing = self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row]
+            controller.currentPersonForEditing = self.getPerson(at: indexPath)
             controller.contactListDelegate = self
             let navController = UINavigationController(rootViewController: controller)
             self.present(navController, animated: true, completion: nil)
@@ -105,7 +105,7 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        self.deletePerson(by: groupedPersons[self.keysArray[indexPath.section]]![indexPath.row].id)
+        self.deletePerson(by: getPerson(at: indexPath).id)
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
@@ -117,7 +117,7 @@ extension TableViewController: ContactListDelegate {
     
     func updatePersonInformation(person: Person) {
         tableView.beginUpdates()
-        let categoryName = Search.getFullNameString(from: person).first?.uppercased() ?? "~"
+        let categoryName = person.fullName.first?.uppercased() ?? "~"
         addNewSection(with: categoryName)
         if !updateCurrentPerson(person: person, in: categoryName) {
             appendNewPerson(person: person, in: categoryName)
@@ -128,12 +128,11 @@ extension TableViewController: ContactListDelegate {
     }
     
     func deletePerson(by id: String) {
-        let result = getCategoryNameAndIndex(by: id)
-        if result.isEmpty {
+        guard let result = getCategoryNameAndIndex(by: id) else {
             return
         }
         
-        removeCurrentPerson(by: result[0])
+        removeCurrentPerson(by: result)
         DataManager.saveImage(by: .removed, name: id)
         updateDictionary()
         changeSearchBarVisibility()
@@ -177,14 +176,13 @@ private extension TableViewController {
     }
     
     func updateCurrentPerson(person: Person, in newCategoryName: String) -> Bool {
-        let result = getCategoryNameAndIndex(by: person.id)
-        if result.isEmpty{
+        guard let result = getCategoryNameAndIndex(by: person.id) else {
             return false
         }
         
         let currentDirectoryName: String
         let currentArrayIndex: Int
-        (currentDirectoryName, currentArrayIndex) = result[0]
+        (currentDirectoryName, currentArrayIndex) = result
         
         let personOldVersion = groupedPersons[currentDirectoryName]![currentArrayIndex]
         let sectionNumber = getKeysArrayIndex(by: currentDirectoryName)
@@ -229,12 +227,13 @@ private extension TableViewController {
             tableView.endUpdates()
     }
     
-    func getCategoryNameAndIndex(by id: String) -> [(String, Int)] {
-        return groupedPersons.compactMap({(key, value) -> (String, Int)? in
-            if let foundedIndex: Int = value.firstIndex(where: {(person) -> Bool in return person.id == id}) {
-                return (key, foundedIndex)
+    func getCategoryNameAndIndex(by id: String) -> (String, Int)? {
+        for category in groupedPersons {
+            if let foundedIndex: Int = category.value.firstIndex(where: {(person) -> Bool in return person.id == id}) {
+                return (category.key, foundedIndex)
             }
-            return nil})
+        }
+        return nil
     }
     
     func getKeysArrayIndex(by key: String) -> Int {

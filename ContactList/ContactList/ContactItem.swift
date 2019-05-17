@@ -17,6 +17,10 @@ class Person: NSObject {
     var phoneNumber: String
     var email: String
     
+    var fullName: String {
+        return firstName + (firstName.isEmpty ? "" : " ") + lastName
+    }
+    
     lazy var image: UIImage? = DataManager.getImage(fileName: id)
     
     
