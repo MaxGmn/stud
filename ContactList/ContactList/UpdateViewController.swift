@@ -86,10 +86,16 @@ class UpdateViewController: UIViewController {
     @objc func onImageTap (tapGuestureRecognizer: UITapGestureRecognizer) {
         
         if let _ = currentPersonCopy.image {
-            let choosePhotoAction = UIAlertController(title: "Choose image source", message: nil, preferredStyle: .actionSheet)
-            let changeAction = UIAlertAction(title: "Change image", style: .default) {action in self.runCooseImageHandler()}
-            let removeAction = UIAlertAction(title: "Remove image", style: .destructive) {action in self.changeCurrentImage(imageState: .removed)}
-            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            let actionTitle = NSLocalizedString("CHANGE_IMAGE_TITLE", comment: "Choose action")
+            let changeActionTitle = NSLocalizedString("CHANGE_IMAGE_ACTION", comment: "Change image")
+            let removeActionTitle = NSLocalizedString("REMOVE_IMAGE_ACTION", comment: "Remove image")
+            let cancelTitle = NSLocalizedString("CANCEL_ACTION", comment: "Cancel")
+            
+            let choosePhotoAction = UIAlertController(title: actionTitle, message: nil, preferredStyle: .actionSheet)
+            let changeAction = UIAlertAction(title: changeActionTitle, style: .default) {action in self.runCooseImageHandler()}
+            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed)}
+            let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
             
             choosePhotoAction.addAction(changeAction)
             choosePhotoAction.addAction(removeAction)
@@ -188,10 +194,16 @@ private extension UpdateViewController {
         #if targetEnvironment(simulator)
         showPhotoLibrary()
         #else
-        let alertController = UIAlertController(title: "Choose image source", message: nil, preferredStyle: .actionSheet)
-        let galleryAction = UIAlertAction(title: "Gallery", style: .default){action in self.showPhotoLibrary()}
-        let cameraAction = UIAlertAction(title: "Camera", style: .default){action in self.runCamera()}
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        let actionTitle = NSLocalizedString("CHANGE_SOURCE_TITLE", comment: "Choose image source")
+        let galleryActionTitle = NSLocalizedString("GALLERY_ACTION", comment: "Gallery")
+        let cameraActionTitle = NSLocalizedString("CAMERA_ACTION", comment: "Camera")
+        let cancelTitle = NSLocalizedString("CANCEL_ACTION", comment: "Cancel")
+        
+        let alertController = UIAlertController(title: actionTitle, message: nil, preferredStyle: .actionSheet)
+        let galleryAction = UIAlertAction(title: galleryActionTitle, style: .default){action in self.showPhotoLibrary()}
+        let cameraAction = UIAlertAction(title: cameraActionTitle, style: .default){action in self.runCamera()}
+        let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
         alertController.addAction(galleryAction)
         alertController.addAction(cameraAction)
         alertController.addAction(cancel)
