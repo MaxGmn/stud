@@ -13,8 +13,8 @@ struct Constants {
     static let emptyAvatar = UIImage(named: "emptyAvatar")!
     static let validColor = UIColor.white
     static let invalidColor = UIColor.red
-    static let grayTextColor = [NSAttributedString.Key.foregroundColor: UIColor.gray]
-    static let blackTextColor = [NSAttributedString.Key.foregroundColor: UIColor.black]
+    static let grayColorAttribute = [NSAttributedString.Key.foregroundColor: UIColor.gray]
+    static let blackColorAttribute = [NSAttributedString.Key.foregroundColor: UIColor.black]
 }
 
 extension Bool {

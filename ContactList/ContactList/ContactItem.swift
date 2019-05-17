@@ -12,15 +12,15 @@ import UIKit
 class Person: NSObject {
     
     private (set) var id: String
-    var firstName: String?
-    var lastName: String?
-    var phoneNumber: String?
-    var email: String?
+    var firstName: String
+    var lastName: String
+    var phoneNumber: String
+    var email: String
     
     lazy var image: UIImage? = DataManager.getImage(fileName: id)
     
     
-    init(firstName: String? = "", lastName: String? = "", phoneNumber: String? = "", email: String? = ""){
+    init(firstName: String = "", lastName: String = "", phoneNumber: String = "", email: String = ""){
         self.id  = UUID.init().uuidString
         self.firstName = firstName
         self.lastName = lastName
@@ -69,7 +69,7 @@ struct PersonViewModel {
     
     init(with contact: Person) {
         image = contact.image ?? Constants.emptyAvatar
-        lineFirst = contact.firstName! + (contact.firstName!.isEmpty ? "" : " ") + contact.lastName!
-        lineSecond = !contact.phoneNumber!.isEmpty ? contact.phoneNumber! : contact.email!
+        lineFirst = contact.firstName + (contact.firstName.isEmpty ? "" : " ") + contact.lastName
+        lineSecond = !contact.phoneNumber.isEmpty ? contact.phoneNumber : contact.email
     }
 }

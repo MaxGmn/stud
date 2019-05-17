@@ -10,11 +10,9 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
 
-    @IBOutlet weak var cellImage: UIImageView!
-    
-    @IBOutlet weak var cellNameLabel: UILabel!
-    
-    @IBOutlet weak var cellContactLabel: UILabel!
+    @IBOutlet private weak var cellImage: UIImageView!
+    @IBOutlet private weak var cellNameLabel: UILabel!
+    @IBOutlet private weak var cellContactLabel: UILabel!
     
     func updateWith (contact: Person) {
         let personViewModel = PersonViewModel(with: contact)

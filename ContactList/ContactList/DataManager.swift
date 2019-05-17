@@ -61,7 +61,7 @@ class DataManager {
 
 private extension DataManager {
     
-    private static func removeFile(fileName: String) {
+    static func removeFile(fileName: String) {
         do {
             guard let fullPath = getFullPath(to: fileName) else {return}
             let fileManager = FileManager.default
@@ -71,7 +71,7 @@ private extension DataManager {
         }
     }
     
-    private static func createFile(fileName: String, image: UIImage) {
+    static func createFile(fileName: String, image: UIImage) {
         do {
             guard let fullPath = getFullPath(to: fileName) else {return}
             let data = image.jpegData(compressionQuality: 0.5)
@@ -81,7 +81,7 @@ private extension DataManager {
         }
     }
     
-    private static func getFullPath(to fileName: String) -> URL? {
+    static func getFullPath(to fileName: String) -> URL? {
         do {
             let documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             let fullPath = documentsDirectory.appendingPathComponent(fileName + ".jpeg")

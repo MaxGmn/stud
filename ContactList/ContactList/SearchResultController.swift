@@ -13,10 +13,11 @@ class SearchResultController: UITableViewController {
     @IBOutlet weak var searchResultLabel: UILabel!
     
     var mainTableView: TableViewController!
-    var personsArray: [Person]!
-    var filteredPersons = [Person]()
-    var resultStringsArray = [NSAttributedString]()
-    var searchText = ""
+    
+    private var personsArray: [Person]!
+    private var filteredPersons = [Person]()
+    private var resultStringsArray = [NSAttributedString]()
+    private var searchText = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,10 +25,6 @@ class SearchResultController: UITableViewController {
     }
 
     // MARK: - Table view data source
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredPersons.count
     }

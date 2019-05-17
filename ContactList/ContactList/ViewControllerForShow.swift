@@ -12,17 +12,12 @@ class ViewControllerForShow: UIViewController {
     
     
     @IBOutlet private weak var firstNameLabel: UILabel!
-    
     @IBOutlet private weak var lastNameLabel: UILabel!
-    
     @IBOutlet private weak var phoneNumberLabel: UILabel!
-    
     @IBOutlet private weak var emailLabel: UILabel!
-    
     @IBOutlet private weak var imageArea: UIImageView!
     
-    var person: Person!
-    
+    var person: Person!    
     var contactListDelegate: ContactListDelegate?
     
     override func viewDidLoad() {
@@ -49,7 +44,7 @@ class ViewControllerForShow: UIViewController {
 
 private extension ViewControllerForShow {
     
-    private func showPersonInformation() {
+    func showPersonInformation() {
         firstNameLabel.text = person.firstName
         lastNameLabel.text = person.lastName
         phoneNumberLabel.text = person.phoneNumber

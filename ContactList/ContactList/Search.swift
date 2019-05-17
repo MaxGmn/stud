@@ -16,12 +16,12 @@ class Search {
         let filteredPersons = array.filter({ (person) -> Bool in
             let sourceString: String
             
-            if isContains(searchText: searchText, in: person.firstName!) || isContains(searchText: searchText, in: person.lastName!){
+            if contains(searchText: searchText, in: person.firstName) || contains(searchText: searchText, in: person.lastName){
                 sourceString = getFullNameString(from: person)
-            } else if isContains(searchText: searchText, in: person.phoneNumber!) {
-                sourceString = person.phoneNumber!
-            } else if isContains(searchText: searchText, in: person.email!){
-                sourceString = person.email!
+            } else if contains(searchText: searchText, in: person.phoneNumber) {
+                sourceString = person.phoneNumber
+            } else if contains(searchText: searchText, in: person.email){
+                sourceString = person.email
             } else {
                 return false
             }
@@ -33,11 +33,7 @@ class Search {
     }
     
     static func getPersonsArrayFromDictionary(from dictionary: [String : [Person]]) -> [Person] {
-        var resultArray = [Person]()
-        for item in dictionary {
-            resultArray += item.value
-        }
-        return resultArray
+        return dictionary.flatMap({(key, value) -> [Person] in return value})
     }
     
     static func isPersonsFullNameFirstCharCompare(firstPerson: Person, secondPerson: Person) -> Bool {
@@ -45,21 +41,21 @@ class Search {
     }
     
     static func getFullNameString(from person: Person) -> String {
-        return person.firstName! + (person.firstName!.isEmpty ? "" : " ") + person.lastName!
+        return person.firstName + (person.firstName.isEmpty ? "" : " ") + person.lastName
     }
 }
 
 private extension Search {
     
-    private static func isContains (searchText: String, in source: String) -> Bool {
+    static func contains (searchText: String, in source: String) -> Bool {
         return source.lowercased().contains(searchText.lowercased())
     }
     
-    private static func getResultString(sourceString: String, searchText: String) -> NSAttributedString {
-        let attributeString = NSMutableAttributedString(string: sourceString, attributes: Constants.grayTextColor)
+    static func getResultString(sourceString: String, searchText: String) -> NSAttributedString {
+        let attributeString = NSMutableAttributedString(string: sourceString, attributes: Constants.grayColorAttribute)
         if let indexRange = sourceString.lowercased().range(of: searchText.lowercased()) {
             let range = NSRange(indexRange, in: sourceString)
-            attributeString.setAttributes(Constants.blackTextColor, range: range)
+            attributeString.setAttributes(Constants.blackColorAttribute, range: range)
         }
         return attributeString
     }

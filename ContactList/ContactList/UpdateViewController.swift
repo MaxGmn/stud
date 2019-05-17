@@ -10,34 +10,22 @@ import UIKit
 
 class UpdateViewController: UIViewController {
     
-    
     @IBOutlet private weak var firstNameTF: UITextField!
-    
     @IBOutlet private weak var lastNameTF: UITextField!
-    
     @IBOutlet private weak var phoneTF: UITextField!
-    
     @IBOutlet private weak var emailTF: UITextField!
-    
     @IBOutlet private weak var imageArea: UIImageView!
-    
     @IBOutlet private weak var saveButton: UIBarButtonItem!
-    
     @IBOutlet private weak var removeButton: UIBarButtonItem!
     
-    
     private var imageState = ImageEditState.noChanges
-    
-    var currentPersonForEditing: Person!
     private var currentPersonCopy: Person!
-    
-    var contactListDelegate: ContactListDelegate?
-    var callback: ((Person) -> Void)?
-    
     private var fieldsCheckingIsOk: Bool!
     
+    var currentPersonForEditing: Person!
+    var contactListDelegate: ContactListDelegate?
+    var callback: ((Person) -> Void)?
     let picker = UIImagePickerController()
-    
     
     @IBAction func cancelAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
@@ -58,7 +46,6 @@ class UpdateViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    
     @IBAction func versionComparison(_ sender: Any) {
         changeCurrentPersonCopy()
         fieldsCheckingIsOk = allFieldsAreValid() && atLeastOneFieldIsFilled()
@@ -67,44 +54,14 @@ class UpdateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         if currentPersonForEditing == nil {
             currentPersonForEditing = Person()
         }
-        
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
         fillTextFields()
         fieldsCheckingIsOk = allFieldsAreValid() && atLeastOneFieldIsFilled()
-        
-        picker.delegate = self
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTap(tapGuestureRecognizer:)))
-        imageArea.isUserInteractionEnabled = true
-        imageArea.addGestureRecognizer(recognizer)
-        imageArea.contentMode = .scaleAspectFit
+        addImagePicker()
     }
-    
-    @objc func onImageTap (tapGuestureRecognizer: UITapGestureRecognizer) {
-        
-        if let _ = currentPersonCopy.image {
-            
-            let actionTitle = NSLocalizedString("CHANGE_IMAGE_TITLE", comment: "Choose action")
-            let changeActionTitle = NSLocalizedString("CHANGE_IMAGE_ACTION", comment: "Change image")
-            let removeActionTitle = NSLocalizedString("REMOVE_IMAGE_ACTION", comment: "Remove image")
-            let cancelTitle = NSLocalizedString("CANCEL_ACTION", comment: "Cancel")
-            
-            let choosePhotoAction = UIAlertController(title: actionTitle, message: nil, preferredStyle: .actionSheet)
-            let changeAction = UIAlertAction(title: changeActionTitle, style: .default) {action in self.runCooseImageHandler()}
-            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed)}
-            let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
-            
-            choosePhotoAction.addAction(changeAction)
-            choosePhotoAction.addAction(removeAction)
-            choosePhotoAction.addAction(cancel)
-            present(choosePhotoAction, animated: true, completion: nil)
-        } else {
-            runCooseImageHandler()
-        }
-    }    
 }
 
 extension UpdateViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
@@ -130,14 +87,14 @@ extension UpdateViewController: UITextFieldDelegate {
 
 private extension UpdateViewController {
     
-    private func changeCurrentPersonCopy() {
-        currentPersonCopy.firstName = firstNameTF.text
-        currentPersonCopy.lastName = lastNameTF.text
-        currentPersonCopy.phoneNumber = phoneTF.text
-        currentPersonCopy.email = emailTF.text
+    func changeCurrentPersonCopy() {
+        currentPersonCopy.firstName = firstNameTF.text ?? ""
+        currentPersonCopy.lastName = lastNameTF.text ?? ""
+        currentPersonCopy.phoneNumber = phoneTF.text ?? ""
+        currentPersonCopy.email = emailTF.text ?? ""
     }
     
-    private func fillTextFields() {
+    func fillTextFields() {
         firstNameTF.text = currentPersonCopy.firstName
         lastNameTF.text = currentPersonCopy.lastName
         phoneTF.text = currentPersonCopy.phoneNumber
@@ -145,36 +102,67 @@ private extension UpdateViewController {
         imageArea.image = currentPersonCopy.image ?? Constants.emptyAvatar
     }
     
-    private func allFieldsAreValid() -> Bool {
-        let firstNameValidationResult = Validation.isValidField(text: currentPersonCopy.firstName!, kindOfField: .forTextField(maxLength: 20))
+    func allFieldsAreValid() -> Bool {
+        let firstNameValidationResult = Validation.isValidField(text: currentPersonCopy.firstName, kindOfField: .forTextField(maxLength: 20))
         firstNameTF.backgroundColor = firstNameValidationResult.color
         
-        let lastNameValidationResult = Validation.isValidField(text: currentPersonCopy.lastName!, kindOfField: .forTextField(maxLength: 20))
+        let lastNameValidationResult = Validation.isValidField(text: currentPersonCopy.lastName, kindOfField: .forTextField(maxLength: 20))
         lastNameTF.backgroundColor = lastNameValidationResult.color
         
-        let phoneNumberValidationResult = Validation.isValidField(text: currentPersonCopy.phoneNumber!, kindOfField: .forPhoneNumber)
+        let phoneNumberValidationResult = Validation.isValidField(text: currentPersonCopy.phoneNumber, kindOfField: .forPhoneNumber)
         phoneTF.backgroundColor = phoneNumberValidationResult.color
         
-        let emailValidationResult = Validation.isValidField(text: currentPersonCopy.email!, kindOfField: .forEmail)
+        let emailValidationResult = Validation.isValidField(text: currentPersonCopy.email, kindOfField: .forEmail)
         emailTF.backgroundColor = emailValidationResult.color
         
         return firstNameValidationResult && lastNameValidationResult && phoneNumberValidationResult && emailValidationResult
     }
     
-    private func atLeastOneFieldIsFilled() -> Bool {
-        let firstNameIsNotEmpty = !currentPersonCopy.firstName!.isEmpty
-        let lastNameIsNotEmpty = !currentPersonCopy.lastName!.isEmpty
-        let phoneNumberIsNotEmpty = !currentPersonCopy.phoneNumber!.isEmpty
-        let emailIsNotEmpty = !currentPersonCopy.email!.isEmpty
+    func atLeastOneFieldIsFilled() -> Bool {
+        let firstNameIsNotEmpty = !currentPersonCopy.firstName.isEmpty
+        let lastNameIsNotEmpty = !currentPersonCopy.lastName.isEmpty
+        let phoneNumberIsNotEmpty = !currentPersonCopy.phoneNumber.isEmpty
+        let emailIsNotEmpty = !currentPersonCopy.email.isEmpty
         
         return firstNameIsNotEmpty || lastNameIsNotEmpty || phoneNumberIsNotEmpty || emailIsNotEmpty
     }
     
-    private func changeSaveButtonAvailability() {
+    func changeSaveButtonAvailability() {
         saveButton.isEnabled = (currentPersonForEditing != currentPersonCopy || imageState != ImageEditState.noChanges) && fieldsCheckingIsOk
     }
     
-    private func changeCurrentImage(imageState: ImageEditState) {
+    func addImagePicker() {
+        picker.delegate = self
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTap(tapGuestureRecognizer:)))
+        imageArea.isUserInteractionEnabled = true
+        imageArea.addGestureRecognizer(recognizer)
+        imageArea.contentMode = .scaleAspectFit
+    }
+    
+    @objc func onImageTap (tapGuestureRecognizer: UITapGestureRecognizer) {
+        
+        if let _ = currentPersonCopy.image {
+            
+            let actionTitle = NSLocalizedString("CHANGE_IMAGE_TITLE", comment: "Choose action")
+            let changeActionTitle = NSLocalizedString("CHANGE_IMAGE_ACTION", comment: "Change image")
+            let removeActionTitle = NSLocalizedString("REMOVE_IMAGE_ACTION", comment: "Remove image")
+            let cancelTitle = NSLocalizedString("CANCEL_ACTION", comment: "Cancel")
+            
+            let choosePhotoAction = UIAlertController(title: actionTitle, message: nil, preferredStyle: .actionSheet)
+            let changeAction = UIAlertAction(title: changeActionTitle, style: .default) {action in self.runChooseImageHandler()}
+            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed)}
+            let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+            
+            choosePhotoAction.addAction(changeAction)
+            choosePhotoAction.addAction(removeAction)
+            choosePhotoAction.addAction(cancel)
+            present(choosePhotoAction, animated: true, completion: nil)
+        } else {
+            runChooseImageHandler()
+        }
+    }
+    
+    func changeCurrentImage(imageState: ImageEditState) {
         switch imageState {
         case .removed:
             imageArea.image = Constants.emptyAvatar
@@ -190,7 +178,7 @@ private extension UpdateViewController {
         changeSaveButtonAvailability()
     }
     
-    private func runCooseImageHandler() {
+    func runChooseImageHandler() {
         #if targetEnvironment(simulator)
         showPhotoLibrary()
         #else
@@ -211,14 +199,14 @@ private extension UpdateViewController {
         #endif
     }
     
-    private func showPhotoLibrary() {
+    func showPhotoLibrary() {
         picker.allowsEditing = false
         picker.sourceType = .photoLibrary
         picker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
         present(self.picker, animated: true, completion: nil)
     }
     
-    private func runCamera() {
+    func runCamera() {
         picker.allowsEditing = false
         picker.sourceType = .camera
         picker.cameraCaptureMode = .photo
