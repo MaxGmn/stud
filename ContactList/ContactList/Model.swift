@@ -15,6 +15,14 @@ struct Constants {
     static let invalidColor = UIColor.red
     static let grayColorAttribute = [NSAttributedString.Key.foregroundColor: UIColor.gray]
     static let blackColorAttribute = [NSAttributedString.Key.foregroundColor: UIColor.black]
+    static let defaultDate = "01.01.1900"
+    static let dateFormat = getDateFormatter()
+    
+    private static func getDateFormatter() -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        return formatter
+    }
 }
 
 extension Bool {

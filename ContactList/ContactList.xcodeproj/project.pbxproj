@@ -13,7 +13,6 @@
 		620395CF22805B7D00734092 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 620395CE22805B7D00734092 /* Assets.xcassets */; };
 		620395D222805B7D00734092 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 620395D022805B7D00734092 /* LaunchScreen.storyboard */; };
 		620395DA22805CE000734092 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395D922805CE000734092 /* TableViewController.swift */; };
-		620395DC22805E2500734092 /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395DB22805E2500734092 /* UpdateViewController.swift */; };
 		620395DE22805EC300734092 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395DD22805EC300734092 /* Model.swift */; };
 		620395E42281A0AA00734092 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E32281A0AA00734092 /* TableViewCell.swift */; };
 		620395E62285629500734092 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E52285629500734092 /* Validation.swift */; };
@@ -22,6 +21,8 @@
 		620395EC228D3E8800734092 /* ContactItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395EB228D3E8800734092 /* ContactItem.swift */; };
 		620395EE228D402D00734092 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395ED228D402D00734092 /* Search.swift */; };
 		620395F2228EB77400734092 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 620395F4228EB77400734092 /* Localizable.strings */; };
+		621A6491229281A000AA1A2C /* UpdateTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A6490229281A000AA1A2C /* UpdateTableViewController.swift */; };
+		621A64932292C5DA00AA1A2C /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A64922292C5DA00AA1A2C /* NotesViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +34,6 @@
 		620395D122805B7D00734092 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		620395D322805B7D00734092 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		620395D922805CE000734092 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
-		620395DB22805E2500734092 /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
 		620395DD22805EC300734092 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		620395E32281A0AA00734092 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		620395E52285629500734092 /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
@@ -44,6 +44,8 @@
 		620395EF228EB36400734092 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		620395F3228EB77400734092 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		620395F5228EB77900734092 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		621A6490229281A000AA1A2C /* UpdateTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTableViewController.swift; sourceTree = "<group>"; };
+		621A64922292C5DA00AA1A2C /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +88,8 @@
 				620395D922805CE000734092 /* TableViewController.swift */,
 				620395E32281A0AA00734092 /* TableViewCell.swift */,
 				620395C922805B7C00734092 /* ViewControllerForShow.swift */,
-				620395DB22805E2500734092 /* UpdateViewController.swift */,
+				621A6490229281A000AA1A2C /* UpdateTableViewController.swift */,
+				621A64922292C5DA00AA1A2C /* NotesViewController.swift */,
 				620395F4228EB77400734092 /* Localizable.strings */,
 				620395CB22805B7C00734092 /* Main.storyboard */,
 				620395CE22805B7D00734092 /* Assets.xcassets */,
@@ -174,9 +177,10 @@
 				620395E42281A0AA00734092 /* TableViewCell.swift in Sources */,
 				620395CA22805B7C00734092 /* ViewControllerForShow.swift in Sources */,
 				620395EA228C39A200734092 /* SearchResultController.swift in Sources */,
-				620395DC22805E2500734092 /* UpdateViewController.swift in Sources */,
 				620395EC228D3E8800734092 /* ContactItem.swift in Sources */,
 				620395E8228ACE6200734092 /* DataManager.swift in Sources */,
+				621A6491229281A000AA1A2C /* UpdateTableViewController.swift in Sources */,
+				621A64932292C5DA00AA1A2C /* NotesViewController.swift in Sources */,
 				620395DA22805CE000734092 /* TableViewController.swift in Sources */,
 				620395C822805B7C00734092 /* AppDelegate.swift in Sources */,
 				620395E62285629500734092 /* Validation.swift in Sources */,

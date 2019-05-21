@@ -20,7 +20,7 @@ class TableViewController: UITableViewController {
     @IBOutlet private weak var addNewContactButton: UIBarButtonItem!    
     
     @IBAction func addNewContact(_ sender: Any?) {
-        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateTableViewController") as! UpdateTableViewController
         controller.contactListDelegate = self
         let navController = UINavigationController(rootViewController: controller)
         self.present(navController, animated: true, completion: nil)
@@ -93,7 +93,7 @@ class TableViewController: UITableViewController {
             self.deletePerson(by: self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row].id)
         }
         let updateAction = UITableViewRowAction(style: .default, title: editButton) {(action, indexPath) in
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateTableViewController") as! UpdateTableViewController
             controller.currentPersonForEditing = self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row]
             controller.contactListDelegate = self
             let navController = UINavigationController(rootViewController: controller)
