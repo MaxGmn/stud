@@ -41,3 +41,43 @@ enum ImageEditState: Equatable {
     case removed
     case changed(newImage: UIImage)
 }
+
+enum RowKind {
+    case imageRow(content: UIImage?)
+    case textFieldRow(name: String, content: String)
+    case switchRow(name: String, switchIsOn: Bool)
+}
+
+enum CellType {
+    case image(Presentation)
+    case firstName(Presentation)
+    case lastName(Presentation)
+    case phone(Presentation)
+    case email(Presentation)
+    case birthday(Presentation)
+    case height(Presentation)
+    case note(Presentation)
+    case driverLicenseSwitch(Presentation)
+    case driverLicenseNumber(Presentation)
+}
+
+enum DataType {
+    case image(UIImage?)
+    case text(String)
+    case date(Date?)
+    case integer(Int)
+}
+
+struct Presentation {
+    let keyboardType: UIKeyboardType?
+    let placeholder: String?
+    let title: String?
+    let dataType: DataType
+    
+    init(keyboardType: UIKeyboardType? = nil, placeholder: String? = nil, title: String? = nil, dataType: DataType) {
+        self.keyboardType = keyboardType
+        self.placeholder = placeholder
+        self.title = title
+        self.dataType = dataType
+    }
+}

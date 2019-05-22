@@ -11,4 +11,9 @@ CHANGE_SOURCE_TITLE = "Укажите источник";
 GALLERY_ACTION = "Галерея";
 CAMERA_ACTION = "Камера";
 
+REMOVE_CONTACT_TITLE = "Вы уверены?";
+
+REMOVE_ACTION = "Удалить";
 CANCEL_ACTION = "Отмена";
+
+ADD_VIEW_NAME = "Добавление";

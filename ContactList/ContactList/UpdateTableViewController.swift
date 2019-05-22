@@ -45,9 +45,21 @@ class UpdateTableViewController: UITableViewController {
     }
     
     @IBAction func removeButtonAction(_ sender: Any) {
-        contactListDelegate?.deletePerson(by: currentPersonCopy.id)
-        navigationController?.popToRootViewController(animated: true)
-        dismiss(animated: true, completion: nil)
+        
+        let actionTitle = NSLocalizedString("REMOVE_CONTACT_TITLE", comment: "Are you sure?")
+        let removeTitle = NSLocalizedString("REMOVE_ACTION", comment: "Remove")
+        let cancelTitle = NSLocalizedString("CANCEL_ACTION", comment: "Cancel")
+        
+        let removeActionController = UIAlertController(title: actionTitle, message: nil, preferredStyle: .actionSheet)
+        let removeAction = UIAlertAction(title: removeTitle, style: .default) { action in
+            self.contactListDelegate?.deletePerson(by: self.currentPersonCopy.id)
+            self.navigationController?.popToRootViewController(animated: true)
+            self.dismiss(animated: true, completion: nil)
+        }
+        let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+        removeActionController.addAction(removeAction)
+        removeActionController.addAction(cancelAction)
+        present(removeActionController, animated: true, completion: nil)
     }
     
     @IBAction func cancelButtonAction(_ sender: Any) {
@@ -68,6 +80,7 @@ class UpdateTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if currentPersonForEditing == nil {
+            navigationItem.title = NSLocalizedString("ADD_VIEW_NAME", comment: "Add")
             currentPersonForEditing = Person()
             removeButton.isEnabled = false
         }

@@ -11,4 +11,9 @@ CHANGE_SOURCE_TITLE = "Choose image source";
 GALLERY_ACTION = "Gallery";
 CAMERA_ACTION = "Camera";
 
+REMOVE_CONTACT_TITLE = "Are you sure?";
+
+REMOVE_ACTION = "Remove";
 CANCEL_ACTION = "Cancel";
+
+ADD_VIEW_NAME = "Add";

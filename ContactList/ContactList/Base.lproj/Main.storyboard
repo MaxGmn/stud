@@ -501,7 +501,58 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MuB-Ef-NvN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="164" y="850"/>
+            <point key="canvasLocation" x="164" y="893"/>
+        </scene>
+        <!--Update Controller-->
+        <scene sceneID="5vx-5M-yOp">
+            <objects>
+                <tableViewController storyboardIdentifier="UpdateController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UmI-5j-Q0Q" customClass="UpdateController" customModule="ContactList" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="GNB-Wd-bTT">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="UpdateCell" id="yUx-ej-tSd" customClass="UpdateCell" customModule="ContactList" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yUx-ej-tSd" id="SkR-Ic-lF6">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="UmI-5j-Q0Q" id="dfz-Ch-cdU"/>
+                            <outlet property="delegate" destination="UmI-5j-Q0Q" id="NgW-DY-cQE"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="RKF-6y-8BB">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="bkz-6o-LiF">
+                            <connections>
+                                <action selector="cancelAction:" destination="UmI-5j-Q0Q" id="ypk-As-wO8"/>
+                            </connections>
+                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem enabled="NO" systemItem="save" id="2AK-Zv-rrI">
+                                <connections>
+                                    <action selector="saveAction:" destination="UmI-5j-Q0Q" id="qdv-9K-nMP"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Remove" id="yHa-UU-1yd">
+                                <connections>
+                                    <action selector="removeAction:" destination="UmI-5j-Q0Q" id="kkS-gn-TmD"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="removeButton" destination="yHa-UU-1yd" id="PFV-Iv-WQy"/>
+                        <outlet property="saveButton" destination="2AK-Zv-rrI" id="IZx-Fy-rPo"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="U7x-8N-r7G" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="164" y="1649"/>
         </scene>
         <!--Notes View Controller-->
         <scene sceneID="A0E-x3-5HW">
@@ -553,7 +604,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H3V-67-8gj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1073.913043478261" y="849.77678571428567"/>
+            <point key="canvasLocation" x="1074" y="893"/>
         </scene>
         <!--Search Result Controller-->
         <scene sceneID="5Rk-U5-LDJ">
@@ -855,7 +906,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ECb-K0-Roc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-746" y="850"/>
+            <point key="canvasLocation" x="-746" y="893"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="woj-kK-l7C">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Wdr-ot-CFo" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="rJi-T3-lEc">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="UmI-5j-Q0Q" kind="relationship" relationship="rootViewController" id="eTU-Tw-b1e"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VIe-ew-mdb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-746" y="1649"/>
         </scene>
     </scenes>
 </document>
