@@ -120,14 +120,13 @@ class TableViewController: UITableViewController {
 extension TableViewController: ContactListDelegate {
     
     func updatePersonInformation(person: Person) {
-        tableView.beginUpdates()
+
         let categoryName = person.fullName.first?.uppercased() ?? "~"
         addNewSection(with: categoryName)
         if !updateCurrentPerson(person: person, in: categoryName) {
             appendNewPerson(person: person, in: categoryName)
             changeSearchBarVisibility()
         }
-        tableView.endUpdates()
         updateDictionary()
     }
     
@@ -203,9 +202,9 @@ private extension TableViewController {
                 groupedPersons[newCategoryName]?.append(person)
                 tableView.moveRow(at: indexPath, to: targetIndexPath)
                 tableView.reloadRows(at: [targetIndexPath], with: .automatic)
-                if groupedPersons[currentDirectoryName]!.isEmpty {
-                    removeSection(by: currentDirectoryName)
-                }
+            }
+            if groupedPersons[currentDirectoryName]!.isEmpty {
+                removeSection(by: currentDirectoryName)
             }
         }
         return true
@@ -246,7 +245,7 @@ private extension TableViewController {
     }
     
     func removeSection(by key: String) {
-        let keysArrayIndex = keysArray.firstIndex(of: key)!
+        let keysArrayIndex = getKeysArrayIndex(by: key)
         groupedPersons.remove(at: groupedPersons.index(forKey: key)!)
         keysArray.remove(at: keysArrayIndex)
         tableView.deleteSections(IndexSet(arrayLiteral: keysArrayIndex), with: .automatic)
