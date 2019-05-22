@@ -15,9 +15,13 @@ class SwitchTableViewCell: UITableViewCell {
     
     var person: Person!
     
-    func setContent(labelName: String, switchState: Bool) {
-        nameLabel.text = labelName
-        showFieldSwitch.isOn = switchState
+    func setContent(_ cellType: CellType) {
+        switch cellType {
+        case .driverLicenseSwitch(let data):
+            updateCellData(presentation: data)
+        default:
+            break
+        }
     }
     
     override func awakeFromNib() {
@@ -31,4 +35,17 @@ class SwitchTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+}
+
+private extension SwitchTableViewCell {
+    
+    func updateCellData(presentation: Presentation) {
+        nameLabel.text = presentation.title
+        switch presentation.dataType {
+        case .text(let text):
+            showFieldSwitch.isOn = !text.isEmpty
+        default:
+            break
+        }
+    }
 }

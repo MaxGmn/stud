@@ -48,7 +48,7 @@ enum RowKind {
     case switchRow(name: String, switchIsOn: Bool)
 }
 
-enum CellType {
+enum CellType {    
     case image(Presentation)
     case firstName(Presentation)
     case lastName(Presentation)
@@ -72,12 +72,16 @@ struct Presentation {
     let keyboardType: UIKeyboardType?
     let placeholder: String?
     let title: String?
-    let dataType: DataType
+    var dataType: DataType
     
     init(keyboardType: UIKeyboardType? = nil, placeholder: String? = nil, title: String? = nil, dataType: DataType) {
         self.keyboardType = keyboardType
         self.placeholder = placeholder
         self.title = title
+        self.dataType = dataType
+    }
+    
+    mutating func updateDataType(with dataType: DataType) {
         self.dataType = dataType
     }
 }

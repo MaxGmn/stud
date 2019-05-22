@@ -19,13 +19,13 @@ class UpdateController: UITableViewController {
     private let heightArray = [Array(0...2), Array(0...9), Array(0...9)]
     private let datePicker = UIDatePicker()
     private var rowsCount: Int!
+    private var cells = [CellType]()
+    private var avatarImageView: UIImageView?
     
     var currentPersonForEditing: Person!
     var contactListDelegate: ContactListDelegate?
     var callback: ((Person) -> Void)?
     let picker = UIImagePickerController()
-    
-    var rowsDictionary: [Int : RowKind]!
     
     
     @IBAction func saveAction(_ sender: Any) {
@@ -66,18 +66,19 @@ class UpdateController: UITableViewController {
         tableView.register(UINib(nibName: "TextTableViewCell", bundle: nil), forCellReuseIdentifier: "TextTableViewCell")
         tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "SwitchTableViewCell")
         
+        picker.delegate = self
+        
         if currentPersonForEditing == nil {
             currentPersonForEditing = Person()
         }
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
-        rowsCount = currentPersonCopy.driverLicense.isEmpty ? 9 : 10
-        rowsDictionary = getRowsDictinary()
+        cells = fillCellsArray(person: currentPersonCopy)
+        
+        
     }
 
-
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {        
-        return rowsCount
+        return cells.count
     }
 
 
@@ -88,7 +89,7 @@ class UpdateController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            onImageTap()
+            changeImage(for: indexPath)
         }
     }
 }
@@ -97,7 +98,7 @@ extension UpdateController: UIImagePickerControllerDelegate, UINavigationControl
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let choosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        changeCurrentImage(imageState: .changed(newImage: choosenImage))
+        changeCurrentImage(imageState: .changed(newImage: choosenImage), for: IndexPath(row: 0, section: 0))
         dismiss(animated:true, completion: nil)
     }
     
@@ -109,21 +110,6 @@ extension UpdateController: UIImagePickerControllerDelegate, UINavigationControl
 
 private extension UpdateController {
     
-    func getRowsDictinary() -> [Int : RowKind]{
-        let dictionary: [Int : RowKind] = [0 : .imageRow(content: currentPersonCopy.image),
-                                           1 : .textFieldRow(name: "First name", content: currentPersonCopy.firstName),
-                                           2 : .textFieldRow(name: "Last name", content: currentPersonCopy.lastName),
-                                           3 : .textFieldRow(name: "Phone", content: currentPersonCopy.phoneNumber),
-                                           4 : .textFieldRow(name: "E-mail", content: currentPersonCopy.email),
-                                           5 : .textFieldRow(name: "Birthday", content: ""),
-                                           6 : .textFieldRow(name: "Height", content: String(currentPersonCopy.height)),
-                                           7 : .textFieldRow(name: "Notes", content: currentPersonCopy.notes),
-                                           8 : .switchRow(name: "Driver license", switchIsOn: !currentPersonCopy.driverLicense.isEmpty),
-                                           9 : .textFieldRow(name: "Driver license number", content: currentPersonCopy.driverLicense)]
-        
-        return dictionary
-    }
-    
     func fillCellsArray (person: Person) -> [CellType] {
         let array: [CellType] = [.image(Presentation(dataType: .image(person.image))),
                                  .firstName(Presentation(keyboardType: .default, placeholder: "First name", title: "First name", dataType: .text(person.firstName))),
@@ -134,43 +120,32 @@ private extension UpdateController {
                                  .height(Presentation(placeholder: "Height", title: "Height", dataType: .integer(person.height))),
                                  .note(Presentation(keyboardType: .default, placeholder: "Note", title: "Note", dataType: .text(person.notes))),
                                  .driverLicenseSwitch(Presentation(title: "Driver license", dataType: .text(person.driverLicense))),
-                                 .driverLicenseNumber(Presentation(keyboardType: .default, placeholder: "Driver license number", title: "Driver license number", dataType: .text(person.driverLicense)))
-                                 
-        ]
-        
+                                 .driverLicenseNumber(Presentation(keyboardType: .default, placeholder: "Driver license number", title: "Driver license number", dataType: .text(person.driverLicense)))]
         return array
     }
     
     func getCurentCell(at indexPath: IndexPath) -> UITableViewCell {
         
-        guard let currentRowKind = rowsDictionary[indexPath.row] else {
-            return UITableViewCell()
-        }
-        
-        switch currentRowKind {
-        case .imageRow(let content):
+        switch indexPath.row {
+        case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ImageTableViewCell", for: indexPath) as! ImageTableViewCell
-            cell.person = currentPersonCopy
-            cell.setContent(content: content)
+            cell.setContent(cells[indexPath.row])
             return cell
-        case .textFieldRow(let name, let content):
-            let cell = tableView.dequeueReusableCell(withIdentifier: "TextTableViewCell", for: indexPath) as! TextTableViewCell
-            cell.person = currentPersonCopy
-            cell.setContent(labelName: name, content: content)
-            return cell
-        case .switchRow(let name, let isOn):
+        case 8:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
-            cell.person = currentPersonCopy
-            cell.setContent(labelName: name, switchState: isOn)
+            cell.setContent(cells[indexPath.row])
             return cell
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "TextTableViewCell", for: indexPath) as! TextTableViewCell
+            cell.setContent(cells[indexPath.row])
+            return cell
+            
         }
     }
-    
-    
-    func onImageTap () {
+        
+    func changeImage(for indexPath: IndexPath) {
         
         if let _ = currentPersonCopy.image {
-            
             let actionTitle = NSLocalizedString("CHANGE_IMAGE_TITLE", comment: "Choose action")
             let changeActionTitle = NSLocalizedString("CHANGE_IMAGE_ACTION", comment: "Change image")
             let removeActionTitle = NSLocalizedString("REMOVE_IMAGE_ACTION", comment: "Remove image")
@@ -178,7 +153,7 @@ private extension UpdateController {
             
             let choosePhotoAction = UIAlertController(title: actionTitle, message: nil, preferredStyle: .actionSheet)
             let changeAction = UIAlertAction(title: changeActionTitle, style: .default) {action in self.runChooseImageHandler()}
-            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed)}
+            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed, for: indexPath)}
             let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
             
             choosePhotoAction.addAction(changeAction)
@@ -190,20 +165,31 @@ private extension UpdateController {
         }
     }
     
-    func changeCurrentImage(imageState: ImageEditState) {
+    func changeCurrentImage(imageState: ImageEditState, for indexPath: IndexPath) {
         switch imageState {
         case .removed:
-//            avatarImageView.image = Constants.emptyAvatar
+            setCellData(newImage: nil, at: indexPath.row)
             currentPersonCopy.image = nil
         case .changed(let newImage):
-//            avatarImageView.image = newImage
+            setCellData(newImage: newImage, at: indexPath.row)
             currentPersonCopy.image = newImage
         default:
             break
         }
         
         self.imageState = imageState
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
 //        changeSaveButtonAvailability()
+    }
+    
+    func setCellData(newImage: UIImage?, at index: Int) {
+        switch cells[index] {
+        case .image(var presentation):
+            presentation.updateDataType(with: .image(newImage))
+            cells[index] = .image(presentation)
+        default:
+            break
+        }
     }
     
     func runChooseImageHandler() {
