@@ -56,11 +56,33 @@ class UpdateViewController: UIViewController {
         super.viewDidLoad()
         if currentPersonForEditing == nil {
             currentPersonForEditing = Person()
+            navigationItem.rightBarButtonItems?.remove(at: 1)
+            navigationItem.title = "Add"
         }
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
         fillTextFields()
         fieldsCheckingIsOk = allFieldsAreValid() && atLeastOneFieldIsFilled()
         addImagePicker()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                let bottomBorder = emailTF.frame.origin.y + emailTF.frame.size.height + 10
+                let viewVisibleHeight = view.frame.size.height - keyboardSize.height
+                
+                if bottomBorder > viewVisibleHeight {
+                    self.view.frame.origin.y -= (bottomBorder - viewVisibleHeight)
+                }
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        self.view.frame.origin.y = 0
     }
 }
 

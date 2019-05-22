@@ -24,11 +24,7 @@ class ViewControllerForShow: UIViewController {
         super.viewDidLoad()
         showPersonInformation()
     }    
-    
-    @IBAction func cancelOnAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-    
+        
     @IBAction func editOnAction(_ sender: Any) {        
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
         controller.currentPersonForEditing = person

@@ -14,10 +14,13 @@ class TableViewController: UITableViewController {
     private (set) var keysArray = [String]()
     private var searchController: UISearchController!
     private var buttonCopy: UIBarButtonItem?
+    private var buttonsCopy: (left: UIBarButtonItem, right: UIBarButtonItem)!
     private let rowsCountForDisplaySearchBar = 10
     
     @IBOutlet private var emptyListView: UIView!
-    @IBOutlet private weak var addNewContactButton: UIBarButtonItem!    
+    @IBOutlet private weak var addNewContactButton: UIBarButtonItem!
+    @IBOutlet private weak var editTableButton: UIBarButtonItem!
+    
     
     @IBAction func addNewContact(_ sender: Any?) {
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
@@ -34,7 +37,8 @@ class TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundView = emptyListView
-        buttonCopy = addNewContactButton
+//        buttonCopy = addNewContactButton
+        buttonsCopy = (editTableButton, addNewContactButton)
         groupedPersons = DataManager.getDictionary()
         createSearchBar()
         changeSearchBarVisibility()
@@ -42,7 +46,7 @@ class TableViewController: UITableViewController {
 
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        changeAddContactButtonVisibility()
+        changeButtonsVisibility()
         if groupedPersons.isEmpty {
             tableView.separatorStyle = .none
             tableView.backgroundView?.isHidden = false
@@ -141,8 +145,9 @@ extension TableViewController: ContactListDelegate {
 
 private extension TableViewController {
     
-    func changeAddContactButtonVisibility() {
-        navigationItem.setRightBarButton(!groupedPersons.isEmpty ? buttonCopy : nil, animated: true)
+    func changeButtonsVisibility() {
+        navigationItem.setRightBarButton(!groupedPersons.isEmpty ? buttonsCopy.right : nil, animated: true)
+        navigationItem.setLeftBarButton(!groupedPersons.isEmpty ? buttonsCopy.left : nil, animated: true)
     }
     
     func createSearchBar() {

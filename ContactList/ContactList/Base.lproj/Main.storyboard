@@ -85,6 +85,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="addNewContactButton" destination="x4b-vX-bvU" id="Upb-Oc-Nqw"/>
+                        <outlet property="editTableButton" destination="J7m-LG-2T1" id="MAD-qw-3U4"/>
                         <outlet property="emptyListView" destination="eya-8e-N3J" id="T5m-2D-Rgr"/>
                     </connections>
                 </tableViewController>
@@ -432,11 +433,6 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="QrU-LB-t1I">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="tkz-Oc-Wo3">
-                            <connections>
-                                <action selector="cancelOnAction:" destination="BYZ-38-t0r" id="5EY-dL-8bZ"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Edit" id="gd8-6W-yeI">
                             <connections>
                                 <action selector="editOnAction:" destination="BYZ-38-t0r" id="A45-eI-XkY"/>
