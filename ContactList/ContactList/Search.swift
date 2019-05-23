@@ -36,7 +36,7 @@ class Search {
         return dictionary.values.flatMap({(value) -> [Person] in return value})
     }
     
-    static func isPersonsFullNameFirstCharCompare(firstPerson: Person, secondPerson: Person) -> Bool {
+    static func isPersonsFullNameFirstCharEqual(firstPerson: Person, secondPerson: Person) -> Bool {
         return firstPerson.fullName.first == secondPerson.fullName.first
     }
 }

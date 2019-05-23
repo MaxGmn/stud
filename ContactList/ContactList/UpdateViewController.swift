@@ -56,7 +56,9 @@ class UpdateViewController: UIViewController {
         super.viewDidLoad()
         if currentPersonForEditing == nil {
             currentPersonForEditing = Person()
-            navigationItem.rightBarButtonItems?.remove(at: 1)
+            if navigationItem.rightBarButtonItems?.count ?? 0 > 1 {
+                navigationItem.rightBarButtonItems?.remove(at: 1)
+            }
             navigationItem.title = "Add"
         }
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)

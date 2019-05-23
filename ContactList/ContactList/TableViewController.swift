@@ -10,12 +10,23 @@ import UIKit
 
 class TableViewController: UITableViewController {
     
-    private (set) var groupedPersons: [String : [Person]]!
-    private (set) var keysArray = [String]()
     private var searchController: UISearchController!
     private var buttonCopy: UIBarButtonItem?
     private var buttonsCopy: (left: UIBarButtonItem, right: UIBarButtonItem)!
     private let rowsCountForDisplaySearchBar = 10
+    private (set) var keysArray = [String]()
+    private (set) var groupedPersons: [String : [Person]]! {
+        didSet {
+            if groupedPersons.isEmpty {
+                tableView.separatorStyle = .none
+                tableView.backgroundView?.isHidden = false
+            } else {
+                tableView.separatorStyle = .singleLine
+                tableView.backgroundView?.isHidden = true
+                keysArray = Array(groupedPersons.keys).sorted()
+            }
+        }
+    }    
     
     @IBOutlet private var emptyListView: UIView!
     @IBOutlet private weak var addNewContactButton: UIBarButtonItem!
@@ -37,7 +48,6 @@ class TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundView = emptyListView
-//        buttonCopy = addNewContactButton
         buttonsCopy = (editTableButton, addNewContactButton)
         groupedPersons = DataManager.getDictionary()
         createSearchBar()
@@ -47,14 +57,6 @@ class TableViewController: UITableViewController {
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         changeButtonsVisibility()
-        if groupedPersons.isEmpty {
-            tableView.separatorStyle = .none
-            tableView.backgroundView?.isHidden = false
-            return 0
-        }
-        tableView.separatorStyle = .singleLine
-        tableView.backgroundView?.isHidden = true
-        keysArray = Array(groupedPersons.keys).sorted()
         return groupedPersons.count
     }
 
@@ -192,7 +194,7 @@ private extension TableViewController {
         let sectionNumber = getKeysArrayIndex(by: currentDirectoryName)
         let indexPath = IndexPath(row: currentArrayIndex, section: sectionNumber)
         
-        if Search.isPersonsFullNameFirstCharCompare(firstPerson: personOldVersion, secondPerson: person) {
+        if Search.isPersonsFullNameFirstCharEqual(firstPerson: personOldVersion, secondPerson: person) {
             groupedPersons[currentDirectoryName]![currentArrayIndex] = person
             tableView.reloadRows(at: [indexPath], with: .automatic)
         } else {
