@@ -23,8 +23,8 @@ class TableViewController: UITableViewController {
             } else {
                 tableView.separatorStyle = .singleLine
                 tableView.backgroundView?.isHidden = true
-                keysArray = Array(groupedPersons.keys).sorted()
             }
+            keysArray = Array(groupedPersons.keys).sorted()
         }
     }    
     
@@ -97,8 +97,7 @@ class TableViewController: UITableViewController {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
             controller.currentPersonForEditing = self.getPerson(at: indexPath)
             controller.contactListDelegate = self
-            let navController = UINavigationController(rootViewController: controller)
-            self.present(navController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(controller, animated: true)
         }
         
         deleteAction.backgroundColor = .red
@@ -163,7 +162,7 @@ private extension TableViewController {
     func changeSearchBarVisibility() {
         if Search.getPersonsArrayFromDictionary(from: groupedPersons).count >= rowsCountForDisplaySearchBar {
             tableView.tableHeaderView = searchController.searchBar
-        } else {
+        } else if tableView.tableHeaderView != nil {
             tableView.tableHeaderView = nil
         }
     }
@@ -249,7 +248,6 @@ private extension TableViewController {
     func removeSection(by key: String) {
         let keysArrayIndex = getKeysArrayIndex(by: key)
         groupedPersons.remove(at: groupedPersons.index(forKey: key)!)
-        keysArray.remove(at: keysArrayIndex)
         tableView.deleteSections(IndexSet(arrayLiteral: keysArrayIndex), with: .automatic)
     }
     
