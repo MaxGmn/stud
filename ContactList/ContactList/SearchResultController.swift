@@ -10,17 +10,29 @@ import UIKit
 
 class SearchResultController: UITableViewController {
     
-    @IBOutlet weak var searchResultLabel: UILabel!
+    @IBOutlet weak var emptySearchResultView: UIView!
     
     var mainTableView: TableViewController!
     
     private var personsArray: [Person]!
-    private var filteredPersons = [Person]()
+    private var filteredPersons = [Person]() {
+        didSet {
+            if filteredPersons.isEmpty {
+                tableView.separatorStyle = .none
+                tableView.backgroundView?.isHidden = false
+            } else {
+                tableView.separatorStyle = .singleLine
+                tableView.backgroundView?.isHidden = true
+            }
+        }
+    }
+        
     private var resultStringsArray = [NSAttributedString]()
     private var searchText = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.backgroundView = emptySearchResultView
         self.personsArray = Search.getPersonsArrayFromDictionary(from: mainTableView.groupedPersons)
     }
 
@@ -34,6 +46,12 @@ class SearchResultController: UITableViewController {
         let controller = storyboard.instantiateViewController(withIdentifier: "ViewControllerForShow") as! ViewControllerForShow
         controller.person = filteredPersons[indexPath.row]
         controller.contactListDelegate = mainTableView
+        controller.searchCallback = {[weak self] (previousPerson, currentPerson) in
+            guard let previous = previousPerson else {return}
+            guard let updateIndex = self?.personsArray.firstIndex(of: previous) else{return}
+            self?.personsArray![updateIndex] = currentPerson
+            self?.tableView.reloadData()
+        }
         mainTableView.navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -51,3 +69,4 @@ extension SearchResultController: UISearchResultsUpdating {
         tableView.reloadData()
     }
 }
+

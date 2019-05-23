@@ -311,8 +311,29 @@
                             <outlet property="delegate" destination="FCy-vc-qcM" id="JxB-YG-vqX"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="emptySearchResultView" destination="K4V-e9-s2u" id="qPw-as-IfR"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gdk-bg-q31" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="K4V-e9-s2u">
+                    <rect key="frame" x="0.0" y="0.0" width="275" height="409"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unfortunately, no contacts found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KsJ-VK-ZOz">
+                            <rect key="frame" x="12" y="194.5" width="251.5" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="KsJ-VK-ZOz" firstAttribute="centerX" secondItem="agZ-iE-Dr3" secondAttribute="centerX" id="5Uh-lx-os3"/>
+                        <constraint firstItem="KsJ-VK-ZOz" firstAttribute="centerY" secondItem="agZ-iE-Dr3" secondAttribute="centerY" constant="-5" id="XeK-6w-nFM"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="agZ-iE-Dr3"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="164" y="-567"/>
         </scene>

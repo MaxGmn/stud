@@ -19,6 +19,7 @@ class ViewControllerForShow: UIViewController {
     
     var person: Person!    
     var contactListDelegate: ContactListDelegate?
+    var searchCallback: ((Person?, Person) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +31,8 @@ class ViewControllerForShow: UIViewController {
         controller.currentPersonForEditing = person
         controller.contactListDelegate = contactListDelegate
         controller.callback = { [weak self] person in
-            self?.person = person
+            self?.searchCallback?(self?.person, person)
+            self?.person = person            
             self?.showPersonInformation()
         }
         
