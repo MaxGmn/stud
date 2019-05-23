@@ -10,19 +10,21 @@ import UIKit
 
 class TextTableViewCell: UITableViewCell {
 
-    @IBOutlet private weak var fieldNameLabel: UILabel!
-    @IBOutlet private weak var fieldDataTextField: UITextField!
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var dataTextField: UITextField!
     
     private var currentCellType: CellType!
     private var datePicker: UIDatePicker?
     private var heightPicker: UIPickerView?
     private var pickerToolbar: UIToolbar?
     
-    var callback: ((UITableViewCell, String) -> Void)?
+    var callback: ((UITableViewCell, String) -> Bool?)?
     
     
     @IBAction func editingChangedAction(_ sender: Any) {
-        callback?(self, fieldDataTextField.text ?? "")
+        if let result = callback?(self, dataTextField.text ?? "") {
+            dataTextField.backgroundColor = result.color
+        }
     }  
     
     func setContent(_ cellType: CellType, datePicker: UIDatePicker? = nil, heightPicker: UIPickerView? = nil, pickerToolbar: UIToolbar? = nil) {
@@ -73,25 +75,25 @@ private extension TextTableViewCell {
     
     func updateCellData(presentation: Presentation) {
         
-        fieldNameLabel.text = presentation.title
-        fieldDataTextField.placeholder = presentation.placeholder
-        fieldDataTextField.backgroundColor = presentation.backgroundColor
+        nameLabel.text = presentation.title
+        dataTextField.placeholder = presentation.placeholder
+        dataTextField.backgroundColor = presentation.backgroundColor
         if let keyboardType = presentation.keyboardType {
-            fieldDataTextField.keyboardType = keyboardType
+            dataTextField.keyboardType = keyboardType
         }
         
         
-        fieldDataTextField.inputView = datePicker ?? heightPicker
-        fieldDataTextField.inputAccessoryView = pickerToolbar
+        dataTextField.inputView = datePicker ?? heightPicker
+        dataTextField.inputAccessoryView = pickerToolbar
         
         
         switch presentation.dataType {
         case .text(let text):
-            fieldDataTextField.text = text
+            dataTextField.text = text
         case .date(let date):
-            fieldDataTextField.text = (date != nil ? Constants.dateFormat.string(from: date!) : Constants.defaultDate)
+            dataTextField.text = (date != nil ? Constants.dateFormat.string(from: date!) : Constants.defaultDate)
         case .integer(let number):
-            fieldDataTextField.text = String(number)
+            dataTextField.text = String(number)
         default:
             break
         }

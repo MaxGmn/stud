@@ -54,6 +54,14 @@ class Person: NSObject {
     static func == (lhs: Person, rhs: Person) -> Bool {
         return lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName && lhs.phoneNumber == rhs.phoneNumber && lhs.email == rhs.email && lhs.birthday == rhs.birthday && lhs.height == rhs.height && lhs.notes == rhs.notes && lhs.driverLicense == rhs.driverLicense
     }
+    
+    override func isEqual(_ object: Any?) -> Bool {
+        if object is Person {
+            let person = object as! Person
+            return self.firstName == person.firstName && self.lastName == person.lastName && self.phoneNumber == person.phoneNumber && self.email == person.email && self.birthday == person.birthday && self.height == person.height && self.notes == person.notes && self.driverLicense == person.driverLicense
+        }
+        return false
+    }
 }
 
 extension Person: NSCopying {

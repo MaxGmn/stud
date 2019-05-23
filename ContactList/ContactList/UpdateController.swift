@@ -15,21 +15,20 @@ class UpdateController: UITableViewController {
     
     private var imageState = ImageEditState.noChanges
     private var currentPersonCopy: Person!
-    private var fieldsCheckingIsOk: Bool!
+    private var fieldsValidationResult = [Bool]()
     private let heightArray = [Array(0...2), Array(0...9), Array(0...9)]
     private let datePicker = UIDatePicker()
     private let datePickerToolbar = UIToolbar()
     private let heightPicker = UIPickerView()
     private let heightPickerToolbar  = UIToolbar()
+    private let picker = UIImagePickerController()
     
     private var cells = [CellType]()
     private var avatarImageView: UIImageView?
     
     var currentPersonForEditing: Person!
     var contactListDelegate: ContactListDelegate?
-    var callback: ((Person) -> Void)?
-    let picker = UIImagePickerController()
-    
+    var callback: ((Person) -> Void)?   
     
     @IBAction func saveAction(_ sender: Any) {
         DataManager.saveImage(by: imageState, name: currentPersonCopy.id)
@@ -64,19 +63,17 @@ class UpdateController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        saveButton.isEnabled = true
         picker.delegate = self
-        
         if currentPersonForEditing == nil {
             currentPersonForEditing = Person()
         }
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
+        fillFieldsValidationResult()
+        changeSaveButtonAvailability()
         cellRegistration()
         cells = fillCellsArray(person: currentPersonCopy)
         addBirthdayDatePicker()
         addHeightPickerview()
-        
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {        
@@ -120,8 +117,21 @@ private extension UpdateController {
         tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "SwitchTableViewCell")
     }
     
+    func fillFieldsValidationResult() {
+        fieldsValidationResult = [Validation.isValidField(text: currentPersonCopy.firstName, kindOfField: .forTextField(maxLength: 20)),
+                                  Validation.isValidField(text: currentPersonCopy.lastName, kindOfField: .forTextField(maxLength: 20)),
+                                  Validation.isValidField(text: currentPersonCopy.phoneNumber, kindOfField: .forPhoneNumber),
+                                  Validation.isValidField(text: currentPersonCopy.email, kindOfField: .forEmail)]
+    }
+    
+    func changeSaveButtonAvailability() {
+        saveButton.isEnabled = (!currentPersonForEditing.isEqual(currentPersonCopy) || imageState != ImageEditState.noChanges) &&
+            fieldsValidationResult.firstIndex(of: false) == nil &&
+            (!currentPersonCopy.firstName.isEmpty || !currentPersonCopy.lastName.isEmpty || !currentPersonCopy.phoneNumber.isEmpty || !currentPersonCopy.email.isEmpty)
+    }
+    
     func fillCellsArray (person: Person) -> [CellType] {
-        let array: [CellType] = [.image(Presentation(dataType: .image(person.image))),
+        var array: [CellType] = [.image(Presentation(dataType: .image(person.image))),
                                  .firstName(Presentation(keyboardType: .default, placeholder: "First name", title: "First name", dataType: .text(person.firstName))),
                                  .lastName(Presentation(keyboardType: .default, placeholder: "Last name", title: "Last name", dataType: .text(person.lastName))),
                                  .phone(Presentation(keyboardType: .numberPad, placeholder: "Phone", title: "Phone", dataType: .text(person.phoneNumber))),
@@ -129,9 +139,15 @@ private extension UpdateController {
                                  .birthday(Presentation(placeholder: "Birthday", title: "Birthday", dataType: .date(person.birthday))),
                                  .height(Presentation(placeholder: "Height", title: "Height", dataType: .integer(person.height))),
                                  .note(Presentation(keyboardType: .default, placeholder: "Note", title: "Note", dataType: .text(person.notes))),
-                                 .driverLicenseSwitch(Presentation(title: "Driver license", dataType: .text(person.driverLicense))),
-                                 .driverLicenseNumber(Presentation(keyboardType: .default, placeholder: "Driver license number", title: "Driver license number", dataType: .text(person.driverLicense)))]
+                                 .driverLicenseSwitch(Presentation(title: "Driver license", dataType: .text(person.driverLicense)))]
+        if !person.driverLicense.isEmpty {
+            array.append(getDriverLicenseNumberCell())
+        }
         return array
+    }
+    
+    func getDriverLicenseNumberCell() -> CellType {
+        return CellType.driverLicenseNumber(Presentation(keyboardType: .default, placeholder: "Driver license number", title: "Driver license number", dataType: .text(currentPersonCopy.driverLicense)))
     }
     
     func getCurentCell(at indexPath: IndexPath) -> UITableViewCell {
@@ -144,6 +160,21 @@ private extension UpdateController {
         case 8:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
             cell.setContent(cells[indexPath.row])
+            cell.callback = {[weak self] (cell, isOn) in
+                guard let noOptionalSelf = self else {return}
+                if isOn {
+                    noOptionalSelf.cells.append(noOptionalSelf.getDriverLicenseNumberCell())
+                    noOptionalSelf.tableView.insertRows(at: [IndexPath(row: noOptionalSelf.cells.count - 1, section: 0)], with: .automatic)
+                } else {
+                    noOptionalSelf.cells.removeLast()
+                    noOptionalSelf.tableView.deleteRows(at: [IndexPath(row: noOptionalSelf.cells.count, section: 0)], with: .automatic)
+                    noOptionalSelf.currentPersonCopy.driverLicense = ""
+                }
+                noOptionalSelf.gchangeSaveButtonAvailability()
+//                if let indexPath = noOptionalSelf.tableView.indexPath(for: cell) {
+//                    let _ = noOptionalSelf.updatePersonInformation(indexPath: indexPath)
+//                }
+            }
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "TextTableViewCell", for: indexPath) as! TextTableViewCell
@@ -155,17 +186,17 @@ private extension UpdateController {
             default:
                 cell.setContent(cells[indexPath.row])
             }
-            cell.callback = {(cell, text) in
-                if let indexPath = self.tableView.indexPath(for: cell) {
-                    self.updatePersonInformation(text: text, indexPath: indexPath)
+            cell.callback = {[weak self] (cell, text) in
+                if let indexPath = self?.tableView.indexPath(for: cell) {
+                    return self?.updatePersonInformation(text: text, indexPath: indexPath)
                 }
+                return nil
             }
             return cell
-            
         }
     }
     
-    func updatePersonInformation(text: String = "", indexPath: IndexPath) {
+    func updatePersonInformation(text: String = "", indexPath: IndexPath) -> Bool?{
         
         let index = indexPath.row
         
@@ -175,21 +206,41 @@ private extension UpdateController {
             cells[index] = .image(presentation)
             tableView.reloadRows(at: [indexPath], with: .automatic)
         case .firstName(var presentation):
-            currentPersonCopy.firstName = text
-            presentation.updateDataType(with: .text(currentPersonCopy.firstName))
-            cells[index] = .firstName(presentation)
+            fieldsValidationResult[0] = Validation.isValidField(text: text, kindOfField: .forTextField(maxLength: 20))
+            if fieldsValidationResult[0] {
+                currentPersonCopy.firstName = text
+                presentation.updateDataType(with: .text(currentPersonCopy.firstName))
+                cells[index] = .firstName(presentation)
+            }
+            changeSaveButtonAvailability()
+            return fieldsValidationResult[0]
         case .lastName(var presentation):
-            currentPersonCopy.lastName = text
-            presentation.updateDataType(with: .text(currentPersonCopy.lastName))
-            cells[index] = .lastName(presentation)
+            fieldsValidationResult[1] = Validation.isValidField(text: text, kindOfField: .forTextField(maxLength: 20))
+            if fieldsValidationResult[1] {
+                currentPersonCopy.lastName = text
+                presentation.updateDataType(with: .text(currentPersonCopy.lastName))
+                cells[index] = .lastName(presentation)
+            }
+            changeSaveButtonAvailability()
+            return fieldsValidationResult[1]
         case .phone(var presentation):
-            currentPersonCopy.phoneNumber = text
-            presentation.updateDataType(with: .text(currentPersonCopy.phoneNumber))
-            cells[index] = .phone(presentation)
+            fieldsValidationResult[2] = Validation.isValidField(text: text, kindOfField: .forPhoneNumber)
+            if fieldsValidationResult[2] {
+                currentPersonCopy.phoneNumber = text
+                presentation.updateDataType(with: .text(currentPersonCopy.phoneNumber))
+                cells[index] = .phone(presentation)
+            }
+            changeSaveButtonAvailability()
+            return fieldsValidationResult[2]
         case .email(var presentation):
-            currentPersonCopy.email = text
-            presentation.updateDataType(with: .text(currentPersonCopy.email))
-            cells[index] = .email(presentation)
+            fieldsValidationResult[3] = Validation.isValidField(text: text, kindOfField: .forEmail)
+            if fieldsValidationResult[3] {
+                currentPersonCopy.email = text
+                presentation.updateDataType(with: .text(currentPersonCopy.email))
+                cells[index] = .email(presentation)
+            }
+            changeSaveButtonAvailability()
+            return fieldsValidationResult[3]
         case .birthday(var presentation):
             presentation.updateDataType(with: .date(currentPersonCopy.birthday))
             cells[index] = .birthday(presentation)
@@ -200,14 +251,15 @@ private extension UpdateController {
             currentPersonCopy.notes = text
             presentation.updateDataType(with: .text(currentPersonCopy.notes))
             cells[index] = .note(presentation)
-        case .driverLicenseSwitch(var presentation):
-            presentation.updateDataType(with: .text(currentPersonCopy.driverLicense))
-            cells[index] = .driverLicenseSwitch(presentation)
+        case .driverLicenseSwitch:
+            break
         case .driverLicenseNumber(var presentation):
             currentPersonCopy.driverLicense = text
             presentation.updateDataType(with: .text(currentPersonCopy.driverLicense))
             cells[index] = .driverLicenseNumber(presentation)
         }
+        changeSaveButtonAvailability()
+        return nil
     }
         
     func changeImage(for indexPath: IndexPath) {
@@ -243,8 +295,7 @@ private extension UpdateController {
         }
         
         self.imageState = imageState
-        updatePersonInformation(indexPath: indexPath)
-//        changeSaveButtonAvailability()
+        let _ = updatePersonInformation(indexPath: indexPath)
     }
     
     func runChooseImageHandler() {
@@ -298,7 +349,7 @@ private extension UpdateController {
     @objc func doneDateButtonAction(){
         currentPersonCopy.birthday = datePicker.date
         let indexPath = IndexPath(row: 5, section: 0)
-        updatePersonInformation(indexPath: indexPath)
+        let _ = updatePersonInformation(indexPath: indexPath)
         tableView.reloadRows(at: [indexPath], with: .automatic)
         self.tableView.endEditing(true)
     }
@@ -332,7 +383,7 @@ private extension UpdateController {
         let thirdNumber = heightArray[2][heightPicker.selectedRow(inComponent: 2)]
         currentPersonCopy.height = firstNumber * 100 + secondNumber * 10 + thirdNumber
         let indexPath = IndexPath(row: 6, section: 0)
-        updatePersonInformation(indexPath: indexPath)
+        let _ = updatePersonInformation(indexPath: indexPath)
         tableView.reloadRows(at: [indexPath], with: .automatic)
         self.tableView.endEditing(true)
     }

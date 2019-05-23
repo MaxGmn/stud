@@ -49,8 +49,8 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="fieldDataTextField" destination="5Rh-fr-w2G" id="q1f-qM-Kt6"/>
-                <outlet property="fieldNameLabel" destination="gwb-ZI-alT" id="ZSg-XX-9vJ"/>
+                <outlet property="dataTextField" destination="5Rh-fr-w2G" id="lPn-VR-oXh"/>
+                <outlet property="nameLabel" destination="gwb-ZI-alT" id="7ih-ek-h5C"/>
             </connections>
             <point key="canvasLocation" x="131.8840579710145" y="150.66964285714286"/>
         </tableViewCell>
