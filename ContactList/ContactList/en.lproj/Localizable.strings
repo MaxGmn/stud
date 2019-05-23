@@ -1,0 +1,14 @@
+
+EDIT_BUTTON = "Edit";
+DONE_BUTTON = "Done";
+DELETE_BUTTON = "Delete";
+
+CHANGE_IMAGE_TITLE = "Choose action";
+CHANGE_IMAGE_ACTION = "Change image";
+REMOVE_IMAGE_ACTION = "Remove image";
+
+CHANGE_SOURCE_TITLE = "Choose image source";
+GALLERY_ACTION = "Gallery";
+CAMERA_ACTION = "Camera";
+
+CANCEL_ACTION = "Cancel";

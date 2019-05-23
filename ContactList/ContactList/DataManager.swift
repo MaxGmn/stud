@@ -9,30 +9,30 @@
 import Foundation
 import UIKit
 
-class WorkWithData {
-   
-    static func putArray(array: [Person]) {
+class DataManager {
+       
+    static func putDictionary(myDictionary: [String : [Person]]) {
         let userDefaults = UserDefaults.standard
-            do{
-                let data = try NSKeyedArchiver.archivedData(withRootObject: array, requiringSecureCoding: false)
-                userDefaults.set(data, forKey: "persons")
-                userDefaults.synchronize()
-            } catch {
-                print("Something wrong")
-            }
+        do{
+            let data = try NSKeyedArchiver.archivedData(withRootObject: myDictionary, requiringSecureCoding: false)
+            userDefaults.set(data, forKey: "groupedPersons")
+            userDefaults.synchronize()
+        } catch {
+            print(error)
+        }
     }
     
-    static func getArray() -> [Person]{
-        guard let data = UserDefaults.standard.object(forKey: "persons") else {
-             return []
+    static func getDictionary() -> [String : [Person]]{
+        guard let data = UserDefaults.standard.object(forKey: "groupedPersons") else {
+            return [:]
         }
-
+        
         do {
-            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [Person]
+            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data as! Data) as! [String : [Person]]
         } catch {
-            return []
+            return [:]
         }
-       
+        
     }
     
     static func saveImage (by imageState: ImageEditState, name: String) {
@@ -57,10 +57,11 @@ class WorkWithData {
         }
         return nil
     }
+}
+
+private extension DataManager {
     
-    
-    
-    private static func removeFile(fileName: String) {       
+    static func removeFile(fileName: String) {
         do {
             guard let fullPath = getFullPath(to: fileName) else {return}
             let fileManager = FileManager.default
@@ -70,8 +71,7 @@ class WorkWithData {
         }
     }
     
-    
-    private static func createFile(fileName: String, image: UIImage) {
+    static func createFile(fileName: String, image: UIImage) {
         do {
             guard let fullPath = getFullPath(to: fileName) else {return}
             let data = image.jpegData(compressionQuality: 0.5)
@@ -81,7 +81,7 @@ class WorkWithData {
         }
     }
     
-    private static func getFullPath(to fileName: String) -> URL? {
+    static func getFullPath(to fileName: String) -> URL? {
         do {
             let documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             let fullPath = documentsDirectory.appendingPathComponent(fileName + ".jpeg")

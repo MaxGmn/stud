@@ -11,40 +11,36 @@ import UIKit
 class ViewControllerForShow: UIViewController {
     
     
-    @IBOutlet weak var firstNameLabel: UILabel!
+    @IBOutlet private weak var firstNameLabel: UILabel!
+    @IBOutlet private weak var lastNameLabel: UILabel!
+    @IBOutlet private weak var phoneNumberLabel: UILabel!
+    @IBOutlet private weak var emailLabel: UILabel!
+    @IBOutlet private weak var imageArea: UIImageView!
     
-    @IBOutlet weak var lastNameLabel: UILabel!
-    
-    @IBOutlet weak var phoneNumberLabel: UILabel!
-    
-    @IBOutlet weak var emailLabel: UILabel!
-    
-    @IBOutlet weak var imageArea: UIImageView!
-    
-    var person: Person!
-    
+    var person: Person!    
     var contactListDelegate: ContactListDelegate?
+    var searchCallback: ((Person?, Person) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         showPersonInformation()
     }    
-    
-    @IBAction func cancelOnAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-    
+        
     @IBAction func editOnAction(_ sender: Any) {        
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateViewController") as! UpdateViewController
         controller.currentPersonForEditing = person
         controller.contactListDelegate = contactListDelegate
         controller.callback = { [weak self] person in
-            self?.person = person
+            self?.searchCallback?(self?.person, person)
+            self?.person = person            
             self?.showPersonInformation()
         }
         
         navigationController?.pushViewController(controller, animated: true)
     }
+}
+
+private extension ViewControllerForShow {
     
     func showPersonInformation() {
         firstNameLabel.text = person.firstName

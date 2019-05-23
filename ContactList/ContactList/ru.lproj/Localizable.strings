@@ -1,0 +1,14 @@
+
+EDIT_BUTTON = "Редактировать";
+DONE_BUTTON = "Готово";
+DELETE_BUTTON = "Удалить";
+
+CHANGE_IMAGE_TITLE = "Выберите действие";
+CHANGE_IMAGE_ACTION = "Сменить изображение";
+REMOVE_IMAGE_ACTION = "Удалить изображение";
+
+CHANGE_SOURCE_TITLE = "Укажите источник";
+GALLERY_ACTION = "Галерея";
+CAMERA_ACTION = "Камера";
+
+CANCEL_ACTION = "Отмена";

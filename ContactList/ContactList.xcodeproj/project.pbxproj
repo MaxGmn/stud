@@ -17,7 +17,10 @@
 		620395DE22805EC300734092 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395DD22805EC300734092 /* Model.swift */; };
 		620395E42281A0AA00734092 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E32281A0AA00734092 /* TableViewCell.swift */; };
 		620395E62285629500734092 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E52285629500734092 /* Validation.swift */; };
-		620395E8228ACE6200734092 /* WorkWithData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E7228ACE6200734092 /* WorkWithData.swift */; };
+		620395E8228ACE6200734092 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E7228ACE6200734092 /* DataManager.swift */; };
+		620395EA228C39A200734092 /* SearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E9228C39A200734092 /* SearchResultController.swift */; };
+		620395EC228D3E8800734092 /* ContactItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395EB228D3E8800734092 /* ContactItem.swift */; };
+		620395EE228D402D00734092 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395ED228D402D00734092 /* Search.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +36,10 @@
 		620395DD22805EC300734092 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		620395E32281A0AA00734092 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		620395E52285629500734092 /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
-		620395E7228ACE6200734092 /* WorkWithData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkWithData.swift; sourceTree = "<group>"; };
+		620395E7228ACE6200734092 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		620395E9228C39A200734092 /* SearchResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultController.swift; sourceTree = "<group>"; };
+		620395EB228D3E8800734092 /* ContactItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactItem.swift; sourceTree = "<group>"; };
+		620395ED228D402D00734092 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,8 +74,11 @@
 			children = (
 				620395C722805B7C00734092 /* AppDelegate.swift */,
 				620395DD22805EC300734092 /* Model.swift */,
+				620395EB228D3E8800734092 /* ContactItem.swift */,
+				620395ED228D402D00734092 /* Search.swift */,
 				620395E52285629500734092 /* Validation.swift */,
-				620395E7228ACE6200734092 /* WorkWithData.swift */,
+				620395E7228ACE6200734092 /* DataManager.swift */,
+				620395E9228C39A200734092 /* SearchResultController.swift */,
 				620395D922805CE000734092 /* TableViewController.swift */,
 				620395E32281A0AA00734092 /* TableViewCell.swift */,
 				620395C922805B7C00734092 /* ViewControllerForShow.swift */,
@@ -124,6 +133,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 620395BB22805B7C00734092;
 			productRefGroup = 620395C522805B7C00734092 /* Products */;
@@ -153,11 +163,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				620395EE228D402D00734092 /* Search.swift in Sources */,
 				620395DE22805EC300734092 /* Model.swift in Sources */,
 				620395E42281A0AA00734092 /* TableViewCell.swift in Sources */,
 				620395CA22805B7C00734092 /* ViewControllerForShow.swift in Sources */,
+				620395EA228C39A200734092 /* SearchResultController.swift in Sources */,
 				620395DC22805E2500734092 /* UpdateViewController.swift in Sources */,
-				620395E8228ACE6200734092 /* WorkWithData.swift in Sources */,
+				620395EC228D3E8800734092 /* ContactItem.swift in Sources */,
+				620395E8228ACE6200734092 /* DataManager.swift in Sources */,
 				620395DA22805CE000734092 /* TableViewController.swift in Sources */,
 				620395C822805B7C00734092 /* AppDelegate.swift in Sources */,
 				620395E62285629500734092 /* Validation.swift in Sources */,
@@ -190,6 +203,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -251,6 +265,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
