@@ -14,6 +14,9 @@ class TextTableViewCell: UITableViewCell {
     @IBOutlet private weak var fieldDataTextField: UITextField!
     
     private var currentCellType: CellType!
+    private var datePicker: UIDatePicker?
+    private var heightPicker: UIPickerView?
+    private var pickerToolbar: UIToolbar?
     
     var callback: ((UITableViewCell, String) -> Void)?
     
@@ -22,8 +25,11 @@ class TextTableViewCell: UITableViewCell {
         callback?(self, fieldDataTextField.text ?? "")
     }  
     
-    func setContent(_ cellType: CellType) {
+    func setContent(_ cellType: CellType, datePicker: UIDatePicker? = nil, heightPicker: UIPickerView? = nil, pickerToolbar: UIToolbar? = nil) {
         currentCellType = cellType
+        self.datePicker = datePicker
+        self.heightPicker = heightPicker
+        self.pickerToolbar = pickerToolbar
         fillContentByCellType()
     }
     
@@ -73,6 +79,11 @@ private extension TextTableViewCell {
         if let keyboardType = presentation.keyboardType {
             fieldDataTextField.keyboardType = keyboardType
         }
+        
+        
+        fieldDataTextField.inputView = datePicker ?? heightPicker
+        fieldDataTextField.inputAccessoryView = pickerToolbar
+        
         
         switch presentation.dataType {
         case .text(let text):

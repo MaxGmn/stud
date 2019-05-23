@@ -18,7 +18,10 @@ class UpdateController: UITableViewController {
     private var fieldsCheckingIsOk: Bool!
     private let heightArray = [Array(0...2), Array(0...9), Array(0...9)]
     private let datePicker = UIDatePicker()
-    private var rowsCount: Int!
+    private let datePickerToolbar = UIToolbar()
+    private let heightPicker = UIPickerView()
+    private let heightPickerToolbar  = UIToolbar()
+    
     private var cells = [CellType]()
     private var avatarImageView: UIImageView?
     
@@ -71,6 +74,9 @@ class UpdateController: UITableViewController {
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
         cellRegistration()
         cells = fillCellsArray(person: currentPersonCopy)
+        addBirthdayDatePicker()
+        addHeightPickerview()
+        
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {        
@@ -141,7 +147,14 @@ private extension UpdateController {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "TextTableViewCell", for: indexPath) as! TextTableViewCell
-            cell.setContent(cells[indexPath.row])
+            switch indexPath.row {
+            case 5:
+                cell.setContent(cells[indexPath.row], datePicker: datePicker, pickerToolbar: datePickerToolbar)
+            case 6:
+                cell.setContent(cells[indexPath.row], heightPicker: heightPicker, pickerToolbar: heightPickerToolbar)
+            default:
+                cell.setContent(cells[indexPath.row])
+            }
             cell.callback = {(cell, text) in
                 if let indexPath = self.tableView.indexPath(for: cell) {
                     self.updatePersonInformation(text: text, indexPath: indexPath)
@@ -178,11 +191,9 @@ private extension UpdateController {
             presentation.updateDataType(with: .text(currentPersonCopy.email))
             cells[index] = .email(presentation)
         case .birthday(var presentation):
-            currentPersonCopy.birthday = Constants.dateFormat.date(from: text)
             presentation.updateDataType(with: .date(currentPersonCopy.birthday))
             cells[index] = .birthday(presentation)
         case .height(var presentation):
-            currentPersonCopy.height = Int(text) ?? 0
             presentation.updateDataType(with: .integer(currentPersonCopy.height))
             cells[index] = .height(presentation)
         case .note(var presentation):
@@ -270,5 +281,73 @@ private extension UpdateController {
         picker.cameraCaptureMode = .photo
         picker.modalPresentationStyle = .fullScreen
         present(self.picker, animated: true, completion: nil)
+    }
+    
+    func addBirthdayDatePicker() {
+        datePicker.datePickerMode = .date
+        datePicker.setDate(currentPersonCopy.birthday ?? Date(), animated: true)
+        datePicker.maximumDate = Date()
+        datePicker.minimumDate = Constants.dateFormat.date(from: Constants.defaultDate)
+        datePickerToolbar.sizeToFit()
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneDateButtonAction))
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonAction))
+        let emptyButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        datePickerToolbar.setItems([cancelButton, emptyButton, doneButton], animated: true)
+    }
+    
+    @objc func doneDateButtonAction(){
+        currentPersonCopy.birthday = datePicker.date
+        let indexPath = IndexPath(row: 5, section: 0)
+        updatePersonInformation(indexPath: indexPath)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+        self.tableView.endEditing(true)
+    }
+    
+    @objc func cancelButtonAction(){
+        self.tableView.endEditing(true)
+    }
+    
+    func addHeightPickerview() {
+        heightPicker.dataSource = self
+        heightPicker.delegate = self
+        if currentPersonCopy.height > 0 {
+            let firstNumber = currentPersonCopy.height / 100
+            let secondNumber = currentPersonCopy.height / 10 - firstNumber * 10
+            let thirdNumber = currentPersonCopy.height % 10
+            heightPicker.selectRow(firstNumber, inComponent: 0, animated: true)
+            heightPicker.selectRow(secondNumber, inComponent: 1, animated: true)
+            heightPicker.selectRow(thirdNumber, inComponent: 2, animated: true)
+        }
+        heightPickerToolbar.sizeToFit()
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(donePickerViewButtonAction))
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonAction))
+        let emptyButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        heightPickerToolbar.setItems([cancelButton, emptyButton, doneButton], animated: true)
+
+    }
+    
+    @objc func donePickerViewButtonAction(){
+        let firstNumber = heightArray[0][heightPicker.selectedRow(inComponent: 0)]
+        let secondNumber = heightArray[1][heightPicker.selectedRow(inComponent: 1)]
+        let thirdNumber = heightArray[2][heightPicker.selectedRow(inComponent: 2)]
+        currentPersonCopy.height = firstNumber * 100 + secondNumber * 10 + thirdNumber
+        let indexPath = IndexPath(row: 6, section: 0)
+        updatePersonInformation(indexPath: indexPath)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+        self.tableView.endEditing(true)
+    }
+}
+
+extension UpdateController: UIPickerViewDataSource, UIPickerViewDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return heightArray.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return heightArray[component].count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return String(heightArray[component][row])
     }
 }
