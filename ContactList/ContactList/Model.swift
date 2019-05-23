@@ -73,15 +73,21 @@ struct Presentation {
     let placeholder: String?
     let title: String?
     var dataType: DataType
+    var backgroundColor: UIColor?
     
-    init(keyboardType: UIKeyboardType? = nil, placeholder: String? = nil, title: String? = nil, dataType: DataType) {
+    init(keyboardType: UIKeyboardType? = nil, placeholder: String? = nil, title: String? = nil, dataType: DataType, color: UIColor? = nil) {
         self.keyboardType = keyboardType
         self.placeholder = placeholder
         self.title = title
         self.dataType = dataType
+        self.backgroundColor = color
     }
     
     mutating func updateDataType(with dataType: DataType) {
         self.dataType = dataType
+    }
+    
+    mutating func updateTextFieldBackground(newColor: UIColor) {
+        self.backgroundColor = newColor
     }
 }

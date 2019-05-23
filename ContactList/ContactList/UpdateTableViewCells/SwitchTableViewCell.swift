@@ -15,6 +15,8 @@ class SwitchTableViewCell: UITableViewCell {
     
     var person: Person!
     
+    var callback: ((CellType, Bool) -> Void)?
+    
     func setContent(_ cellType: CellType) {
         switch cellType {
         case .driverLicenseSwitch(let data):

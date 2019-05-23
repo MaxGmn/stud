@@ -62,19 +62,15 @@ class UpdateController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UINib(nibName: "ImageTableViewCell", bundle: nil), forCellReuseIdentifier: "ImageTableViewCell")
-        tableView.register(UINib(nibName: "TextTableViewCell", bundle: nil), forCellReuseIdentifier: "TextTableViewCell")
-        tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "SwitchTableViewCell")
-        
+        saveButton.isEnabled = true
         picker.delegate = self
         
         if currentPersonForEditing == nil {
             currentPersonForEditing = Person()
         }
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
+        cellRegistration()
         cells = fillCellsArray(person: currentPersonCopy)
-        
-        
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {        
@@ -91,6 +87,8 @@ class UpdateController: UITableViewController {
         if indexPath.row == 0 {
             changeImage(for: indexPath)
         }
+        tableView.endEditing(true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
@@ -109,6 +107,12 @@ extension UpdateController: UIImagePickerControllerDelegate, UINavigationControl
 
 
 private extension UpdateController {
+    
+    func cellRegistration() {
+        tableView.register(UINib(nibName: "ImageTableViewCell", bundle: nil), forCellReuseIdentifier: "ImageTableViewCell")
+        tableView.register(UINib(nibName: "TextTableViewCell", bundle: nil), forCellReuseIdentifier: "TextTableViewCell")
+        tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "SwitchTableViewCell")
+    }
     
     func fillCellsArray (person: Person) -> [CellType] {
         let array: [CellType] = [.image(Presentation(dataType: .image(person.image))),
@@ -138,8 +142,60 @@ private extension UpdateController {
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "TextTableViewCell", for: indexPath) as! TextTableViewCell
             cell.setContent(cells[indexPath.row])
+            cell.callback = {(cell, text) in
+                if let indexPath = self.tableView.indexPath(for: cell) {
+                    self.updatePersonInformation(text: text, indexPath: indexPath)
+                }
+            }
             return cell
             
+        }
+    }
+    
+    func updatePersonInformation(text: String = "", indexPath: IndexPath) {
+        
+        let index = indexPath.row
+        
+        switch cells[index] {
+        case .image(var presentation):
+            presentation.updateDataType(with: .image(currentPersonCopy.image))
+            cells[index] = .image(presentation)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        case .firstName(var presentation):
+            currentPersonCopy.firstName = text
+            presentation.updateDataType(with: .text(currentPersonCopy.firstName))
+            cells[index] = .firstName(presentation)
+        case .lastName(var presentation):
+            currentPersonCopy.lastName = text
+            presentation.updateDataType(with: .text(currentPersonCopy.lastName))
+            cells[index] = .lastName(presentation)
+        case .phone(var presentation):
+            currentPersonCopy.phoneNumber = text
+            presentation.updateDataType(with: .text(currentPersonCopy.phoneNumber))
+            cells[index] = .phone(presentation)
+        case .email(var presentation):
+            currentPersonCopy.email = text
+            presentation.updateDataType(with: .text(currentPersonCopy.email))
+            cells[index] = .email(presentation)
+        case .birthday(var presentation):
+            currentPersonCopy.birthday = Constants.dateFormat.date(from: text)
+            presentation.updateDataType(with: .date(currentPersonCopy.birthday))
+            cells[index] = .birthday(presentation)
+        case .height(var presentation):
+            currentPersonCopy.height = Int(text) ?? 0
+            presentation.updateDataType(with: .integer(currentPersonCopy.height))
+            cells[index] = .height(presentation)
+        case .note(var presentation):
+            currentPersonCopy.notes = text
+            presentation.updateDataType(with: .text(currentPersonCopy.notes))
+            cells[index] = .note(presentation)
+        case .driverLicenseSwitch(var presentation):
+            presentation.updateDataType(with: .text(currentPersonCopy.driverLicense))
+            cells[index] = .driverLicenseSwitch(presentation)
+        case .driverLicenseNumber(var presentation):
+            currentPersonCopy.driverLicense = text
+            presentation.updateDataType(with: .text(currentPersonCopy.driverLicense))
+            cells[index] = .driverLicenseNumber(presentation)
         }
     }
         
@@ -168,28 +224,16 @@ private extension UpdateController {
     func changeCurrentImage(imageState: ImageEditState, for indexPath: IndexPath) {
         switch imageState {
         case .removed:
-            setCellData(newImage: nil, at: indexPath.row)
             currentPersonCopy.image = nil
         case .changed(let newImage):
-            setCellData(newImage: newImage, at: indexPath.row)
             currentPersonCopy.image = newImage
         default:
             break
         }
         
         self.imageState = imageState
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        updatePersonInformation(indexPath: indexPath)
 //        changeSaveButtonAvailability()
-    }
-    
-    func setCellData(newImage: UIImage?, at index: Int) {
-        switch cells[index] {
-        case .image(var presentation):
-            presentation.updateDataType(with: .image(newImage))
-            cells[index] = .image(presentation)
-        default:
-            break
-        }
     }
     
     func runChooseImageHandler() {

@@ -33,6 +33,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="editingChangedAction:" destination="KGk-i7-Jjw" eventType="editingChanged" id="Qcz-bZ-qa8"/>
+                                </connections>
                             </textField>
                         </subviews>
                     </stackView>

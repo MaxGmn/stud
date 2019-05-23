@@ -14,7 +14,14 @@ class TextTableViewCell: UITableViewCell {
     @IBOutlet private weak var fieldDataTextField: UITextField!
     
     private var currentCellType: CellType!
-        
+    
+    var callback: ((UITableViewCell, String) -> Void)?
+    
+    
+    @IBAction func editingChangedAction(_ sender: Any) {
+        callback?(self, fieldDataTextField.text ?? "")
+    }  
+    
     func setContent(_ cellType: CellType) {
         currentCellType = cellType
         fillContentByCellType()
@@ -59,9 +66,13 @@ private extension TextTableViewCell {
     }
     
     func updateCellData(presentation: Presentation) {
+        
         fieldNameLabel.text = presentation.title
-        fieldDataTextField.keyboardType = presentation.keyboardType ?? UIKeyboardType.default
         fieldDataTextField.placeholder = presentation.placeholder
+        fieldDataTextField.backgroundColor = presentation.backgroundColor
+        if let keyboardType = presentation.keyboardType {
+            fieldDataTextField.keyboardType = keyboardType
+        }
         
         switch presentation.dataType {
         case .text(let text):
@@ -74,24 +85,4 @@ private extension TextTableViewCell {
             break
         }
     }
-    
-//    func checkTextValidation() {
-//
-//        guard let cellType = currentCellType else {return}
-//        var validationFunction: ValidationFunctions!
-//
-//        switch cellType {
-//        case .firstName, .lastName:
-//            validationFunction = .forTextField(maxLength: 20)
-//        case .phone:
-//            validationFunction = .forPhoneNumber
-//        case .email:
-//            validationFunction = .forEmail
-//        default:
-//            return
-//        }
-//
-//        let validationResult = Validation.isValidField(text: fieldDataTextField.text!, kindOfField: validationFunction)
-//        fieldDataTextField.backgroundColor = validationResult.color
-//    }
 }
