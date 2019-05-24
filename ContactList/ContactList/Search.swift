@@ -17,7 +17,7 @@ class Search {
             let sourceString: String
             
             if contains(searchText: searchText, in: person.firstName) || contains(searchText: searchText, in: person.lastName){
-                sourceString = getFullNameString(from: person)
+                sourceString = person.fullName
             } else if contains(searchText: searchText, in: person.phoneNumber) {
                 sourceString = person.phoneNumber
             } else if contains(searchText: searchText, in: person.email){
@@ -33,15 +33,11 @@ class Search {
     }
     
     static func getPersonsArrayFromDictionary(from dictionary: [String : [Person]]) -> [Person] {
-        return dictionary.flatMap({(key, value) -> [Person] in return value})
+        return dictionary.values.flatMap({(value) -> [Person] in return value})
     }
     
-    static func isPersonsFullNameFirstCharCompare(firstPerson: Person, secondPerson: Person) -> Bool {
-        return getFullNameString(from: firstPerson).first == getFullNameString(from: secondPerson).first
-    }
-    
-    static func getFullNameString(from person: Person) -> String {
-        return person.firstName + (person.firstName.isEmpty ? "" : " ") + person.lastName
+    static func isPersonsFullNameFirstCharEqual(firstPerson: Person, secondPerson: Person) -> Bool {
+        return firstPerson.fullName.first == secondPerson.fullName.first
     }
 }
 

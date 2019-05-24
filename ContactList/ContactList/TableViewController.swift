@@ -10,17 +10,31 @@ import UIKit
 
 class TableViewController: UITableViewController {
     
-    private (set) var groupedPersons: [String : [Person]]!
-    private (set) var keysArray = [String]()
     private var searchController: UISearchController!
     private var buttonCopy: UIBarButtonItem?
+    private var buttonsCopy: (left: UIBarButtonItem, right: UIBarButtonItem)!
     private let rowsCountForDisplaySearchBar = 10
+    private (set) var keysArray = [String]()
+    private (set) var groupedPersons: [String : [Person]]! {
+        didSet {
+            if groupedPersons.isEmpty {
+                tableView.separatorStyle = .none
+                tableView.backgroundView?.isHidden = false
+            } else {
+                tableView.separatorStyle = .singleLine
+                tableView.backgroundView?.isHidden = true
+            }
+            keysArray = Array(groupedPersons.keys).sorted()
+        }
+    }    
     
     @IBOutlet private var emptyListView: UIView!
-    @IBOutlet private weak var addNewContactButton: UIBarButtonItem!    
+    @IBOutlet private weak var addNewContactButton: UIBarButtonItem!
+    @IBOutlet private weak var editTableButton: UIBarButtonItem!
+    
     
     @IBAction func addNewContact(_ sender: Any?) {
-        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateTableViewController") as! UpdateTableViewController
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateController") as! UpdateController
 //        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateController") as! UpdateController
         controller.contactListDelegate = self
         let navController = UINavigationController(rootViewController: controller)
@@ -29,15 +43,13 @@ class TableViewController: UITableViewController {
     
     @IBAction func editTable(_ sender: Any) {
         tableView.setEditing(!tableView.isEditing, animated: true)
-        let editButton = NSLocalizedString("EDIT_BUTTON", comment: "Edit")
-        let doneButton = NSLocalizedString("DONE_BUTTON", comment: "Done")
-        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? doneButton : editButton
+        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundView = emptyListView
-        buttonCopy = addNewContactButton
+        buttonsCopy = (editTableButton, addNewContactButton)
         groupedPersons = DataManager.getDictionary()
         createSearchBar()
         changeSearchBarVisibility()
@@ -45,15 +57,7 @@ class TableViewController: UITableViewController {
 
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        changeAddContactButtonVisibility()
-        if groupedPersons.isEmpty {
-            tableView.separatorStyle = .none
-            tableView.backgroundView?.isHidden = false
-            return 0
-        }
-        tableView.separatorStyle = .singleLine
-        tableView.backgroundView?.isHidden = true
-        keysArray = Array(groupedPersons.keys).sorted()
+        changeButtonsVisibility()
         return groupedPersons.count
     }
 
@@ -86,20 +90,16 @@ class TableViewController: UITableViewController {
         if tableView.isEditing {
             return nil
         }
-        
-        let editButton = NSLocalizedString("EDIT_BUTTON", comment: "Edit")
-        let deleteButton = NSLocalizedString("DELETE_BUTTON", comment: "Delete")
-        
-        let deleteAction = UITableViewRowAction(style: .default, title: deleteButton) {(action, indexPath) in
-            self.deletePerson(by: self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row].id)
+                
+        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
+            self.deletePerson(by: self.getPerson(at: indexPath).id)
         }
-        let updateAction = UITableViewRowAction(style: .default, title: editButton) {(action, indexPath) in
-//            let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateTableViewController") as! UpdateTableViewController
+        let updateAction = UITableViewRowAction(style: .default, title: "Edit") {(action, indexPath) in
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateController") as! UpdateController
             controller.currentPersonForEditing = self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row]
+
             controller.contactListDelegate = self
-            let navController = UINavigationController(rootViewController: controller)
-            self.present(navController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(controller, animated: true)
         }
         
         deleteAction.backgroundColor = .red
@@ -112,7 +112,7 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        self.deletePerson(by: groupedPersons[self.keysArray[indexPath.section]]![indexPath.row].id)
+        self.deletePerson(by: getPerson(at: indexPath).id)
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
@@ -123,24 +123,22 @@ class TableViewController: UITableViewController {
 extension TableViewController: ContactListDelegate {
     
     func updatePersonInformation(person: Person) {
-        tableView.beginUpdates()
-        let categoryName = Search.getFullNameString(from: person).first?.uppercased() ?? "~"
+
+        let categoryName = person.fullName.first?.uppercased() ?? "~"
         addNewSection(with: categoryName)
         if !updateCurrentPerson(person: person, in: categoryName) {
             appendNewPerson(person: person, in: categoryName)
             changeSearchBarVisibility()
         }
-        tableView.endUpdates()
         updateDictionary()
     }
     
     func deletePerson(by id: String) {
-        let result = getCategoryNameAndIndex(by: id)
-        if result.isEmpty {
+        guard let result = getCategoryNameAndIndex(by: id) else {
             return
         }
         
-        removeCurrentPerson(by: result[0])
+        removeCurrentPerson(by: result)
         DataManager.saveImage(by: .removed, name: id)
         updateDictionary()
         changeSearchBarVisibility()
@@ -149,8 +147,9 @@ extension TableViewController: ContactListDelegate {
 
 private extension TableViewController {
     
-    func changeAddContactButtonVisibility() {
-        navigationItem.setRightBarButton(!groupedPersons.isEmpty ? buttonCopy : nil, animated: true)
+    func changeButtonsVisibility() {
+        navigationItem.setRightBarButton(!groupedPersons.isEmpty ? buttonsCopy.right : nil, animated: true)
+        navigationItem.setLeftBarButton(!groupedPersons.isEmpty ? buttonsCopy.left : nil, animated: true)
     }
     
     func createSearchBar() {
@@ -165,7 +164,7 @@ private extension TableViewController {
     func changeSearchBarVisibility() {
         if Search.getPersonsArrayFromDictionary(from: groupedPersons).count >= rowsCountForDisplaySearchBar {
             tableView.tableHeaderView = searchController.searchBar
-        } else {
+        } else if tableView.tableHeaderView != nil {
             tableView.tableHeaderView = nil
         }
     }
@@ -184,20 +183,19 @@ private extension TableViewController {
     }
     
     func updateCurrentPerson(person: Person, in newCategoryName: String) -> Bool {
-        let result = getCategoryNameAndIndex(by: person.id)
-        if result.isEmpty{
+        guard let result = getCategoryNameAndIndex(by: person.id) else {
             return false
         }
         
         let currentDirectoryName: String
         let currentArrayIndex: Int
-        (currentDirectoryName, currentArrayIndex) = result[0]
+        (currentDirectoryName, currentArrayIndex) = result
         
         let personOldVersion = groupedPersons[currentDirectoryName]![currentArrayIndex]
         let sectionNumber = getKeysArrayIndex(by: currentDirectoryName)
         let indexPath = IndexPath(row: currentArrayIndex, section: sectionNumber)
         
-        if Search.isPersonsFullNameFirstCharCompare(firstPerson: personOldVersion, secondPerson: person) {
+        if Search.isPersonsFullNameFirstCharEqual(firstPerson: personOldVersion, secondPerson: person) {
             groupedPersons[currentDirectoryName]![currentArrayIndex] = person
             tableView.reloadRows(at: [indexPath], with: .automatic)
         } else {
@@ -207,9 +205,9 @@ private extension TableViewController {
                 groupedPersons[newCategoryName]?.append(person)
                 tableView.moveRow(at: indexPath, to: targetIndexPath)
                 tableView.reloadRows(at: [targetIndexPath], with: .automatic)
-                if groupedPersons[currentDirectoryName]!.isEmpty {
-                    removeSection(by: currentDirectoryName)
-                }
+            }
+            if groupedPersons[currentDirectoryName]!.isEmpty {
+                removeSection(by: currentDirectoryName)
             }
         }
         return true
@@ -225,7 +223,7 @@ private extension TableViewController {
         }
     }
     
-    func removeCurrentPerson(by result: (directoryName: String, arrayIndex: Int))    {
+    func removeCurrentPerson(by result: (directoryName: String, arrayIndex: Int)) {
             tableView.beginUpdates()
             groupedPersons[result.directoryName]!.remove(at: result.arrayIndex)
             let indexPath = IndexPath(row: result.arrayIndex, section: getKeysArrayIndex(by: result.directoryName))
@@ -236,12 +234,13 @@ private extension TableViewController {
             tableView.endUpdates()
     }
     
-    func getCategoryNameAndIndex(by id: String) -> [(String, Int)] {
-        return groupedPersons.compactMap({(key, value) -> (String, Int)? in
-            if let foundedIndex: Int = value.firstIndex(where: {(person) -> Bool in return person.id == id}) {
-                return (key, foundedIndex)
+    func getCategoryNameAndIndex(by id: String) -> (String, Int)? {
+        for category in groupedPersons {
+            if let foundedIndex: Int = category.value.firstIndex(where: {(person) -> Bool in return person.id == id}) {
+                return (category.key, foundedIndex)
             }
-            return nil})
+        }
+        return nil
     }
     
     func getKeysArrayIndex(by key: String) -> Int {
@@ -249,9 +248,8 @@ private extension TableViewController {
     }
     
     func removeSection(by key: String) {
-        let keysArrayIndex = keysArray.firstIndex(of: key)!
+        let keysArrayIndex = getKeysArrayIndex(by: key)
         groupedPersons.remove(at: groupedPersons.index(forKey: key)!)
-        keysArray.remove(at: keysArrayIndex)
         tableView.deleteSections(IndexSet(arrayLiteral: keysArrayIndex), with: .automatic)
     }
     

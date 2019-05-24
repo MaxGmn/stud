@@ -17,6 +17,7 @@ struct Constants {
     static let blackColorAttribute = [NSAttributedString.Key.foregroundColor: UIColor.black]
     static let defaultDate = "01.01.1900"
     static let dateFormat = getDateFormatter()
+    static let userDefaultsKey = "groupedPersons"
     
     private static func getDateFormatter() -> DateFormatter {
         let formatter = DateFormatter()
@@ -73,21 +74,15 @@ struct Presentation {
     let placeholder: String?
     let title: String?
     var dataType: DataType
-    var backgroundColor: UIColor?
     
-    init(keyboardType: UIKeyboardType? = nil, placeholder: String? = nil, title: String? = nil, dataType: DataType, color: UIColor? = nil) {
+    init(keyboardType: UIKeyboardType? = nil, placeholder: String? = nil, title: String? = nil, dataType: DataType) {
         self.keyboardType = keyboardType
         self.placeholder = placeholder
         self.title = title
         self.dataType = dataType
-        self.backgroundColor = color
     }
     
     mutating func updateDataType(with dataType: DataType) {
         self.dataType = dataType
-    }
-    
-    mutating func updateTextFieldBackground(newColor: UIColor) {
-        self.backgroundColor = newColor
     }
 }

@@ -102,6 +102,7 @@
 				620395D922805CE000734092 /* TableViewController.swift */,
 				620395E32281A0AA00734092 /* TableViewCell.swift */,
 				620395C922805B7C00734092 /* ViewControllerForShow.swift */,
+
 				621A6490229281A000AA1A2C /* UpdateTableViewController.swift */,
 				621A64922292C5DA00AA1A2C /* NotesViewController.swift */,
 				622E9C792293F681005FF214 /* UpdateController.swift */,
@@ -241,15 +242,6 @@
 				620395D122805B7D00734092 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		620395F4228EB77400734092 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				620395F3228EB77400734092 /* ru */,
-				620395F5228EB77900734092 /* en */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

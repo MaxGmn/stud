@@ -15,7 +15,7 @@ class DataManager {
         let userDefaults = UserDefaults.standard
         do{
             let data = try NSKeyedArchiver.archivedData(withRootObject: myDictionary, requiringSecureCoding: false)
-            userDefaults.set(data, forKey: "groupedPersons")
+            userDefaults.set(data, forKey: Constants.userDefaultsKey)
             userDefaults.synchronize()
         } catch {
             print(error)
@@ -23,7 +23,7 @@ class DataManager {
     }
     
     static func getDictionary() -> [String : [Person]]{
-        guard let data = UserDefaults.standard.object(forKey: "groupedPersons") else {
+        guard let data = UserDefaults.standard.object(forKey: Constants.userDefaultsKey) else {
             return [:]
         }
         

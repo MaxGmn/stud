@@ -16,11 +16,6 @@ class UpdateController: UITableViewController {
     private var imageState = ImageEditState.noChanges
     private var currentPersonCopy: Person!
     private var fieldsValidationResult = [Bool]()
-    private let heightArray = [Array(0...2), Array(0...9), Array(0...9)]
-    private let datePicker = UIDatePicker()
-    private let datePickerToolbar = UIToolbar()
-    private let heightPicker = UIPickerView()
-    private let heightPickerToolbar  = UIToolbar()
     private let picker = UIImagePickerController()
     
     private var cells = [CellType]()
@@ -58,8 +53,7 @@ class UpdateController: UITableViewController {
     @IBAction func cancelAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
-    }
-       
+    }       
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,8 +66,6 @@ class UpdateController: UITableViewController {
         changeSaveButtonAvailability()
         cellRegistration()
         cells = fillCellsArray(person: currentPersonCopy)
-        addBirthdayDatePicker()
-        addHeightPickerview()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {        
@@ -87,8 +79,13 @@ class UpdateController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
-            changeImage(for: indexPath)
+        switch indexPath.row {
+        case 0:
+            changeImage(for: indexPath.row)
+        case 7:
+            showNoteTextView(index: indexPath.row)
+        default:
+            break
         }
         tableView.endEditing(true)
         tableView.deselectRow(at: indexPath, animated: true)
@@ -99,7 +96,7 @@ extension UpdateController: UIImagePickerControllerDelegate, UINavigationControl
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let choosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        changeCurrentImage(imageState: .changed(newImage: choosenImage), for: IndexPath(row: 0, section: 0))
+        changeCurrentImage(imageState: .changed(newImage: choosenImage), for: 0)
         dismiss(animated:true, completion: nil)
     }
     
@@ -161,50 +158,26 @@ private extension UpdateController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
             cell.setContent(cells[indexPath.row])
             cell.callback = {[weak self] (cell, isOn) in
-                guard let noOptionalSelf = self else {return}
-                if isOn {
-                    noOptionalSelf.cells.append(noOptionalSelf.getDriverLicenseNumberCell())
-                    noOptionalSelf.tableView.insertRows(at: [IndexPath(row: noOptionalSelf.cells.count - 1, section: 0)], with: .automatic)
-                } else {
-                    noOptionalSelf.cells.removeLast()
-                    noOptionalSelf.tableView.deleteRows(at: [IndexPath(row: noOptionalSelf.cells.count, section: 0)], with: .automatic)
-                    noOptionalSelf.currentPersonCopy.driverLicense = ""
-                }
-                noOptionalSelf.gchangeSaveButtonAvailability()
-//                if let indexPath = noOptionalSelf.tableView.indexPath(for: cell) {
-//                    let _ = noOptionalSelf.updatePersonInformation(indexPath: indexPath)
-//                }
+                let _ = self?.updatePersonInformation(index: indexPath.row, switchIsOn: isOn)
             }
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "TextTableViewCell", for: indexPath) as! TextTableViewCell
-            switch indexPath.row {
-            case 5:
-                cell.setContent(cells[indexPath.row], datePicker: datePicker, pickerToolbar: datePickerToolbar)
-            case 6:
-                cell.setContent(cells[indexPath.row], heightPicker: heightPicker, pickerToolbar: heightPickerToolbar)
-            default:
-                cell.setContent(cells[indexPath.row])
-            }
+            cell.setContent(cells[indexPath.row])
             cell.callback = {[weak self] (cell, text) in
-                if let indexPath = self?.tableView.indexPath(for: cell) {
-                    return self?.updatePersonInformation(text: text, indexPath: indexPath)
-                }
-                return nil
+                return self?.updatePersonInformation(index: indexPath.row, text: text)
             }
             return cell
         }
     }
     
-    func updatePersonInformation(text: String = "", indexPath: IndexPath) -> Bool?{
-        
-        let index = indexPath.row
-        
+    func updatePersonInformation(index: Int, text: String = "", switchIsOn: Bool = false) -> Bool?{
+       
         switch cells[index] {
         case .image(var presentation):
             presentation.updateDataType(with: .image(currentPersonCopy.image))
             cells[index] = .image(presentation)
-            tableView.reloadRows(at: [indexPath], with: .automatic)
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         case .firstName(var presentation):
             fieldsValidationResult[0] = Validation.isValidField(text: text, kindOfField: .forTextField(maxLength: 20))
             if fieldsValidationResult[0] {
@@ -244,15 +217,26 @@ private extension UpdateController {
         case .birthday(var presentation):
             presentation.updateDataType(with: .date(currentPersonCopy.birthday))
             cells[index] = .birthday(presentation)
+            currentPersonCopy.birthday = Constants.dateFormat.date(from: text)
+            tableView.endEditing(true)
         case .height(var presentation):
             presentation.updateDataType(with: .integer(currentPersonCopy.height))
             cells[index] = .height(presentation)
+            currentPersonCopy.height = Int(text) ?? 0
         case .note(var presentation):
             currentPersonCopy.notes = text
             presentation.updateDataType(with: .text(currentPersonCopy.notes))
             cells[index] = .note(presentation)
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         case .driverLicenseSwitch:
-            break
+            if switchIsOn {
+                cells.append(getDriverLicenseNumberCell())
+                tableView.insertRows(at: [IndexPath(row: index + 1, section: 0)], with: .automatic)
+            } else {
+                cells.removeLast()
+                tableView.deleteRows(at: [IndexPath(row: index + 1, section: 0)], with: .automatic)
+                currentPersonCopy.driverLicense = ""
+            }
         case .driverLicenseNumber(var presentation):
             currentPersonCopy.driverLicense = text
             presentation.updateDataType(with: .text(currentPersonCopy.driverLicense))
@@ -262,8 +246,7 @@ private extension UpdateController {
         return nil
     }
         
-    func changeImage(for indexPath: IndexPath) {
-        
+    func changeImage(for index: Int) {
         if let _ = currentPersonCopy.image {
             let actionTitle = NSLocalizedString("CHANGE_IMAGE_TITLE", comment: "Choose action")
             let changeActionTitle = NSLocalizedString("CHANGE_IMAGE_ACTION", comment: "Change image")
@@ -272,7 +255,7 @@ private extension UpdateController {
             
             let choosePhotoAction = UIAlertController(title: actionTitle, message: nil, preferredStyle: .actionSheet)
             let changeAction = UIAlertAction(title: changeActionTitle, style: .default) {action in self.runChooseImageHandler()}
-            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed, for: indexPath)}
+            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed, for: index)}
             let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
             
             choosePhotoAction.addAction(changeAction)
@@ -284,7 +267,7 @@ private extension UpdateController {
         }
     }
     
-    func changeCurrentImage(imageState: ImageEditState, for indexPath: IndexPath) {
+    func changeCurrentImage(imageState: ImageEditState, for index: Int) {
         switch imageState {
         case .removed:
             currentPersonCopy.image = nil
@@ -295,14 +278,13 @@ private extension UpdateController {
         }
         
         self.imageState = imageState
-        let _ = updatePersonInformation(indexPath: indexPath)
+        let _ = updatePersonInformation(index: index)
     }
     
     func runChooseImageHandler() {
         #if targetEnvironment(simulator)
         showPhotoLibrary()
         #else
-        
         let actionTitle = NSLocalizedString("CHANGE_SOURCE_TITLE", comment: "Choose image source")
         let galleryActionTitle = NSLocalizedString("GALLERY_ACTION", comment: "Gallery")
         let cameraActionTitle = NSLocalizedString("CAMERA_ACTION", comment: "Camera")
@@ -334,71 +316,12 @@ private extension UpdateController {
         present(self.picker, animated: true, completion: nil)
     }
     
-    func addBirthdayDatePicker() {
-        datePicker.datePickerMode = .date
-        datePicker.setDate(currentPersonCopy.birthday ?? Date(), animated: true)
-        datePicker.maximumDate = Date()
-        datePicker.minimumDate = Constants.dateFormat.date(from: Constants.defaultDate)
-        datePickerToolbar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneDateButtonAction))
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonAction))
-        let emptyButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        datePickerToolbar.setItems([cancelButton, emptyButton, doneButton], animated: true)
-    }
-    
-    @objc func doneDateButtonAction(){
-        currentPersonCopy.birthday = datePicker.date
-        let indexPath = IndexPath(row: 5, section: 0)
-        let _ = updatePersonInformation(indexPath: indexPath)
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        self.tableView.endEditing(true)
-    }
-    
-    @objc func cancelButtonAction(){
-        self.tableView.endEditing(true)
-    }
-    
-    func addHeightPickerview() {
-        heightPicker.dataSource = self
-        heightPicker.delegate = self
-        if currentPersonCopy.height > 0 {
-            let firstNumber = currentPersonCopy.height / 100
-            let secondNumber = currentPersonCopy.height / 10 - firstNumber * 10
-            let thirdNumber = currentPersonCopy.height % 10
-            heightPicker.selectRow(firstNumber, inComponent: 0, animated: true)
-            heightPicker.selectRow(secondNumber, inComponent: 1, animated: true)
-            heightPicker.selectRow(thirdNumber, inComponent: 2, animated: true)
+    func showNoteTextView(index: Int) {
+        let destinationController = self.storyboard!.instantiateViewController(withIdentifier: "NotesViewController") as! NotesViewController
+        destinationController.currentText = currentPersonCopy.notes
+        destinationController.callback = {[weak self] text in
+            let _ = self?.updatePersonInformation(index: index, text: text)
         }
-        heightPickerToolbar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(donePickerViewButtonAction))
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonAction))
-        let emptyButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        heightPickerToolbar.setItems([cancelButton, emptyButton, doneButton], animated: true)
-
-    }
-    
-    @objc func donePickerViewButtonAction(){
-        let firstNumber = heightArray[0][heightPicker.selectedRow(inComponent: 0)]
-        let secondNumber = heightArray[1][heightPicker.selectedRow(inComponent: 1)]
-        let thirdNumber = heightArray[2][heightPicker.selectedRow(inComponent: 2)]
-        currentPersonCopy.height = firstNumber * 100 + secondNumber * 10 + thirdNumber
-        let indexPath = IndexPath(row: 6, section: 0)
-        let _ = updatePersonInformation(indexPath: indexPath)
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        self.tableView.endEditing(true)
-    }
-}
-
-extension UpdateController: UIPickerViewDataSource, UIPickerViewDelegate {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return heightArray.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return heightArray[component].count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return String(heightArray[component][row])
+        present(destinationController, animated: true, completion: nil)
     }
 }

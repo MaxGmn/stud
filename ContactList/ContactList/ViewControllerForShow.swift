@@ -22,22 +22,20 @@ class ViewControllerForShow: UIViewController {
     
     var person: Person!    
     var contactListDelegate: ContactListDelegate?
+    var searchCallback: ((Person?, Person) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         showPersonInformation()
     }    
-    
-    @IBAction func cancelOnAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-    
+        
     @IBAction func editOnAction(_ sender: Any) {        
-        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateTableViewController") as! UpdateTableViewController
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateController") as! UpdateController
         controller.currentPersonForEditing = person
         controller.contactListDelegate = contactListDelegate
         controller.callback = { [weak self] person in
-            self?.person = person
+            self?.searchCallback?(self?.person, person)
+            self?.person = person            
             self?.showPersonInformation()
         }        
         navigationController?.pushViewController(controller, animated: true)

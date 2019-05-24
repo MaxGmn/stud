@@ -21,6 +21,10 @@ class Person: NSObject {
     var notes: String
     var driverLicense: String
     
+    var fullName: String {
+        return firstName + (firstName.isEmpty ? "" : " ") + lastName
+    }
+    
     lazy var image: UIImage? = DataManager.getImage(fileName: id)
     
     
