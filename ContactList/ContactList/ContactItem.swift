@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class Person: NSObject {
+@objcMembers class Person: NSObject {
     
     private (set) var id: String
     var firstName: String

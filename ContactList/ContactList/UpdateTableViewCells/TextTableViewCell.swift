@@ -13,7 +13,6 @@ class TextTableViewCell: UITableViewCell {
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var dataTextField: UITextField!
     
-    private var currentCellType: CellType!
     private let datePicker = UIDatePicker()
     private let heightPicker = UIPickerView()
     private let heightArray = [Array(0...2), Array(0...9), Array(0...9)]
@@ -28,9 +27,8 @@ class TextTableViewCell: UITableViewCell {
         }
     }  
     
-    func setContent(_ cellType: CellType) {
-        currentCellType = cellType
-        fillContentByCellType()
+    func setContent(_ presentation: Presentation) {
+        updateCellData(presentation: presentation)
     }
     
     override func awakeFromNib() {
@@ -45,38 +43,11 @@ class TextTableViewCell: UITableViewCell {
 
 private extension TextTableViewCell {
     
-    func fillContentByCellType() {
-        guard let cellType = currentCellType else {return}
-        
-        switch cellType {
-        case .firstName(let data):
-            updateCellData(presentation: data)
-        case .lastName(let data):
-            updateCellData(presentation: data)
-        case .phone(let data):
-            updateCellData(presentation: data)
-        case .email(let data):
-            updateCellData(presentation: data)
-        case .birthday(let data):
-            updateCellData(presentation: data)
-            addBirthdayDatePicker()
-        case .height(let data):
-            updateCellData(presentation: data)
-            addHeightPickerview()
-        case .note(let data):
-            updateCellData(presentation: data, textFieldIsEnable: false)
-        case .driverLicenseNumber(let data):
-            updateCellData(presentation: data)
-        default:
-            break
-        }
-    }
-    
-    func updateCellData(presentation: Presentation, textFieldIsEnable: Bool = true) {
+    func updateCellData(presentation: Presentation) {
         
         nameLabel.text = presentation.title
         dataTextField.placeholder = presentation.placeholder
-        dataTextField.isEnabled = textFieldIsEnable
+        dataTextField.isEnabled = presentation.cellType != .notes
         if let keyboardType = presentation.keyboardType {
             dataTextField.keyboardType = keyboardType
         }
@@ -87,9 +58,11 @@ private extension TextTableViewCell {
         case .date(let date):
             self.birthday = date
             dataTextField.text = (date != nil ? Constants.dateFormat.string(from: date!) : Constants.defaultDate)
+            addBirthdayDatePicker()
         case .integer(let number):
             self.height = number
             dataTextField.text = String(number)
+            addHeightPickerview()
         default:
             break
         }

@@ -43,17 +43,17 @@ enum ImageEditState: Equatable {
     case changed(newImage: UIImage)
 }
 
-enum CellType {    
-    case image(Presentation)
-    case firstName(Presentation)
-    case lastName(Presentation)
-    case phone(Presentation)
-    case email(Presentation)
-    case birthday(Presentation)
-    case height(Presentation)
-    case note(Presentation)
-    case driverLicenseSwitch(Presentation)
-    case driverLicenseNumber(Presentation)
+enum CellType: String {    
+    case image
+    case firstName
+    case lastName
+    case phoneNumber
+    case email
+    case birthday
+    case height
+    case notes
+    case driverLicenseSwitch
+    case driverLicense
 }
 
 enum DataType {
@@ -68,12 +68,16 @@ struct Presentation {
     let placeholder: String?
     let title: String?
     var dataType: DataType
+    let cellType: CellType
+    let validationType: ValidationFunctions?
     
-    init(keyboardType: UIKeyboardType? = nil, placeholder: String? = nil, title: String? = nil, dataType: DataType) {
+    init(keyboardType: UIKeyboardType? = nil, placeholder: String? = nil, title: String? = nil, dataType: DataType, cellType: CellType, validationType: ValidationFunctions? = nil) {
         self.keyboardType = keyboardType
         self.placeholder = placeholder
         self.title = title
         self.dataType = dataType
+        self.cellType = cellType
+        self.validationType = validationType
     }
     
     mutating func updateDataType(with dataType: DataType) {

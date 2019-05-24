@@ -13,36 +13,17 @@ class SwitchTableViewCell: UITableViewCell {
     @IBOutlet private weak var nameLabel: UILabel!    
     @IBOutlet private weak var showFieldSwitch: UISwitch!    
     
-    var person: Person!
-    
     var callback: ((UITableViewCell, Bool) -> Void)?
     
-    func setContent(_ cellType: CellType) {
-        switch cellType {
-        case .driverLicenseSwitch(let data):
-            updateCellData(presentation: data)
-        default:
-            break
+    func setContent(_ presentation: Presentation) {
+        if presentation.cellType == .driverLicenseSwitch {
+            updateCellData(presentation: presentation)
         }
     }
-    
     
     @IBAction func switchOnAction(_ sender: Any) {
         callback?(self, showFieldSwitch.isOn)
     }
-    
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
 }
 
 private extension SwitchTableViewCell {
