@@ -29,6 +29,7 @@
 		622E9C85229422CA005FF214 /* TextTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 622E9C83229422CA005FF214 /* TextTableViewCell.xib */; };
 		622E9C8822942638005FF214 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622E9C8622942638005FF214 /* SwitchTableViewCell.swift */; };
 		622E9C8922942638005FF214 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 622E9C8722942638005FF214 /* SwitchTableViewCell.xib */; };
+		62384AC92297E943001711F2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 62384ACB2297E943001711F2 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,7 +49,6 @@
 		620395EB228D3E8800734092 /* ContactItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactItem.swift; sourceTree = "<group>"; };
 		620395ED228D402D00734092 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		621A64922292C5DA00AA1A2C /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
-		622E9C782293DFA4005FF214 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ru; path = ru.lproj/Main.storyboard; sourceTree = "<group>"; };
 		622E9C792293F681005FF214 /* UpdateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateController.swift; sourceTree = "<group>"; };
 		622E9C7D2294069C005FF214 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		622E9C7E2294069C005FF214 /* ImageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageTableViewCell.xib; sourceTree = "<group>"; };
@@ -56,6 +56,9 @@
 		622E9C83229422CA005FF214 /* TextTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextTableViewCell.xib; sourceTree = "<group>"; };
 		622E9C8622942638005FF214 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		622E9C8722942638005FF214 /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
+		62384ACA2297E943001711F2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		62384ACC2297E957001711F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		62384AD22297EF5F001711F2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +102,7 @@
 				620395E9228C39A200734092 /* SearchResultController.swift */,
 				620395C922805B7C00734092 /* ViewControllerForShow.swift */,
 				622E9C792293F681005FF214 /* UpdateController.swift */,
+				62384ACB2297E943001711F2 /* Localizable.strings */,
 				621A64922292C5DA00AA1A2C /* NotesViewController.swift */,
 				622E9C81229406A4005FF214 /* UpdateTableViewCells */,
 				620395CB22805B7C00734092 /* Main.storyboard */,
@@ -186,6 +190,7 @@
 				622E9C85229422CA005FF214 /* TextTableViewCell.xib in Resources */,
 				622E9C8922942638005FF214 /* SwitchTableViewCell.xib in Resources */,
 				620395F2228EB77400734092 /* (null) in Resources */,
+				62384AC92297E943001711F2 /* Localizable.strings in Resources */,
 				620395CF22805B7D00734092 /* Assets.xcassets in Resources */,
 				620395CD22805B7C00734092 /* Main.storyboard in Resources */,
 			);
@@ -223,7 +228,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				620395CC22805B7C00734092 /* Base */,
-				622E9C782293DFA4005FF214 /* ru */,
+				62384AD22297EF5F001711F2 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -234,6 +239,15 @@
 				620395D122805B7D00734092 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		62384ACB2297E943001711F2 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				62384ACA2297E943001711F2 /* ru */,
+				62384ACC2297E957001711F2 /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

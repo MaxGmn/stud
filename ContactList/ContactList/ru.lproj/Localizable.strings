@@ -17,3 +17,13 @@ REMOVE_ACTION = "Удалить";
 CANCEL_ACTION = "Отмена";
 
 ADD_VIEW_NAME = "Добавление";
+
+FIRST_NAME_LABLE_TITLE = "Имя";
+LAST_NAME_LABLE_TITLE = "Фамилия";
+PHONE_LABLE_TITLE = "Телефон";
+EMAIL_LABLE_TITLE = "Эл. почта";
+BIRTHDAY_LABLE_TITLE = "Дата рождения";
+HEIGHT_LABLE_TITLE = "Рост";
+NOTE_LABLE_TITLE = "Заметки";
+DRIVER_LICENSE_LABLE_TITLE = "Водительское удостоверение";
+DRIVER_LICENSE_NUMBER_LABLE_TITLE = "Номер вод. удост.";

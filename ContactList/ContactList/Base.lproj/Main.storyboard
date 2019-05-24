@@ -144,7 +144,7 @@
                             <outlet property="delegate" destination="UmI-5j-Q0Q" id="NgW-DY-cQE"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="RKF-6y-8BB">
+                    <navigationItem key="navigationItem" title="Update" id="RKF-6y-8BB">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="bkz-6o-LiF">
                             <connections>
                                 <action selector="cancelAction:" destination="UmI-5j-Q0Q" id="ypk-As-wO8"/>

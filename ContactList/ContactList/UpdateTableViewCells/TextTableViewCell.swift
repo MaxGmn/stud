@@ -64,8 +64,7 @@ private extension TextTableViewCell {
             updateCellData(presentation: data)
             addHeightPickerview()
         case .note(let data):
-            dataTextField.isEnabled = false
-            updateCellData(presentation: data)
+            updateCellData(presentation: data, textFieldIsEnable: false)
         case .driverLicenseNumber(let data):
             updateCellData(presentation: data)
         default:
@@ -73,10 +72,11 @@ private extension TextTableViewCell {
         }
     }
     
-    func updateCellData(presentation: Presentation) {
+    func updateCellData(presentation: Presentation, textFieldIsEnable: Bool = true) {
         
         nameLabel.text = presentation.title
         dataTextField.placeholder = presentation.placeholder
+        dataTextField.isEnabled = textFieldIsEnable
         if let keyboardType = presentation.keyboardType {
             dataTextField.keyboardType = keyboardType
         }

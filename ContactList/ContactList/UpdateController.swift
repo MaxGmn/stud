@@ -60,6 +60,11 @@ class UpdateController: UITableViewController {
         picker.delegate = self
         if currentPersonForEditing == nil {
             currentPersonForEditing = Person()
+            let addTitle = NSLocalizedString("ADD_VIEW_NAME", comment: "Add")
+            navigationItem.title = addTitle
+            if navigationItem.rightBarButtonItems?.count ?? 0 > 1 {
+                navigationItem.rightBarButtonItems?.remove(at: 1)
+            }
         }
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
         fillFieldsValidationResult()
@@ -128,15 +133,24 @@ private extension UpdateController {
     }
     
     func fillCellsArray (person: Person) -> [CellType] {
+        let firstName = NSLocalizedString("FIRST_NAME_LABLE_TITLE", comment: "First name")
+        let lastName = NSLocalizedString("LAST_NAME_LABLE_TITLE", comment: "Last name")
+        let phone = NSLocalizedString("PHONE_LABLE_TITLE", comment: "Phone")
+        let email = NSLocalizedString("EMAIL_LABLE_TITLE", comment: "Email")
+        let birthday = NSLocalizedString("BIRTHDAY_LABLE_TITLE", comment: "Birthday")
+        let height = NSLocalizedString("HEIGHT_LABLE_TITLE", comment: "Height")
+        let note = NSLocalizedString("NOTE_LABLE_TITLE", comment: "Note")
+        let driverLicense = NSLocalizedString("DRIVER_LICENSE_LABLE_TITLE", comment: "Driver license")
+        
         var array: [CellType] = [.image(Presentation(dataType: .image(person.image))),
-                                 .firstName(Presentation(keyboardType: .default, placeholder: "First name", title: "First name", dataType: .text(person.firstName))),
-                                 .lastName(Presentation(keyboardType: .default, placeholder: "Last name", title: "Last name", dataType: .text(person.lastName))),
-                                 .phone(Presentation(keyboardType: .numberPad, placeholder: "Phone", title: "Phone", dataType: .text(person.phoneNumber))),
-                                 .email(Presentation(keyboardType: .emailAddress, placeholder: "E-mail", title: "E-mail", dataType: .text(person.email))),
-                                 .birthday(Presentation(placeholder: "Birthday", title: "Birthday", dataType: .date(person.birthday))),
-                                 .height(Presentation(placeholder: "Height", title: "Height", dataType: .integer(person.height))),
-                                 .note(Presentation(keyboardType: .default, placeholder: "Note", title: "Note", dataType: .text(person.notes))),
-                                 .driverLicenseSwitch(Presentation(title: "Driver license", dataType: .text(person.driverLicense)))]
+                                 .firstName(Presentation(keyboardType: .default, placeholder: firstName, title: firstName, dataType: .text(person.firstName))),
+                                 .lastName(Presentation(keyboardType: .default, placeholder: lastName, title: lastName, dataType: .text(person.lastName))),
+                                 .phone(Presentation(keyboardType: .numberPad, placeholder: phone, title: phone, dataType: .text(person.phoneNumber))),
+                                 .email(Presentation(keyboardType: .emailAddress, placeholder: email, title: email, dataType: .text(person.email))),
+                                 .birthday(Presentation(placeholder: birthday, title: birthday, dataType: .date(person.birthday))),
+                                 .height(Presentation(placeholder: height, title: height, dataType: .integer(person.height))),
+                                 .note(Presentation(keyboardType: .default, placeholder: note, title: note, dataType: .text(person.notes))),
+                                 .driverLicenseSwitch(Presentation(title: driverLicense, dataType: .text(person.driverLicense)))]
         if !person.driverLicense.isEmpty {
             array.append(getDriverLicenseNumberCell())
         }
@@ -144,7 +158,8 @@ private extension UpdateController {
     }
     
     func getDriverLicenseNumberCell() -> CellType {
-        return CellType.driverLicenseNumber(Presentation(keyboardType: .default, placeholder: "Driver license number", title: "Driver license number", dataType: .text(currentPersonCopy.driverLicense)))
+        let driverLicenseNumber = NSLocalizedString("DRIVER_LICENSE_NUMBER_LABLE_TITLE", comment: "Driver license number")
+        return CellType.driverLicenseNumber(Presentation(keyboardType: .default, placeholder: driverLicenseNumber, title: driverLicenseNumber, dataType: .text(currentPersonCopy.driverLicense)))
     }
     
     func getCurentCell(at indexPath: IndexPath) -> UITableViewCell {

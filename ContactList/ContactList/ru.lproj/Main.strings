@@ -1,0 +1,87 @@
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "0r4-CU-lzq"; */
+"0r4-CU-lzq.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "7rq-we-xuZ"; */
+"7rq-we-xuZ.text" = "Label";
+
+/* Class = "UIViewController"; title = "Show"; ObjectID = "BYZ-38-t0r"; */
+"BYZ-38-t0r.title" = "Просмотр";
+
+/* Class = "UILabel"; text = "E-mail"; ObjectID = "Buf-uL-eQJ"; */
+"Buf-uL-eQJ.text" = "Эл. почта";
+
+/* Class = "UINavigationItem"; title = "Contact list"; ObjectID = "BvG-kV-p6O"; */
+"BvG-kV-p6O.title" = "Список контактов";
+
+/* Class = "UILabel"; text = "Your contact list is empty"; ObjectID = "FOg-NX-xD9"; */
+"FOg-NX-xD9.text" = "Список контактов пуст";
+
+/* Class = "UILabel"; text = "First name"; ObjectID = "FhX-Rh-kBl"; */
+"FhX-Rh-kBl.text" = "Имя";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "IoZ-6h-R5X"; */
+"IoZ-6h-R5X.text" = "Label";
+
+/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "J7m-LG-2T1"; */
+"J7m-LG-2T1.title" = "Редактировать";
+
+/* Class = "UILabel"; text = "Unfortunately, no contacts found"; ObjectID = "KsJ-VK-ZOz"; */
+"KsJ-VK-ZOz.text" = "Ничего не найдено :(";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "LGo-ef-NYV"; */
+"LGo-ef-NYV.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "Show"; ObjectID = "QrU-LB-t1I"; */
+"QrU-LB-t1I.title" = "Просмотр";
+
+/* Class = "UINavigationItem"; title = "UpdateRus"; ObjectID = "RKF-6y-8BB"; */
+"RKF-6y-8BB.title" = "Редактор";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "RT6-gP-9tD"; */
+"RT6-gP-9tD.text" = "Label";
+
+/* Class = "UILabel"; text = "Last name"; ObjectID = "RZ1-Xm-cmQ"; */
+"RZ1-Xm-cmQ.text" = "Фамилия";
+
+/* Class = "UILabel"; text = "Height"; ObjectID = "TUW-YD-zBy"; */
+"TUW-YD-zBy.text" = "Рост";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "TZK-wo-N54"; */
+"TZK-wo-N54.text" = "Label";
+
+/* Class = "UITableViewController"; title = "Update"; ObjectID = "UmI-5j-Q0Q"; */
+"UmI-5j-Q0Q.title" = "Редактировать";
+
+/* Class = "UINavigationItem"; title = "Notes"; ObjectID = "aq9-1B-4cH"; */
+"aq9-1B-4cH.title" = "Заметки";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "c7A-4t-zT0"; */
+"c7A-4t-zT0.text" = "Label";
+
+/* Class = "UILabel"; text = "Phone"; ObjectID = "d7Y-u2-9xU"; */
+"d7Y-u2-9xU.text" = "Телефон";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "fjD-y6-zKs"; */
+"fjD-y6-zKs.text" = "Label";
+
+/* Class = "UILabel"; text = "Driver license"; ObjectID = "fvC-p2-Ixi"; */
+"fvC-p2-Ixi.text" = "Вод. удостоверение";
+
+/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "gd8-6W-yeI"; */
+"gd8-6W-yeI.title" = "Редактировать";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "gmv-Me-cYC"; */
+"gmv-Me-cYC.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "kQG-5J-siz"; */
+"kQG-5J-siz.text" = "Label";
+
+/* Class = "UILabel"; text = "Birthday"; ObjectID = "kuM-zS-Tdh"; */
+"kuM-zS-Tdh.text" = "Дата рождения";
+
+/* Class = "UIButton"; normalTitle = "Add contact"; ObjectID = "pZR-pa-m6W"; */
+"pZR-pa-m6W.normalTitle" = "Добавить контакт";
+
+/* Class = "UIBarButtonItem"; title = "Remove"; ObjectID = "yHa-UU-1yd"; */
+"yHa-UU-1yd.title" = "Удалить";

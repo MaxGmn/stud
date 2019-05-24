@@ -35,7 +35,6 @@ class TableViewController: UITableViewController {
     
     @IBAction func addNewContact(_ sender: Any?) {
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateController") as! UpdateController
-//        let controller = self.storyboard!.instantiateViewController(withIdentifier: "UpdateController") as! UpdateController
         controller.contactListDelegate = self
         let navController = UINavigationController(rootViewController: controller)
         self.present(navController, animated: true, completion: nil)
@@ -43,7 +42,9 @@ class TableViewController: UITableViewController {
     
     @IBAction func editTable(_ sender: Any) {
         tableView.setEditing(!tableView.isEditing, animated: true)
-        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
+        let doneButton = NSLocalizedString("DONE_BUTTON", comment: "Done")
+        let editButton = NSLocalizedString("EDIT_BUTTON", comment: "Edit")
+        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? doneButton : editButton
     }
     
     override func viewDidLoad() {
@@ -90,11 +91,13 @@ class TableViewController: UITableViewController {
         if tableView.isEditing {
             return nil
         }
-                
-        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") {(action, indexPath) in
+        
+        let editButton = NSLocalizedString("EDIT_BUTTON", comment: "Edit")
+        let deleteButton = NSLocalizedString("DELETE_BUTTON", comment: "Delete")
+        let deleteAction = UITableViewRowAction(style: .default, title: deleteButton) {(action, indexPath) in
             self.deletePerson(by: self.getPerson(at: indexPath).id)
         }
-        let updateAction = UITableViewRowAction(style: .default, title: "Edit") {(action, indexPath) in
+        let updateAction = UITableViewRowAction(style: .default, title: editButton) {(action, indexPath) in
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "UpdateController") as! UpdateController
             controller.currentPersonForEditing = self.groupedPersons[self.keysArray[indexPath.section]]![indexPath.row]
 
