@@ -20,8 +20,7 @@
 		620395EA228C39A200734092 /* SearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395E9228C39A200734092 /* SearchResultController.swift */; };
 		620395EC228D3E8800734092 /* ContactItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395EB228D3E8800734092 /* ContactItem.swift */; };
 		620395EE228D402D00734092 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620395ED228D402D00734092 /* Search.swift */; };
-		620395F2228EB77400734092 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 620395F4228EB77400734092 /* Localizable.strings */; };
-		621A6491229281A000AA1A2C /* UpdateTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A6490229281A000AA1A2C /* UpdateTableViewController.swift */; };
+		620395F2228EB77400734092 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		621A64932292C5DA00AA1A2C /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A64922292C5DA00AA1A2C /* NotesViewController.swift */; };
 		622E9C7A2293F681005FF214 /* UpdateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622E9C792293F681005FF214 /* UpdateController.swift */; };
 		622E9C7F2294069C005FF214 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622E9C7D2294069C005FF214 /* ImageTableViewCell.swift */; };
@@ -48,9 +47,6 @@
 		620395E9228C39A200734092 /* SearchResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultController.swift; sourceTree = "<group>"; };
 		620395EB228D3E8800734092 /* ContactItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactItem.swift; sourceTree = "<group>"; };
 		620395ED228D402D00734092 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
-		620395F3228EB77400734092 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		620395F5228EB77900734092 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		621A6490229281A000AA1A2C /* UpdateTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTableViewController.swift; sourceTree = "<group>"; };
 		621A64922292C5DA00AA1A2C /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		622E9C782293DFA4005FF214 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ru; path = ru.lproj/Main.storyboard; sourceTree = "<group>"; };
 		622E9C792293F681005FF214 /* UpdateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateController.swift; sourceTree = "<group>"; };
@@ -98,16 +94,13 @@
 				620395ED228D402D00734092 /* Search.swift */,
 				620395E52285629500734092 /* Validation.swift */,
 				620395E7228ACE6200734092 /* DataManager.swift */,
-				620395E9228C39A200734092 /* SearchResultController.swift */,
 				620395D922805CE000734092 /* TableViewController.swift */,
 				620395E32281A0AA00734092 /* TableViewCell.swift */,
+				620395E9228C39A200734092 /* SearchResultController.swift */,
 				620395C922805B7C00734092 /* ViewControllerForShow.swift */,
-
-				621A6490229281A000AA1A2C /* UpdateTableViewController.swift */,
-				621A64922292C5DA00AA1A2C /* NotesViewController.swift */,
 				622E9C792293F681005FF214 /* UpdateController.swift */,
+				621A64922292C5DA00AA1A2C /* NotesViewController.swift */,
 				622E9C81229406A4005FF214 /* UpdateTableViewCells */,
-				620395F4228EB77400734092 /* Localizable.strings */,
 				620395CB22805B7C00734092 /* Main.storyboard */,
 				620395CE22805B7D00734092 /* Assets.xcassets */,
 				620395D022805B7D00734092 /* LaunchScreen.storyboard */,
@@ -192,7 +185,7 @@
 				620395D222805B7D00734092 /* LaunchScreen.storyboard in Resources */,
 				622E9C85229422CA005FF214 /* TextTableViewCell.xib in Resources */,
 				622E9C8922942638005FF214 /* SwitchTableViewCell.xib in Resources */,
-				620395F2228EB77400734092 /* Localizable.strings in Resources */,
+				620395F2228EB77400734092 /* (null) in Resources */,
 				620395CF22805B7D00734092 /* Assets.xcassets in Resources */,
 				620395CD22805B7C00734092 /* Main.storyboard in Resources */,
 			);
@@ -214,7 +207,6 @@
 				622E9C8822942638005FF214 /* SwitchTableViewCell.swift in Sources */,
 				620395EC228D3E8800734092 /* ContactItem.swift in Sources */,
 				620395E8228ACE6200734092 /* DataManager.swift in Sources */,
-				621A6491229281A000AA1A2C /* UpdateTableViewController.swift in Sources */,
 				621A64932292C5DA00AA1A2C /* NotesViewController.swift in Sources */,
 				622E9C84229422CA005FF214 /* TextTableViewCell.swift in Sources */,
 				620395DA22805CE000734092 /* TableViewController.swift in Sources */,
