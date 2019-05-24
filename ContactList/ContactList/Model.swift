@@ -43,12 +43,6 @@ enum ImageEditState: Equatable {
     case changed(newImage: UIImage)
 }
 
-enum RowKind {
-    case imageRow(content: UIImage?)
-    case textFieldRow(name: String, content: String)
-    case switchRow(name: String, switchIsOn: Bool)
-}
-
 enum CellType {    
     case image(Presentation)
     case firstName(Presentation)
