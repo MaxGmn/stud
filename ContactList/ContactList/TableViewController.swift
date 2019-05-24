@@ -13,7 +13,7 @@ class TableViewController: UITableViewController {
     private var searchController: UISearchController!
     private var buttonCopy: UIBarButtonItem?
     private var buttonsCopy: (left: UIBarButtonItem, right: UIBarButtonItem)!
-    private let rowsCountForDisplaySearchBar = 10
+    private let rowsCountForDisplaySearchBar = 5
     private (set) var keysArray = [String]()
     private (set) var groupedPersons: [String : [Person]]! {
         didSet {
@@ -63,10 +63,7 @@ class TableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if groupedPersons.isEmpty {
-            return 0
-        }
-        return groupedPersons[keysArray[section]]!.count
+        return !groupedPersons.isEmpty ? groupedPersons[keysArray[section]]!.count : 0
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -139,8 +136,7 @@ extension TableViewController: ContactListDelegate {
     func deletePerson(by id: String) {
         guard let result = getCategoryNameAndIndex(by: id) else {
             return
-        }
-        
+        }        
         removeCurrentPerson(by: result)
         DataManager.saveImage(by: .removed, name: id)
         updateDictionary()
@@ -157,7 +153,9 @@ private extension TableViewController {
     
     func createSearchBar() {
         let searchResultController = self.storyboard!.instantiateViewController(withIdentifier: "SearchResultController") as! SearchResultController
-        searchResultController.mainTableView = self
+        searchResultController.delegate = self
+        searchResultController.getPersonsCallback = {self.getPersonsArrayFromDictionary()}
+        searchResultController.pushControllerCallback = {[weak self] controller in self?.navigationController?.pushViewController(controller, animated: true)}
         searchController = UISearchController(searchResultsController: searchResultController)
         searchController.searchResultsUpdater = searchResultController
         searchController.dimsBackgroundDuringPresentation = false
@@ -165,11 +163,15 @@ private extension TableViewController {
     }
     
     func changeSearchBarVisibility() {
-        if Search.getPersonsArrayFromDictionary(from: groupedPersons).count >= rowsCountForDisplaySearchBar {
+        if getPersonsArrayFromDictionary().count >= rowsCountForDisplaySearchBar {
             tableView.tableHeaderView = searchController.searchBar
         } else if tableView.tableHeaderView != nil {
             tableView.tableHeaderView = nil
         }
+    }
+    
+    func getPersonsArrayFromDictionary() -> [Person] {
+        return groupedPersons.values.flatMap{$0}
     }
     
     func getPerson(at indexPath: IndexPath) -> Person {
@@ -181,7 +183,9 @@ private extension TableViewController {
             keysArray.append(categoryName)
             keysArray.sort()
             groupedPersons[categoryName] = []
-            tableView.insertSections(IndexSet(arrayLiteral: getKeysArrayIndex(by: categoryName)), with: .automatic)
+            if let keysArrayIndex = getKeysArrayIndex(by: categoryName) {
+                tableView.insertSections(IndexSet(arrayLiteral: keysArrayIndex), with: .automatic)
+            }
         }
     }
     
@@ -189,13 +193,14 @@ private extension TableViewController {
         guard let result = getCategoryNameAndIndex(by: person.id) else {
             return false
         }
+        guard let category = groupedPersons[newCategoryName] else {return false}
         
         let currentDirectoryName: String
         let currentArrayIndex: Int
         (currentDirectoryName, currentArrayIndex) = result
         
         let personOldVersion = groupedPersons[currentDirectoryName]![currentArrayIndex]
-        let sectionNumber = getKeysArrayIndex(by: currentDirectoryName)
+        guard let sectionNumber = getKeysArrayIndex(by: currentDirectoryName) else {return false}
         let indexPath = IndexPath(row: currentArrayIndex, section: sectionNumber)
         
         if Search.isPersonsFullNameFirstCharEqual(firstPerson: personOldVersion, secondPerson: person) {
@@ -203,13 +208,14 @@ private extension TableViewController {
             tableView.reloadRows(at: [indexPath], with: .automatic)
         } else {
             if let targetDirectory = groupedPersons[newCategoryName] {
-                let targetIndexPath = IndexPath(row: targetDirectory.count, section: getKeysArrayIndex(by: newCategoryName))
+                guard let keysArrayIndex = getKeysArrayIndex(by: newCategoryName) else {return false}
+                let targetIndexPath = IndexPath(row: targetDirectory.count, section: keysArrayIndex)
                 groupedPersons[currentDirectoryName]!.remove(at: currentArrayIndex)
                 groupedPersons[newCategoryName]?.append(person)
                 tableView.moveRow(at: indexPath, to: targetIndexPath)
                 tableView.reloadRows(at: [targetIndexPath], with: .automatic)
             }
-            if groupedPersons[currentDirectoryName]!.isEmpty {
+            if category.isEmpty {
                 removeSection(by: currentDirectoryName)
             }
         }
@@ -227,14 +233,17 @@ private extension TableViewController {
     }
     
     func removeCurrentPerson(by result: (directoryName: String, arrayIndex: Int)) {
-            tableView.beginUpdates()
-            groupedPersons[result.directoryName]!.remove(at: result.arrayIndex)
-            let indexPath = IndexPath(row: result.arrayIndex, section: getKeysArrayIndex(by: result.directoryName))
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            if groupedPersons[result.directoryName]!.isEmpty {
-                removeSection(by: result.directoryName)
-            }
-            tableView.endUpdates()
+        guard let keysArrayIndex = getKeysArrayIndex(by: result.directoryName) else {return}
+        guard let category = groupedPersons[result.directoryName] else {return}
+        
+        tableView.beginUpdates()
+        groupedPersons[result.directoryName]!.remove(at: result.arrayIndex)
+        let indexPath = IndexPath(row: result.arrayIndex, section: keysArrayIndex)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        if category.isEmpty {
+            removeSection(by: result.directoryName)
+        }
+        tableView.endUpdates()
     }
     
     func getCategoryNameAndIndex(by id: String) -> (String, Int)? {
@@ -246,13 +255,14 @@ private extension TableViewController {
         return nil
     }
     
-    func getKeysArrayIndex(by key: String) -> Int {
-        return keysArray.firstIndex(of: key)!
+    func getKeysArrayIndex(by key: String) -> Int? {
+        return keysArray.firstIndex(of: key)
     }
     
     func removeSection(by key: String) {
-        let keysArrayIndex = getKeysArrayIndex(by: key)
-        groupedPersons.remove(at: groupedPersons.index(forKey: key)!)
+        guard let keysArrayIndex = getKeysArrayIndex(by: key) else {return}
+        guard let guardPersonIndexForRemove = groupedPersons.index(forKey: key) else {return}
+        groupedPersons.remove(at: guardPersonIndexForRemove)
         tableView.deleteSections(IndexSet(arrayLiteral: keysArrayIndex), with: .automatic)
     }
     

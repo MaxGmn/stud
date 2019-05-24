@@ -12,9 +12,7 @@ class SearchResultController: UITableViewController {
     
     @IBOutlet weak var emptySearchResultView: UIView!
     
-    var mainTableView: TableViewController!
-    
-    private var personsArray: [Person]!
+    private var resultStringsArray = [NSAttributedString]()
     private var filteredPersons = [Person]() {
         didSet {
             if filteredPersons.isEmpty {
@@ -26,14 +24,15 @@ class SearchResultController: UITableViewController {
             }
         }
     }
-        
-    private var resultStringsArray = [NSAttributedString]()
-    private var searchText = ""
+    
+    var getPersonsCallback: (() -> [Person])!
+    var pushControllerCallback: ((ViewControllerForShow) -> Void)!
+    var delegate: ContactListDelegate?
+    var personsArray: [Person]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundView = emptySearchResultView
-        self.personsArray = Search.getPersonsArrayFromDictionary(from: mainTableView.groupedPersons)
     }
 
     // MARK: - Table view data source
@@ -45,14 +44,15 @@ class SearchResultController: UITableViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "ViewControllerForShow") as! ViewControllerForShow
         controller.person = filteredPersons[indexPath.row]
-        controller.contactListDelegate = mainTableView
+        controller.contactListDelegate = delegate
         controller.searchCallback = {[weak self] (previousPerson, currentPerson) in
             guard let previous = previousPerson else {return}
             guard let updateIndex = self?.personsArray.firstIndex(of: previous) else{return}
             self?.personsArray![updateIndex] = currentPerson
             self?.tableView.reloadData()
         }
-        mainTableView.navigationController?.pushViewController(controller, animated: true)
+        pushControllerCallback(controller)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -65,6 +65,7 @@ class SearchResultController: UITableViewController {
 extension SearchResultController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
+        personsArray = getPersonsCallback()
         (filteredPersons, resultStringsArray) = Search.getFilterResults(from: personsArray, by: searchController.searchBar.text!)
         tableView.reloadData()
     }

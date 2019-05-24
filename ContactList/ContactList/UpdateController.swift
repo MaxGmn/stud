@@ -319,7 +319,9 @@ private extension UpdateController {
     func showPhotoLibrary() {
         picker.allowsEditing = false
         picker.sourceType = .photoLibrary
-        picker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+        if let mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary) {
+            picker.mediaTypes = mediaTypes
+        }
         present(self.picker, animated: true, completion: nil)
     }
     
