@@ -18,16 +18,18 @@ class TextTableViewCell: UITableViewCell {
     private let heightArray = [Array(0...2), Array(0...9), Array(0...9)]
     private var height: Int?
     private var birthday: Date?
+    private var cellType: CellType!
     
-    var callback: ((UITableViewCell, String) -> Bool?)?
+    var callback: ((CellType, Any?) -> Bool?)?
         
     @IBAction func editingChangedAction(_ sender: Any) {
-        if let result = callback?(self, dataTextField.text ?? "") {
+        if let result = callback?(cellType, dataTextField.text ?? "") {
             dataTextField.backgroundColor = result.color
         }
     }  
     
     func setContent(_ presentation: Presentation) {
+        cellType = presentation.cellType
         updateCellData(presentation: presentation)
     }
     
@@ -57,7 +59,9 @@ private extension TextTableViewCell {
             dataTextField.text = text
         case .date(let date):
             self.birthday = date
-            dataTextField.text = (date != nil ? Constants.dateFormat.string(from: date!) : Constants.defaultDate)
+            let formatter = DateFormatter()
+            formatter.dateFormat = Constants.dateFormat
+            dataTextField.text = (date != nil ? formatter.string(from: date!) : Constants.defaultDate)
             addBirthdayDatePicker()
         case .integer(let number):
             self.height = number
@@ -88,7 +92,9 @@ private extension TextTableViewCell {
         datePicker.datePickerMode = .date
         datePicker.setDate(birthday ?? Date(), animated: true)
         datePicker.maximumDate = Date()
-        datePicker.minimumDate = Constants.dateFormat.date(from: Constants.defaultDate)
+        let formatter = DateFormatter()
+        formatter.dateFormat = Constants.dateFormat
+        datePicker.minimumDate = formatter.date(from: Constants.defaultDate)
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneDateButtonAction))
@@ -100,8 +106,10 @@ private extension TextTableViewCell {
     
     @objc func doneDateButtonAction(){
         birthday = datePicker.date
-        dataTextField.text = birthday != nil ? Constants.dateFormat.string(from: birthday!) : Constants.defaultDate
-        let _ = callback?(self, dataTextField.text ?? "")
+        let formatter = DateFormatter()
+        formatter.dateFormat = Constants.dateFormat
+        dataTextField.text = birthday != nil ? formatter.string(from: birthday!) : Constants.defaultDate
+        let _ = callback?(cellType, birthday)
     }
 }
 
@@ -118,9 +126,9 @@ extension TextTableViewCell : UIPickerViewDataSource, UIPickerViewDelegate {
         let firstNumber = heightArray[0][pickerView.selectedRow(inComponent: 0)]
         let secondNumber = heightArray[1][pickerView.selectedRow(inComponent: 1)]
         let thirdNumber = heightArray[2][pickerView.selectedRow(inComponent: 2)]
-        let resultString = String(firstNumber * 100 + secondNumber * 10 + thirdNumber)
-        dataTextField.text = resultString
-        let _ = callback?(self, resultString)
+        let result = firstNumber * 100 + secondNumber * 10 + thirdNumber
+        dataTextField.text = String(result)
+        let _ = callback?(cellType, result)
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {

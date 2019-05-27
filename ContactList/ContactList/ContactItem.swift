@@ -34,7 +34,7 @@ import UIKit
         self.lastName = lastName
         self.phoneNumber = phoneNumber
         self.email = email
-        self.birthday = birthday// ?? Constants.dateFormat.date(from: Constants.defaultDate)!
+        self.birthday = birthday
         self.height = height
         self.notes = notes
         self.driverLicense = driverLicense

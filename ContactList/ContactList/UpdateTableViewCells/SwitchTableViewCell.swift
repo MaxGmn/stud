@@ -13,16 +13,19 @@ class SwitchTableViewCell: UITableViewCell {
     @IBOutlet private weak var nameLabel: UILabel!    
     @IBOutlet private weak var showFieldSwitch: UISwitch!    
     
-    var callback: ((UITableViewCell, Bool) -> Void)?
+    private var cellType: CellType!
+    
+    var callback: ((CellType, Bool) -> Void)?
     
     func setContent(_ presentation: Presentation) {
-        if presentation.cellType == .driverLicenseSwitch {
+        cellType = presentation.cellType
+        if cellType == .driverLicenseSwitch {
             updateCellData(presentation: presentation)
         }
     }
     
     @IBAction func switchOnAction(_ sender: Any) {
-        callback?(self, showFieldSwitch.isOn)
+        callback?(cellType, showFieldSwitch.isOn)
     }
 }
 

@@ -50,7 +50,9 @@ private extension ViewControllerForShow {
         phoneNumberLabel.text = person.phoneNumber
         emailLabel.text = person.email
         imageArea.image = person.image ?? Constants.emptyAvatar
-        birthdayLabel.text = person.birthday != nil ? Constants.dateFormat.string(from: person.birthday!) : ""
+        let formatter = DateFormatter()
+        formatter.dateFormat = Constants.dateFormat
+        birthdayLabel.text = person.birthday != nil ? formatter.string(from: person.birthday!) : ""
         heightLabel.text = String(person.height)
         driverLicenseLabel.text = person.driverLicense
         notesLabel.text = person.notes

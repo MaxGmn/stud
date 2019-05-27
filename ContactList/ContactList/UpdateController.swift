@@ -79,16 +79,17 @@ class UpdateController: UITableViewController {
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {        
-        let cell = getCurentCell(at: indexPath)
+        let cell = getCell(at: indexPath)
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cellType = cells[indexPath.row].cellType
         switch indexPath.row {
         case 0:
-            changeImage(for: indexPath.row)
+            changeImage(for: cellType)
         case 7:
-            showNoteTextView(index: indexPath.row)
+            showNoteTextView(for: cellType)
         default:
             break
         }
@@ -101,7 +102,7 @@ extension UpdateController: UIImagePickerControllerDelegate, UINavigationControl
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let choosenImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        changeCurrentImage(imageState: .changed(newImage: choosenImage), for: 0)
+        changeCurrentImage(imageState: .changed(newImage: choosenImage), for: .image)
         dismiss(animated:true, completion: nil)
     }
     
@@ -156,71 +157,66 @@ private extension UpdateController {
         return Presentation(keyboardType: .default, placeholder: driverLicenseNumber, title: driverLicenseNumber, dataType: .text(currentPersonCopy.driverLicense), cellType: .driverLicense)
     }
     
-    func getCurentCell(at indexPath: IndexPath) -> UITableViewCell {
+    func getCell(at indexPath: IndexPath) -> UITableViewCell {
         
-        switch indexPath.row {
-        case 0:
+        let presentation = cells[indexPath.row]
+        switch presentation.cellType {
+        case .image:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ImageTableViewCell", for: indexPath) as! ImageTableViewCell
-            cell.setContent(cells[indexPath.row])
+            cell.setContent(presentation)
             return cell
-        case 8:
+        case .driverLicenseSwitch:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
-            cell.setContent(cells[indexPath.row])
-            cell.callback = {[weak self] (cell, isOn) in
-                let _ = self?.updatePersonInformation(index: indexPath.row, switchIsOn: isOn)
+            cell.setContent(presentation)
+            cell.callback = {[weak self] (cellType, isOn) in
+                let _ = self?.updatePersonInformation(cellType, data: isOn)
             }
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "TextTableViewCell", for: indexPath) as! TextTableViewCell
-            cell.setContent(cells[indexPath.row])
-            cell.callback = {[weak self] (cell, text) in
-                return self?.updatePersonInformation(index: indexPath.row, text: text)
+            cell.setContent(presentation)
+            cell.callback = {[weak self] (cellType, data) in
+                return self?.updatePersonInformation(cellType, data: data)
             }
             return cell
         }
     }
     
-    func updatePersonInformation(index: Int, text: String = "", switchIsOn: Bool = false, image: UIImage? = nil) -> Bool?{
+    
+    func updatePersonInformation(_ cellType: CellType, data: Any?) -> Bool?{
+        
+        guard let index = cells.firstIndex(where: {$0.cellType == cellType}) else {
+            return nil
+        }
         
         var validationResult: Bool?
         
-        if cells[index].cellType == .driverLicenseSwitch {
-            let indexPath = IndexPath(row: index + 1, section: 0)
-            if switchIsOn {
+        if cellType == .driverLicenseSwitch {
+            if data is Bool && data as! Bool {
                 cells.append(getDriverLicenseNumberCell())
-                tableView.insertRows(at: [indexPath], with: .automatic)
+                if let indexPath = getDriverLicenseIndexPath() {
+                    tableView.insertRows(at: [indexPath], with: .automatic)
+                }
             } else {
-                cells.removeLast()
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-                currentPersonCopy.driverLicense = ""
+                if let indexPath = getDriverLicenseIndexPath() {
+                    cells.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                    currentPersonCopy.driverLicense = ""
+                }
             }
         } else {
-            let newData: Any?
-            let newDataType: DataType
-            switch cells[index].cellType {
-            case .image:
-                newData = image
-                newDataType = .image(newData as? UIImage)
-            case .birthday:
-                newData = Constants.dateFormat.date(from: text)
-                newDataType = .date(newData as? Date)
-            case .height:
-                newData = Int(text) ?? 0
-                newDataType = .integer(newData as! Int)
-            default:
-                newData = text
-                newDataType = .text(newData as! String)
-            }
-            cells[index].updateDataType(with: newDataType)
+            cells[index].updateDataType(cells[index].dataType, with: data)
             
             if let validationType = cells[index].validationType {
-                fieldsValidationResult[index] = Validation.isValidField(text: text, kindOfField: validationType)
-                validationResult = fieldsValidationResult[index]
+                if data is String{
+                    fieldsValidationResult[index] = Validation.isValidField(text: data as! String, kindOfField: validationType)
+                    validationResult = fieldsValidationResult[index]
+                }
             }
             
-            currentPersonCopy.setValue(newData, forKey: cells[index].cellType.rawValue)
+            currentPersonCopy.setValue(data, forKey: cellType.rawValue)
             
-            switch cells[index].cellType {
+            switch cellType {
             case .image, .notes:
                 tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
             case .birthday:
@@ -233,83 +229,14 @@ private extension UpdateController {
         return validationResult
     }
     
+    func getDriverLicenseIndexPath() -> IndexPath? {
+        guard let driverLicenseIndex = cells.firstIndex(where: {$0.cellType == .driverLicense}) else {
+            return nil
+        }
+        return IndexPath(row: driverLicenseIndex, section: 0)
+    }
     
-//    func updatePersonInformation(index: Int, text: String = "", switchIsOn: Bool = false) -> Bool?{
-//
-//        switch cells[index] {
-//        case .image(var presentation):
-//            presentation.updateDataType(with: .image(currentPersonCopy.image))
-//            cells[index] = .image(presentation)
-//            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//        case .firstName(var presentation):
-//            fieldsValidationResult[0] = Validation.isValidField(text: text, kindOfField: .forTextField(maxLength: 20))
-//            if fieldsValidationResult[0] {
-//                currentPersonCopy.firstName = text
-//                presentation.updateDataType(with: .text(currentPersonCopy.firstName))
-//                cells[index] = .firstName(presentation)
-//            }
-//            changeSaveButtonAvailability()
-//            return fieldsValidationResult[0]
-//        case .lastName(var presentation):
-//            fieldsValidationResult[1] = Validation.isValidField(text: text, kindOfField: .forTextField(maxLength: 20))
-//            if fieldsValidationResult[1] {
-//                currentPersonCopy.lastName = text
-//                presentation.updateDataType(with: .text(currentPersonCopy.lastName))
-//                cells[index] = .lastName(presentation)
-//            }
-//            changeSaveButtonAvailability()
-//            return fieldsValidationResult[1]
-//        case .phone(var presentation):
-//            fieldsValidationResult[2] = Validation.isValidField(text: text, kindOfField: .forPhoneNumber)
-//            if fieldsValidationResult[2] {
-//                currentPersonCopy.phoneNumber = text
-//                presentation.updateDataType(with: .text(currentPersonCopy.phoneNumber))
-//                cells[index] = .phone(presentation)
-//            }
-//            changeSaveButtonAvailability()
-//            return fieldsValidationResult[2]
-//        case .email(var presentation):
-//            fieldsValidationResult[3] = Validation.isValidField(text: text, kindOfField: .forEmail)
-//            if fieldsValidationResult[3] {
-//                currentPersonCopy.email = text
-//                presentation.updateDataType(with: .text(currentPersonCopy.email))
-//                cells[index] = .email(presentation)
-//            }
-//            changeSaveButtonAvailability()
-//            return fieldsValidationResult[3]
-//        case .birthday(var presentation):
-//            presentation.updateDataType(with: .date(currentPersonCopy.birthday))
-//            cells[index] = .birthday(presentation)
-//            currentPersonCopy.birthday = Constants.dateFormat.date(from: text)
-//            tableView.endEditing(true)
-//        case .height(var presentation):
-//            presentation.updateDataType(with: .integer(currentPersonCopy.height))
-//            cells[index] = .height(presentation)
-//            currentPersonCopy.height = Int(text) ?? 0
-//        case .note(var presentation):
-//            currentPersonCopy.notes = text
-//            presentation.updateDataType(with: .text(currentPersonCopy.notes))
-//            cells[index] = .note(presentation)
-//            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//        case .driverLicenseSwitch:
-//            if switchIsOn {
-//                cells.append(getDriverLicenseNumberCell())
-//                tableView.insertRows(at: [IndexPath(row: index + 1, section: 0)], with: .automatic)
-//            } else {
-//                cells.removeLast()
-//                tableView.deleteRows(at: [IndexPath(row: index + 1, section: 0)], with: .automatic)
-//                currentPersonCopy.driverLicense = ""
-//            }
-//        case .driverLicenseNumber(var presentation):
-//            currentPersonCopy.driverLicense = text
-//            presentation.updateDataType(with: .text(currentPersonCopy.driverLicense))
-//            cells[index] = .driverLicenseNumber(presentation)
-//        }
-//        changeSaveButtonAvailability()
-//        return nil
-//    }
-    
-    func changeImage(for index: Int) {
+    func changeImage(for cellType: CellType) {
         if let _ = currentPersonCopy.image {
             let actionTitle = NSLocalizedString("CHANGE_IMAGE_TITLE", comment: "Choose action")
             let changeActionTitle = NSLocalizedString("CHANGE_IMAGE_ACTION", comment: "Change image")
@@ -318,7 +245,7 @@ private extension UpdateController {
             
             let choosePhotoAction = UIAlertController(title: actionTitle, message: nil, preferredStyle: .actionSheet)
             let changeAction = UIAlertAction(title: changeActionTitle, style: .default) {action in self.runChooseImageHandler()}
-            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed, for: index)}
+            let removeAction = UIAlertAction(title: removeActionTitle, style: .destructive) {action in self.changeCurrentImage(imageState: .removed, for: cellType)}
             let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
             
             choosePhotoAction.addAction(changeAction)
@@ -330,7 +257,7 @@ private extension UpdateController {
         }
     }
     
-    func changeCurrentImage(imageState: ImageEditState, for index: Int) {
+    func changeCurrentImage(imageState: ImageEditState, for cellType: CellType) {
         let newPicture: UIImage?
         switch imageState {
         case .changed(let newImage):
@@ -340,7 +267,7 @@ private extension UpdateController {
         }
         
         self.imageState = imageState
-        let _ = updatePersonInformation(index: index, image: newPicture)
+        let _ = updatePersonInformation(cellType, data: newPicture)
     }
     
     func runChooseImageHandler() {
@@ -380,11 +307,11 @@ private extension UpdateController {
         present(self.picker, animated: true, completion: nil)
     }
     
-    func showNoteTextView(index: Int) {
+    func showNoteTextView(for cellType: CellType) {
         let destinationController = self.storyboard!.instantiateViewController(withIdentifier: "NotesViewController") as! NotesViewController
         destinationController.currentText = currentPersonCopy.notes
         destinationController.callback = {[weak self] text in
-            let _ = self?.updatePersonInformation(index: index, text: text)
+            let _ = self?.updatePersonInformation(cellType, data: text)
         }
         present(destinationController, animated: true, completion: nil)
     }

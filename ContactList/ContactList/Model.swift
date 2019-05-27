@@ -16,14 +16,8 @@ struct Constants {
     static let grayColorAttribute = [NSAttributedString.Key.foregroundColor: UIColor.gray]
     static let blackColorAttribute = [NSAttributedString.Key.foregroundColor: UIColor.black]
     static let defaultDate = "01.01.1900"
-    static let dateFormat = getDateFormatter()
+    static let dateFormat = "dd.MM.yyyy"
     static let userDefaultsKey = "groupedPersons"
-    
-    private static func getDateFormatter() -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        return formatter
-    }
 }
 
 extension Bool {
@@ -80,7 +74,20 @@ struct Presentation {
         self.validationType = validationType
     }
     
-    mutating func updateDataType(with dataType: DataType) {
-        self.dataType = dataType
+    mutating func updateDataType(_ dataType: DataType, with data: Any?) {
+        let newDataType: DataType
+        
+        switch dataType {
+        case .image:
+            newDataType = .image(data as? UIImage)
+        case .integer:
+            newDataType = .integer(data as! Int)
+        case .date:
+            newDataType = .date(data as? Date)
+        default:
+            newDataType = .text(data as! String)
+        }
+        
+        self.dataType = newDataType
     }
 }
