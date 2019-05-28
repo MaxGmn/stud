@@ -69,7 +69,7 @@ class UpdateController: UITableViewController {
         currentPersonCopy = (currentPersonForEditing!.copy() as! Person)
         fieldsValidationResult = Array(repeating: true, count: 10)
         changeSaveButtonAvailability()
-        cellRegistration()
+        registerCells()
         cells = fillCellsArray(person: currentPersonCopy)
     }
 
@@ -85,10 +85,10 @@ class UpdateController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cellType = cells[indexPath.row].cellType
-        switch indexPath.row {
-        case 0:
+        switch cellType {
+        case .image:
             changeImage(for: cellType)
-        case 7:
+        case .notes:
             showNoteTextView(for: cellType)
         default:
             break
@@ -114,16 +114,17 @@ extension UpdateController: UIImagePickerControllerDelegate, UINavigationControl
 
 private extension UpdateController {
     
-    func cellRegistration() {
+    func registerCells() {
         tableView.register(UINib(nibName: "ImageTableViewCell", bundle: nil), forCellReuseIdentifier: "ImageTableViewCell")
         tableView.register(UINib(nibName: "TextTableViewCell", bundle: nil), forCellReuseIdentifier: "TextTableViewCell")
         tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "SwitchTableViewCell")
     }
     
     func changeSaveButtonAvailability() {
-        saveButton.isEnabled = (!currentPersonForEditing.isEqual(currentPersonCopy) || imageState != ImageEditState.noChanges) &&
-            fieldsValidationResult.firstIndex(of: false) == nil &&
-            (!currentPersonCopy.firstName.isEmpty || !currentPersonCopy.lastName.isEmpty || !currentPersonCopy.phoneNumber.isEmpty || !currentPersonCopy.email.isEmpty)
+        let contactChanged = (!currentPersonForEditing.isEqual(currentPersonCopy) || imageState != ImageEditState.noChanges)
+        let validationSuccessful = fieldsValidationResult.firstIndex(of: false) == nil
+        let atLeastOneFieldIsFilled = !currentPersonCopy.firstName.isEmpty || !currentPersonCopy.lastName.isEmpty || !currentPersonCopy.phoneNumber.isEmpty || !currentPersonCopy.email.isEmpty
+        saveButton.isEnabled = contactChanged && validationSuccessful && atLeastOneFieldIsFilled
     }
     
     func fillCellsArray (person: Person) -> [Presentation] {
@@ -192,7 +193,7 @@ private extension UpdateController {
         var validationResult: Bool?
         
         if cellType == .driverLicenseSwitch {
-            if data is Bool && data as! Bool {
+            if data as! Bool {
                 cells.append(getDriverLicenseNumberCell())
                 if let indexPath = getDriverLicenseIndexPath() {
                     tableView.insertRows(at: [indexPath], with: .automatic)
@@ -208,8 +209,8 @@ private extension UpdateController {
             cells[index].updateDataType(cells[index].dataType, with: data)
             
             if let validationType = cells[index].validationType {
-                if data is String{
-                    fieldsValidationResult[index] = Validation.isValidField(text: data as! String, kindOfField: validationType)
+                if let text = data as? String{
+                    fieldsValidationResult[index] = Validation.isValidField(text: text, kindOfField: validationType)
                     validationResult = fieldsValidationResult[index]
                 }
             }
@@ -219,8 +220,8 @@ private extension UpdateController {
             switch cellType {
             case .image, .notes:
                 tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-            case .birthday:
-                tableView.endEditing(true)
+//            case .birthday:
+//                tableView.endEditing(true)
             default:
                 break
             }

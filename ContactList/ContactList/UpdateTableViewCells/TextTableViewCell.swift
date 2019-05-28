@@ -109,6 +109,7 @@ private extension TextTableViewCell {
         let formatter = DateFormatter()
         formatter.dateFormat = Constants.dateFormat
         dataTextField.text = birthday != nil ? formatter.string(from: birthday!) : Constants.defaultDate
+        dataTextField.resignFirstResponder()
         let _ = callback?(cellType, birthday)
     }
 }
