@@ -220,8 +220,6 @@ private extension UpdateController {
             switch cellType {
             case .image, .notes:
                 tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//            case .birthday:
-//                tableView.endEditing(true)
             default:
                 break
             }
