@@ -11,4 +11,21 @@ CHANGE_SOURCE_TITLE = "Choose image source";
 GALLERY_ACTION = "Gallery";
 CAMERA_ACTION = "Camera";
 
+REMOVE_CONTACT_TITLE = "Are you sure?";
+
+REMOVE_ACTION = "Remove";
 CANCEL_ACTION = "Cancel";
+
+ADD_VIEW_NAME = "Add";
+
+FIRST_NAME_LABLE_TITLE = "First name";
+LAST_NAME_LABLE_TITLE = "Last name";
+PHONE_LABLE_TITLE = "Phone";
+EMAIL_LABLE_TITLE = "Email";
+BIRTHDAY_LABLE_TITLE = "Birthday";
+HEIGHT_LABLE_TITLE = "Height";
+NOTE_LABLE_TITLE = "Note";
+DRIVER_LICENSE_LABLE_TITLE = "Driver license";
+DRIVER_LICENSE_NUMBER_LABLE_TITLE = "Driver license number";
+
+NOTES_TITLE = "Notes";

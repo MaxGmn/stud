@@ -31,11 +31,7 @@ class Search {
         })
         return (filteredPersons, resultStringsArray)
     }
-    
-    static func getPersonsArrayFromDictionary(from dictionary: [String : [Person]]) -> [Person] {
-        return dictionary.values.flatMap({(value) -> [Person] in return value})
-    }
-    
+        
     static func isPersonsFullNameFirstCharEqual(firstPerson: Person, secondPerson: Person) -> Bool {
         return firstPerson.fullName.first == secondPerson.fullName.first
     }
