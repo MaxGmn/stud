@@ -28,13 +28,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Rh-fr-w2G">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Rh-fr-w2G">
                                 <rect key="frame" x="148" y="0.0" width="140" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <action selector="editingChangedAction:" destination="KGk-i7-Jjw" eventType="editingChanged" id="Qcz-bZ-qa8"/>
+                                    <outlet property="delegate" destination="KGk-i7-Jjw" id="4IX-pE-RqY"/>
                                 </connections>
                             </textField>
                         </subviews>

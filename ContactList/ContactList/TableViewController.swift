@@ -193,7 +193,7 @@ private extension TableViewController {
         guard let result = getCategoryNameAndIndex(by: person.id) else {
             return false
         }
-        guard let category = groupedPersons[newCategoryName] else {return false}
+        guard let _ = groupedPersons[newCategoryName] else {return false}
         
         let currentDirectoryName: String
         let currentArrayIndex: Int
@@ -215,7 +215,7 @@ private extension TableViewController {
                 tableView.moveRow(at: indexPath, to: targetIndexPath)
                 tableView.reloadRows(at: [targetIndexPath], with: .automatic)
             }
-            if category.isEmpty {
+            if groupedPersons[currentDirectoryName]!.isEmpty {
                 removeSection(by: currentDirectoryName)
             }
         }
@@ -234,13 +234,13 @@ private extension TableViewController {
     
     func removeCurrentPerson(by result: (directoryName: String, arrayIndex: Int)) {
         guard let keysArrayIndex = getKeysArrayIndex(by: result.directoryName) else {return}
-        guard let category = groupedPersons[result.directoryName] else {return}
+        guard let _ = groupedPersons[result.directoryName] else {return}
         
         tableView.beginUpdates()
         groupedPersons[result.directoryName]!.remove(at: result.arrayIndex)
         let indexPath = IndexPath(row: result.arrayIndex, section: keysArrayIndex)
         tableView.deleteRows(at: [indexPath], with: .automatic)
-        if category.isEmpty {
+        if groupedPersons[result.directoryName]!.isEmpty {
             removeSection(by: result.directoryName)
         }
         tableView.endUpdates()
