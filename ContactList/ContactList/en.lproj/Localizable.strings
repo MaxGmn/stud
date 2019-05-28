@@ -27,3 +27,5 @@ HEIGHT_LABLE_TITLE = "Height";
 NOTE_LABLE_TITLE = "Note";
 DRIVER_LICENSE_LABLE_TITLE = "Driver license";
 DRIVER_LICENSE_NUMBER_LABLE_TITLE = "Driver license number";
+
+NOTES_TITLE = "Notes";

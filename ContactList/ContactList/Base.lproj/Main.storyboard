@@ -181,29 +181,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="I0P-rq-JeR">
-                                <rect key="frame" x="20" y="88" width="374" height="774"/>
+                                <rect key="frame" x="20" y="44" width="374" height="818"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Xl-Q4-JAj">
-                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="Notes" id="aq9-1B-4cH">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="IFz-Ty-gpv">
-                                            <connections>
-                                                <action selector="cancelAction:" destination="UOt-ch-HDx" id="x23-p2-gnH"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="nJ7-Q9-qo4">
-                                            <connections>
-                                                <action selector="saveChangesAction:" destination="UOt-ch-HDx" id="pn9-Kt-q9N"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -211,8 +193,8 @@
                             <constraint firstItem="RMn-1R-IPH" firstAttribute="trailing" secondItem="I0P-rq-JeR" secondAttribute="trailing" constant="20" id="4QB-Uw-xKv"/>
                             <constraint firstItem="I0P-rq-JeR" firstAttribute="centerX" secondItem="RMn-1R-IPH" secondAttribute="centerX" id="FVY-jw-DX5"/>
                             <constraint firstItem="I0P-rq-JeR" firstAttribute="leading" secondItem="RMn-1R-IPH" secondAttribute="leading" constant="20" id="JfS-oh-gNx"/>
-                            <constraint firstItem="I0P-rq-JeR" firstAttribute="centerY" secondItem="RMn-1R-IPH" secondAttribute="centerY" constant="22" id="fBY-Fx-kEp"/>
-                            <constraint firstItem="I0P-rq-JeR" firstAttribute="top" secondItem="RMn-1R-IPH" secondAttribute="top" constant="44" id="xEi-Nx-UDw"/>
+                            <constraint firstItem="I0P-rq-JeR" firstAttribute="centerY" secondItem="RMn-1R-IPH" secondAttribute="centerY" id="fBY-Fx-kEp"/>
+                            <constraint firstItem="I0P-rq-JeR" firstAttribute="top" secondItem="RMn-1R-IPH" secondAttribute="top" id="xEi-Nx-UDw"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RMn-1R-IPH"/>
                     </view>
@@ -222,7 +204,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H3V-67-8gj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1074" y="893"/>
+            <point key="canvasLocation" x="1073.913043478261" y="892.63392857142856"/>
         </scene>
         <!--Search Result Controller-->
         <scene sceneID="5Rk-U5-LDJ">

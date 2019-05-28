@@ -312,6 +312,6 @@ private extension UpdateController {
         destinationController.callback = {[weak self] text in
             let _ = self?.updatePersonInformation(cellType, data: text)
         }
-        present(destinationController, animated: true, completion: nil)
+        navigationController?.pushViewController(destinationController, animated: true)
     }
 }

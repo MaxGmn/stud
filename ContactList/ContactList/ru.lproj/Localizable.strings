@@ -27,3 +27,5 @@ HEIGHT_LABLE_TITLE = "Рост";
 NOTE_LABLE_TITLE = "Заметки";
 DRIVER_LICENSE_LABLE_TITLE = "Водительское удостоверение";
 DRIVER_LICENSE_NUMBER_LABLE_TITLE = "Номер вод. удост.";
+
+NOTES_TITLE = "Заметки";
