@@ -139,8 +139,8 @@ private extension UpdateController {
         
         
         var array: [Presentation] = [(Presentation(dataType: .image(person.image), cellType: .image)),
-                                 (Presentation(keyboardType: .default, placeholder: firstName, title: firstName, dataType: .text(person.firstName), cellType: .firstName, validationType: .forTextField(maxLength: 20))),
-                                 (Presentation(keyboardType: .default, placeholder: lastName, title: lastName, dataType: .text(person.lastName), cellType: .lastName, validationType: .forTextField(maxLength: 20))),
+                                 (Presentation(keyboardType: .default, placeholder: firstName, title: firstName, dataType: .text(person.firstName), cellType: .firstName, validationType: .forTextField)),
+                                 (Presentation(keyboardType: .default, placeholder: lastName, title: lastName, dataType: .text(person.lastName), cellType: .lastName, validationType: .forTextField)),
                                  (Presentation(keyboardType: .numberPad, placeholder: phone, title: phone, dataType: .text(person.phoneNumber), cellType: .phoneNumber, validationType: .forPhoneNumber)),
                                  (Presentation(keyboardType: .emailAddress, placeholder: email, title: email, dataType: .text(person.email), cellType: .email, validationType: .forEmail)),
                                  (Presentation(placeholder: birthday, title: birthday, dataType: .date(person.birthday), cellType: .birthday)),

@@ -11,25 +11,16 @@ import Foundation
 class Validation {
         
     static func isValidField(text: String, kindOfField: ValidationFunctions) -> Bool {
-        if text.isEmpty {return true}
-        
+        if text.isEmpty {return true}        
         let textRegEx = kindOfField.getRegExForField
-        
         let textTest = NSPredicate(format: "SELF MATCHES %@", textRegEx)
-        
         let result = textTest.evaluate(with: text)
-        
-        switch kindOfField {
-        case .forTextField(let maxLength):
-            return result && text.count <= maxLength
-        default:
-            return result
-        }
+        return result
     }
 }
 
 enum ValidationFunctions {
-    case forTextField(maxLength: Int)
+    case forTextField
     case forPhoneNumber
     case forEmail
     

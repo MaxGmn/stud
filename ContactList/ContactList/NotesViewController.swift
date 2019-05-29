@@ -22,6 +22,12 @@ class NotesViewController: UIViewController {
     }
 }
 
+extension NotesViewController: UITextViewDelegate{
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return textView.text.count <= 300 || text.isEmpty
+    }
+}
 
 private extension NotesViewController {
     
