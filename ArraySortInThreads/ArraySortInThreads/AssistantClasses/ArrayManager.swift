@@ -10,20 +10,18 @@ import Foundation
 
 class ArrayManager {
     
-    static func getResultArraySorting(sortType: SortTypes, arrayType: BaseArrayType, numbersOfIteration: Int) -> String {
+    static func getResultArraySorting(sortType: SortTypes, arrayType: BaseArrayType, _ numberOfIterations: Int) -> String {
         let baseArray = createArray(arrayType)
         
         let startDate = Date()
-        for _ in 0...numbersOfIteration-1 {
+        for _ in 0...numberOfIterations-1 {
             sorting(array: baseArray, by: sortType)
         }
         let finishDate = Date()
         
         let timeInterval = finishDate.timeIntervalSince(startDate)
-        let resultTime = timeInterval / Double(numbersOfIteration)
-        
-
-        return arrayType.description + ": \(round(resultTime*100000)/100000)"
+        let resultTime = timeInterval / Double(numberOfIterations)
+        return arrayType.description + ": \(round(resultTime * 100000) / 100000)"
     }
 }
 
@@ -51,7 +49,7 @@ private extension ArrayManager {
         case .backSorted(let itemsCount):
             return arrayFilling(itemsCount).sorted(by: {$1 < $0})
         case .partiallySorted(let itemsCount):
-            return partiallySort(inputArray: arrayFilling(itemsCount))
+            return SortMetods.shellSort(inputArray: arrayFilling(itemsCount), partiallySort: true)
         }
     }
     
@@ -60,16 +58,6 @@ private extension ArrayManager {
         for _ in 0...itemsCount-1 {
             resultArray.append(Int.random(in: -10000...10000))
         }
-        return resultArray
-    }
-    
-    
-    
-    static func partiallySort(inputArray: [Int]) -> [Int] {
-        let resultArray = inputArray
-        
-        // magic
-        
         return resultArray
     }
 }

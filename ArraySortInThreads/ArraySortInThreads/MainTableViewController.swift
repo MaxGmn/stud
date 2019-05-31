@@ -10,16 +10,16 @@ import UIKit
 
 class MainTableViewController: UITableViewController {
     
-    var sectionsArray = [SortTypes]()
-    var rowsArray = [[String]]()
-    
-    var inputData = [SortTypes : [BaseArrayType]]()    
+    private var sectionsArray = [SortTypes]()
+    private var rowsArray = [[String]]()    
+    private var inputData = [SortTypes : [BaseArrayType]]()
+    private let numberOfIterations = 50
     
     @IBAction func startAction(_ sender: Any) {
         for (sectionNumber, sortType) in sectionsArray.enumerated() {
             guard let arrayTypes = inputData[sortType] else {return}
             for (rowNumber, arrayType) in arrayTypes.enumerated() {
-                let resultString = ArrayManager.getResultArraySorting(sortType: sortType, arrayType: arrayType, numbersOfIteration: 50)
+                let resultString = ArrayManager.getResultArraySorting(sortType: sortType, arrayType: arrayType, numberOfIterations)
                 rowsArray[sectionNumber][rowNumber] = resultString
                 let indexPath = IndexPath(row: rowNumber, section: sectionNumber)
                 tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -42,7 +42,6 @@ class MainTableViewController: UITableViewController {
         return rowsArray[section].count
     }
 
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath)
         cell.textLabel?.text = rowsArray[indexPath.section][indexPath.row]
@@ -51,10 +50,6 @@ class MainTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionsArray[section].rawValue
-    }
-    
-    func start() {
-        
     }
 }
 

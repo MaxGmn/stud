@@ -113,6 +113,28 @@ class SortMetods {
         
         return internalSort(start: 0, end: inputArray.count - 1)
     }
+    
+    static func shellSort(inputArray:[Int], partiallySort: Bool) -> [Int] {
+        var sortedArray = inputArray
+        var step = sortedArray.count/2
+        
+        while(step > 0){
+            for i in 0..<sortedArray.count - step{
+                var j = i
+                while(j >= 0 && sortedArray[j] > sortedArray[j+step]){
+                    let tmp = sortedArray[j]
+                    sortedArray[j] = sortedArray[j+step]
+                    sortedArray[j+step] = tmp
+                    j -= step
+                }
+            }
+            step /= 2
+            if step == 1 && partiallySort {
+                return sortedArray
+            }
+        }
+        return sortedArray
+    }
 }
 
 enum SortTypes: String {
