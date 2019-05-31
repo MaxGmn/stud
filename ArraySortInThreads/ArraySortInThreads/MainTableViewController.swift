@@ -14,8 +14,14 @@ class MainTableViewController: UITableViewController {
     private var rowsArray = [[String]]()    
     private var inputData = [SortTypes : [BaseArrayType]]()
     private let numberOfIterations = 50
+    private var rowsCount: Float = 0
+    private var rowsDone: Float = 0
+    
+    @IBOutlet weak var progressBar: UIProgressView!
+    
     
     @IBAction func startAction(_ sender: Any) {
+        rowsDone = 0
         for (sectionNumber, sortType) in sectionsArray.enumerated() {
             guard let arrayTypes = inputData[sortType] else {return}
             for (rowNumber, arrayType) in arrayTypes.enumerated() {
@@ -23,6 +29,8 @@ class MainTableViewController: UITableViewController {
                 rowsArray[sectionNumber][rowNumber] = resultString
                 let indexPath = IndexPath(row: rowNumber, section: sectionNumber)
                 tableView.reloadRows(at: [indexPath], with: .automatic)
+                rowsDone += 1
+                progressBar.setProgress(rowsDone/rowsCount, animated: true)
             }
         }
     }
@@ -59,8 +67,10 @@ private extension MainTableViewController {
         sectionsArray = inputData.keys.compactMap({$0})
         for section in sectionsArray {
             let tmpArray = Array(repeating: "in process", count: inputData[section]?.count ?? 0)
+            rowsCount += Float(tmpArray.count)
             rowsArray.append(tmpArray)
         }
+        progressBar.setProgress(0, animated: true)
     }
     
     func fillDataDictionary() -> [SortTypes : [BaseArrayType]] {
