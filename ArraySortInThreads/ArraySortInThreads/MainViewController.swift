@@ -15,11 +15,17 @@ class MainViewController: UIViewController {
     private var inputData = [SortTypes : [BaseArrayType]]()
     private let numberOfIterations = 50
     private var rowsCount: Float = 0
-    private var rowsDone: Float = 0
+    private var rowsDone: Float = 0 {
+        didSet{
+            changeButtonsAvailabillity(rowsDone == 0, rowsDone == rowsCount)
+        }
+    }
     private let operationQueue = OperationQueue()
     
     @IBOutlet private weak var progressBar: UIProgressView!
     @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var startButton: UIBarButtonItem!
+    @IBOutlet private weak var refreshButton: UIBarButtonItem!
     
     @IBAction func startAction(_ sender: Any) {
         for (sectionNumber, sortType) in sectionsArray.enumerated() {
@@ -37,6 +43,12 @@ class MainViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @IBAction func refreshAction(_ sender: Any) {
+        createEmptyTable()
+        rowsDone = 0
+        tableView.reloadData()
     }
     
     @IBAction func cancelAction(_ sender: Any) {
@@ -75,8 +87,15 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
 
 private extension MainViewController {
     
+    func changeButtonsAvailabillity(_ startButtonIsEhabled: Bool, _ refreshButtonIsEhabled: Bool) {
+        startButton.isEnabled = startButtonIsEhabled
+        refreshButton.isEnabled = refreshButtonIsEhabled
+    }
+    
     func createEmptyTable() {
         sectionsArray = inputData.keys.compactMap({$0})
+        rowsArray.removeAll()
+        rowsCount = 0
         for section in sectionsArray {
             let tmpArray = Array(repeating: "no data", count: inputData[section]?.count ?? 0)
             rowsCount += Float(tmpArray.count)

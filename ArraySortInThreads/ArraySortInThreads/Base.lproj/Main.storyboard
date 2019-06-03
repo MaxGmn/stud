@@ -58,14 +58,23 @@
                                 <action selector="cancelAction:" destination="xrC-0k-am2" id="kCF-tN-ye7"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Start" id="xgd-s4-rvz">
-                            <connections>
-                                <action selector="startAction:" destination="xrC-0k-am2" id="bU4-xa-qpZ"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Start" id="xgd-s4-rvz">
+                                <connections>
+                                    <action selector="startAction:" destination="xrC-0k-am2" id="bU4-xa-qpZ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem enabled="NO" systemItem="refresh" id="AoJ-XM-DME">
+                                <connections>
+                                    <action selector="refreshAction:" destination="xrC-0k-am2" id="hTJ-W7-P9g"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="progressBar" destination="Pzb-nU-ZLT" id="fmU-Ho-agJ"/>
+                        <outlet property="refreshButton" destination="AoJ-XM-DME" id="W3C-GK-9PS"/>
+                        <outlet property="startButton" destination="xgd-s4-rvz" id="qTW-Bl-6sF"/>
                         <outlet property="tableView" destination="rNC-AR-8el" id="P8k-he-qal"/>
                     </connections>
                 </viewController>
