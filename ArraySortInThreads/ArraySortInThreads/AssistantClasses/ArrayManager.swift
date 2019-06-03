@@ -30,13 +30,13 @@ private extension ArrayManager {
     static func sorting(array: [Int], by sortType: SortTypes) {
         switch sortType {
         case .bubble:
-            let _ = SortMetods.bubbleSort(inputArray: array)
+            _ = SortMetods.bubbleSort(inputArray: array)
         case .insertion:
-            let _ = SortMetods.insertionSort(inputArray: array)
+            _ = SortMetods.insertionSort(inputArray: array)
         case .quick:
-            let _ = SortMetods.quickSort(inputArray: array)
+            _ = SortMetods.quickSort(inputArray: array)
         case .merge:
-            let _ = SortMetods.mergeSort(inputArray: array)
+            _ = SortMetods.mergeSort(inputArray: array)
         }
     }
     
