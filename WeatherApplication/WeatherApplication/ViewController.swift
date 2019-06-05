@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        WeatherAPIManager.myRequest(.byCityName(q: "Vinnytsya,ua"))
+//        WeatherAPIManager.myRequest(.byCityName(q: "Vinnytsya,ua"))
     }
 
 }

@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct WeatherData: Codable {
-    
+// main structures
+struct CurrentWeatherData: Codable {
     let id: Int?
     let name: String?
     let cod: Int?
@@ -17,7 +17,6 @@ struct WeatherData: Codable {
     let timezone: Int?
     let visibility: Int?
     let dt: Int?
-    
     let coord: Coord?
     let weather: [WeatherInfo]?
     let main: MainInfo?
@@ -26,6 +25,43 @@ struct WeatherData: Codable {
     let sys: Sys?
     let rain: Rain?
     
+}
+struct DailyWeatherData: Codable {
+    let cod: Int?
+    let message: Double?
+    let cnt: Int?
+    let city: City?
+    let list: [WeatherList]?
+}
+
+// accessory structures
+struct City: Codable {
+    let id: Int?
+    let name: String?
+    let country: String?
+    let coord: Coord?
+}
+
+struct WeatherList: Codable{
+    let dt: Int?
+    let pressure: Double?
+    let humidity: Int?
+    let speed: Double?
+    let deg: Int?
+    let clouds: Int?
+    let rain: Int?
+    let snow: Int?
+    let temp: Temperature?
+    let weather: [WeatherInfo]?
+}
+
+struct Temperature: Codable {
+    let day: Double?
+    let min: Double?
+    let max: Double?
+    let night: Double?
+    let eve: Double?
+    let morn: Double?
 }
 
 struct Coord: Codable {
