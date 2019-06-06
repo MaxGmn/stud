@@ -14,21 +14,21 @@ class WeatherAPIManager {
     static func myRequest(_ weatherDataType: WeatherDataType, handler: @escaping (WeatherData) -> Void) {
         guard let url = getURL(by: weatherDataType) else { return }
         
-        // URLSession
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let receivedData = data {
-                switch weatherDataType {
-                case .current:
-                    if let currentWeather = try? JSONDecoder().decode(CurrentWeatherData.self, from: receivedData) {
-                        handler(currentWeather)
-                    }
-                case .fiveDay:
-                    if let dailyWeather = try? JSONDecoder().decode(FiveDayWeatherData.self, from: receivedData) {
-                        handler(dailyWeather)
-                    }
-                }
-            }
-        }.resume()
+//        // URLSession
+//        URLSession.shared.dataTask(with: url) { (data, response, error) in
+//            if let receivedData = data {
+//                switch weatherDataType {
+//                case .current:
+//                    if let currentWeather = try? JSONDecoder().decode(CurrentWeatherData.self, from: receivedData) {
+//                        handler(currentWeather)
+//                    }
+//                case .fiveDay:
+//                    if let dailyWeather = try? JSONDecoder().decode(FiveDayWeatherData.self, from: receivedData) {
+//                        handler(dailyWeather)
+//                    }
+//                }
+//            }
+//        }.resume()
         
         // Alamofire
         request(url).responseJSON { (response) in
