@@ -11,12 +11,37 @@ import Alamofire
 
 class WeatherAPIManager {
     
-    static func myRequest(_ weatherDataType: WeatherDataType) {
+    static func myRequest(_ weatherDataType: WeatherDataType, handler: @escaping (WeatherData) -> Void) {
         guard let url = getURL(by: weatherDataType) else { return }
+        
+        // URLSession
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let receivedData = data {
+                switch weatherDataType {
+                case .current:
+                    if let currentWeather = try? JSONDecoder().decode(CurrentWeatherData.self, from: receivedData) {
+                        handler(currentWeather)
+                    }
+                case .fiveDay:
+                    if let dailyWeather = try? JSONDecoder().decode(FiveDayWeatherData.self, from: receivedData) {
+                        handler(dailyWeather)
+                    }
+                }
+            }
+        }.resume()
+        
+        // Alamofire
         request(url).responseJSON { (response) in
             if let data = response.data {
-                if let weather = try? JSONDecoder().decode(CurrentWeatherData.self, from: data) {
-                    print(weather)
+                switch weatherDataType {
+                case .current:
+                    if let currentWeather = try? JSONDecoder().decode(CurrentWeatherData.self, from: data) {
+                        handler(currentWeather)
+                    }
+                case .fiveDay:
+                    if let dailyWeather = try? JSONDecoder().decode(FiveDayWeatherData.self, from: data) {
+                        handler(dailyWeather)
+                    }
                 }
             }
         }
@@ -36,13 +61,13 @@ private extension WeatherAPIManager {
 }
 
 enum WeatherDataType {
-    case daily(searchLocationType: SearchLocationType, count: Int)
+    case fiveDay(searchLocationType: SearchLocationType)
     case current(searchLocationType: SearchLocationType)
     
     var getURLParameters: [URLQueryItem] {
         switch self {
-        case .daily(let type, let count):
-            return type.getURLParameters + [URLQueryItem(name: "cnt", value: String(count))]
+        case .fiveDay(let type):
+            return type.getURLParameters
         case .current(let type):
             return type.getURLParameters
         }
@@ -50,8 +75,8 @@ enum WeatherDataType {
     
     var getURLPath: String {
         switch self {
-        case .daily:
-            return "https://api.openweathermap.org/data/2.5/forecast/daily"
+        case .fiveDay:
+            return "https://api.openweathermap.org/data/2.5/forecast"
         case .current:
             return "https://api.openweathermap.org/data/2.5/weather"
         }

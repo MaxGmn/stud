@@ -8,12 +8,14 @@
 
 import Foundation
 
+protocol WeatherData {}
+
 // main structures
-struct CurrentWeatherData: Codable {
-    let id: Int?
-    let name: String?
-    let cod: Int?
-    let base :String?
+struct CurrentWeatherData: WeatherData, Codable {
+    let id: Int
+    let name: String
+    let cod: Int
+    let base :String
     let timezone: Int?
     let visibility: Int?
     let dt: Int?
@@ -24,12 +26,13 @@ struct CurrentWeatherData: Codable {
     let clouds: Clouds?
     let sys: Sys?
     let rain: Rain?
-    
+    let snow: Snow?
 }
-struct DailyWeatherData: Codable {
-    let cod: Int?
-    let message: Double?
-    let cnt: Int?
+
+struct FiveDayWeatherData: WeatherData, Codable {
+    let cod: String
+    let message: Double
+    let cnt: Int
     let city: City?
     let list: [WeatherList]?
 }
@@ -44,15 +47,24 @@ struct City: Codable {
 
 struct WeatherList: Codable{
     let dt: Int?
-    let pressure: Double?
-    let humidity: Int?
-    let speed: Double?
-    let deg: Int?
-    let clouds: Int?
-    let rain: Int?
-    let snow: Int?
-    let temp: Temperature?
+    let dtTxt: String?
+    let main: MainInfo?
     let weather: [WeatherInfo]?
+    let clouds: Clouds?
+    let wind: Wind?
+    let rain: Rain?
+    let snow: Snow?
+    
+    enum CodingKeys: String, CodingKey {
+        case dt
+        case dtTxt = "dt_txt"
+        case main
+        case weather
+        case clouds
+        case wind
+        case rain
+        case snow
+    }
 }
 
 struct Temperature: Codable {
@@ -78,10 +90,13 @@ struct WeatherInfo: Codable {
 
 struct MainInfo: Codable {
     let temp: Double?
-    let pressure: Int?
+    let pressure: Double?
     let humidity: Int?
     let tempMin: Double?
     let tempMax: Double?
+    let seaLevel: Double?
+    let grndLevel: Double?
+    let tempKf: Double?
     
     enum CodingKeys: String, CodingKey {
         case temp
@@ -89,12 +104,15 @@ struct MainInfo: Codable {
         case humidity
         case tempMin = "temp_min"
         case tempMax = "temp_max"
+        case seaLevel = "sea_level"
+        case grndLevel = "grnd_level"
+        case tempKf = "temp_kf"
     }
 }
 
 struct Wind: Codable {
-    let speed: Int?
-    let deg: Int?
+    let speed: Double?
+    let deg: Double?
 }
 
 struct Clouds: Codable {
@@ -111,6 +129,16 @@ struct Sys: Codable {
 }
 
 struct Rain: Codable {
+    let oneHour: Double?
+    let threeHours: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case oneHour = "1h"
+        case threeHours = "3h"
+    }
+}
+
+struct Snow: Codable {
     let oneHour: Double?
     let threeHours: Double?
     

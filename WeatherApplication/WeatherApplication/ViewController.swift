@@ -12,8 +12,14 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        WeatherAPIManager.myRequest(.byCityName(q: "Vinnytsya,ua"))
+        WeatherAPIManager.myRequest(.current(searchLocationType: .byCityName(q: "Vinnytsya,ua"))) { (data) in
+            print(data)
+        }
+        
+        WeatherAPIManager.myRequest(.fiveDay(searchLocationType: .byCityName(q: "Vinnytsya,ua"))) { (data) in
+            print(data)
+        }
     }
-
 }
+
 
