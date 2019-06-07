@@ -12,7 +12,24 @@
 		62378FFB229FD860005A8B98 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62378FF9229FD860005A8B98 /* Main.storyboard */; };
 		62378FFD229FD861005A8B98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62378FFC229FD861005A8B98 /* Assets.xcassets */; };
 		62379000229FD861005A8B98 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62378FFE229FD861005A8B98 /* LaunchScreen.storyboard */; };
+		6237901522A65313005A8B98 /* WeatherAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6237901422A65313005A8B98 /* WeatherAPIManager.swift */; };
+		6237901722A67C4A005A8B98 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6237901622A67C4A005A8B98 /* WeatherData.swift */; };
+		627215DC22A7CAEF00A39E06 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 627215DB22A7CAEF00A39E06 /* Alamofire.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		627215E222A7DEDF00A39E06 /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 627215E122A7DEDF00A39E06 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		627215E022A7DE7400A39E06 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				627215E222A7DEDF00A39E06 /* Alamofire.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		62378FF2229FD860005A8B98 /* WeatherApplication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApplication.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,6 +39,10 @@
 		62378FFC229FD861005A8B98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		62378FFF229FD861005A8B98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		62379001229FD861005A8B98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6237901422A65313005A8B98 /* WeatherAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPIManager.swift; sourceTree = "<group>"; };
+		6237901622A67C4A005A8B98 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
+		627215DB22A7CAEF00A39E06 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		627215E122A7DEDF00A39E06 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				627215DC22A7CAEF00A39E06 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,8 +60,10 @@
 		62378FE9229FD860005A8B98 = {
 			isa = PBXGroup;
 			children = (
+				627215E122A7DEDF00A39E06 /* Alamofire.framework */,
 				62378FF4229FD860005A8B98 /* WeatherApplication */,
 				62378FF3229FD860005A8B98 /* Products */,
+				627215DA22A7CAEF00A39E06 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,12 +80,22 @@
 			children = (
 				62378FF5229FD860005A8B98 /* AppDelegate.swift */,
 				62378FF7229FD860005A8B98 /* ViewController.swift */,
+				6237901422A65313005A8B98 /* WeatherAPIManager.swift */,
+				6237901622A67C4A005A8B98 /* WeatherData.swift */,
 				62378FF9229FD860005A8B98 /* Main.storyboard */,
 				62378FFC229FD861005A8B98 /* Assets.xcassets */,
 				62378FFE229FD861005A8B98 /* LaunchScreen.storyboard */,
 				62379001229FD861005A8B98 /* Info.plist */,
 			);
 			path = WeatherApplication;
+			sourceTree = "<group>";
+		};
+		627215DA22A7CAEF00A39E06 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				627215DB22A7CAEF00A39E06 /* Alamofire.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,6 +108,8 @@
 				62378FEE229FD860005A8B98 /* Sources */,
 				62378FEF229FD860005A8B98 /* Frameworks */,
 				62378FF0229FD860005A8B98 /* Resources */,
+				627215DF22A7DE1D00A39E06 /* ShellScript */,
+				627215E022A7DE7400A39E06 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -130,11 +166,34 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		627215DF22A7DE1D00A39E06 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		62378FEE229FD860005A8B98 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6237901722A67C4A005A8B98 /* WeatherData.swift in Sources */,
+				6237901522A65313005A8B98 /* WeatherAPIManager.swift in Sources */,
 				62378FF8229FD860005A8B98 /* ViewController.swift in Sources */,
 				62378FF6229FD860005A8B98 /* AppDelegate.swift in Sources */,
 			);
@@ -283,6 +342,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = WeatherApplication/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -300,6 +363,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = WeatherApplication/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
