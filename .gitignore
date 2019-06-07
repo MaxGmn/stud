@@ -31,3 +31,10 @@ ArraySortInThreads/ArraySortInThreads.xcodeproj/xcuserdata/*
 
 WeatherApplication/WeatherApplication.xcodeproj/project.xcworkspace/*
 WeatherApplication/WeatherApplication.xcodeproj/xcuserdata/*
+WeatherApplication/Cartfile.resolved
+WeatherApplication/Carthage/*
+
+MyWeatherApplication/MyWeatherApplication.xcodeproj/project.xcworkspace/*
+MyWeatherApplication/MyWeatherApplication.xcodeproj/xcuserdata/*
+MyWeatherApplication/Cartfile.resolved
+MyWeatherApplication/Carthage/*
