@@ -86,7 +86,7 @@ enum WeatherDataType {
 enum SearchLocationType {
     case byCityName(q: String)
     case byCityID(id: Int)
-    case byGeographicCoordinates(lat: Int, lon: Int)
+    case byGeographicCoordinates(lat: Double, lon: Double)
     case byZipCode(zip: String)
     
     var getURLParameters: [URLQueryItem] {

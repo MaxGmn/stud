@@ -10,7 +10,7 @@ import Foundation
 
 protocol WeatherData {}
 
-// main structures
+// MARK: - main structures
 struct CurrentWeatherData: WeatherData, Codable {
     let id: Int
     let name: String
@@ -37,7 +37,7 @@ struct FiveDayWeatherData: WeatherData, Codable {
     let list: [WeatherList]?
 }
 
-// accessory structures
+// MARK: - accessory structures
 struct City: Codable {
     let id: Int?
     let name: String?

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina6_1" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,17 +15,17 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="WeatherApplication" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud_small" translatesAutoresizingMaskIntoConstraints="NO" id="beH-Vo-Jtl">
-                                <rect key="frame" x="37.5" y="40" width="300" height="196.5"/>
+                                <rect key="frame" x="54" y="109" width="403" height="196.5"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2uH-4L-YVT" userLabel="TextContainer">
-                                <rect key="frame" x="0.0" y="256.5" width="375" height="410.5"/>
+                                <rect key="frame" x="492" y="0.0" width="404" height="414"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cupertino" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="B7f-Hb-oN6">
-                                        <rect key="frame" x="0.0" y="10" width="375" height="107.5"/>
+                                        <rect key="frame" x="0.0" y="10" width="404" height="179.5"/>
                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="150"/>
                                         <color key="textColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -34,7 +34,7 @@
                                         </variation>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="28C" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="bf7-nH-rmS">
-                                        <rect key="frame" x="0.0" y="221" width="375" height="179.5"/>
+                                        <rect key="frame" x="0.0" y="105.5" width="404" height="298.5"/>
                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="250"/>
                                         <color key="textColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -72,15 +72,16 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="vuA-Lm-gJ4"/>
                                 <exclude reference="Fn1-iB-u4D"/>
                                 <exclude reference="gNS-Zm-MOu"/>
                                 <exclude reference="z9d-ma-Haz"/>
                                 <exclude reference="T7a-30-Cou"/>
-                                <exclude reference="vuA-Lm-gJ4"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
+                                <include reference="vuA-Lm-gJ4"/>
                                 <include reference="Fn1-iB-u4D"/>
                                 <exclude reference="OEF-OQ-QCw"/>
                                 <exclude reference="TiU-ay-cOO"/>
@@ -90,7 +91,6 @@
                                 <exclude reference="GLU-dr-ljO"/>
                                 <include reference="T7a-30-Cou"/>
                                 <exclude reference="nGr-OJ-POl"/>
-                                <include reference="vuA-Lm-gJ4"/>
                             </mask>
                         </variation>
                     </view>
